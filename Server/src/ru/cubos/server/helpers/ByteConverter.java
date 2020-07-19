@@ -1,10 +1,10 @@
 package ru.cubos.server.helpers;
 
 public class ByteConverter {
-    static public byte[] char_to_byte(char value){
+    static public byte[] char_to_bytes(char value){
         byte data[] = new byte[2];
-        data[0] = (byte) value;
-        data[1] = (byte) (value>>> 8);
+        data[1] = (byte) value;
+        data[0] = (byte) (value>>> 8);
         return data;
     }
 

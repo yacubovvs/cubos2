@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+import static ru.cubos.server.helpers.ByteConverter.uByte;
 import static ru.cubos.server.helpers.Protocol.*;
 
 public class Emulator extends JFrame implements Connector {
@@ -58,36 +59,54 @@ public class Emulator extends JFrame implements Connector {
             return false; // No data
         }
 
-        switch (data[0]){
-            case DRWING_PIXEL:
-                System.out.println("Emulator client: drawing pixel command");
-                break;
-            case DRWING_RECT:
-                System.out.println("Emulator client: drawing rectangle command");
-                char x0 = ByteConverter.bytesToChar(data[1], data[2]);
-                char y0 = ByteConverter.bytesToChar(data[3], data[4]);
-                char x1 = ByteConverter.bytesToChar(data[5], data[6]);
-                char y1 = ByteConverter.bytesToChar(data[7], data[8]);
+        char x0, y0, x1, y1, r, g, b;
+        int current_position = 0;
 
-                char r = ByteConverter.byte_to_char(data[9]);
-                char g = ByteConverter.byte_to_char(data[10]);
-                char b = ByteConverter.byte_to_char(data[11]);
+        while(current_position<data.length) {
 
-                drawRect(x0, y0, x1, y1, new Color(r,g,b));
-                break;
-            case DRWING_RECTS_ARRAY:
-                System.out.println("Emulator client: drawing rectangle array");
-                break;
-            case DRWING_PIXELS_ARRAY:
-                System.out.println("Emulator client: drawing pixels array");
-                break;
-            case UPDATE_SCREEN:
-                System.out.println("Emulator client: update screen");
-                updateImage();
-                break;
-            default:
-                System.out.println("Emulator client: unknown protocol command");
-                return false;
+            switch (data[current_position]) {
+                case DRWING_PIXEL:
+                    //System.out.println("Emulator client: drawing pixel command");
+                    x0 = ByteConverter.bytesToChar(data[current_position + 1], data[current_position + 2]);
+                    y0 = ByteConverter.bytesToChar(data[current_position + 3], data[current_position + 4]);
+
+                    r = ByteConverter.byte_to_char(data[current_position + 5]);
+                    g = ByteConverter.byte_to_char(data[current_position + 6]);
+                    b = ByteConverter.byte_to_char(data[current_position + 7]);
+
+                    drawPixel(x0, y0, new Color(r, g, b));
+
+                    current_position += 8;
+
+                    break;
+                case DRWING_RECT:
+                    //System.out.println("Emulator client: drawing rectangle command");
+                    x0 = ByteConverter.bytesToChar(data[current_position + 1], data[current_position + 2]);
+                    y0 = ByteConverter.bytesToChar(data[current_position + 3], data[current_position + 4]);
+                    x1 = ByteConverter.bytesToChar(data[current_position + 5], data[current_position + 6]);
+                    y1 = ByteConverter.bytesToChar(data[current_position + 7], data[current_position + 8]);
+
+                    r = ByteConverter.byte_to_char(data[current_position + 9]);
+                    g = ByteConverter.byte_to_char(data[current_position + 10]);
+                    b = ByteConverter.byte_to_char(data[current_position + 11]);
+
+                    current_position += 12;
+                    drawRect(x0, y0, x1, y1, new Color(r, g, b));
+                    break;
+                case DRWING_RECTS_ARRAY:
+                    System.out.println("Emulator client: drawing rectangle array");
+                    break;
+                case DRWING_PIXELS_ARRAY:
+                    System.out.println("Emulator client: drawing pixels array");
+                    break;
+                case UPDATE_SCREEN:
+                    System.out.println("Emulator client: update screen");
+                    updateImage();
+                    break;
+                default:
+                    System.out.println("Emulator client: unknown protocol command");
+                    return false;
+            }
         }
 
         return true;
@@ -265,7 +284,7 @@ public class Emulator extends JFrame implements Connector {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * *                                                                                                             * *
-     * *                                                    SYSTEM                                                   * *
+     * *                                                    OTHER                                                    * *
      * *                                                                                                             * *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
