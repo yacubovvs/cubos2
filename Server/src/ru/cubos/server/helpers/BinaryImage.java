@@ -1,7 +1,10 @@
-package ru.cubos.server.helpers.framebuffer;
+package ru.cubos.server.helpers;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class BinaryImage {
 
@@ -9,6 +12,8 @@ public class BinaryImage {
 
     private int width;
     private int height;
+
+    private String imagePath;
 
     public BinaryImage(int width, int height){
         setWidth(width);
@@ -19,6 +24,12 @@ public class BinaryImage {
         for(int i=0; i<data.length; i++){
             data[i] = -128;
         }
+    }
+
+    public BinaryImage(String imagePath) throws IOException {
+        this.imagePath = imagePath;
+        BufferedImage image = ImageIO.read(new File(imagePath));
+        setImage(image);
     }
 
     public void setColorPixel(int x, int y, byte r, byte g, byte b){
@@ -49,7 +60,25 @@ public class BinaryImage {
     }
     public void setHeight(int height) { this.height = height; }
 
-    public void setImage(BufferedImage image){}
+    public void setImage(BufferedImage image){
+        data = new byte[image.getHeight() * image.getWidth() * 3];
+        this.setHeight((char)image.getHeight());
+        this.setWidth((char)image.getWidth());
+
+        for(char y=0; y<image.getHeight(); y++){
+            for(char x=0; x<image.getWidth(); x++){
+                int color = image.getRGB(x, y);
+
+                int blue = color & 0xff;
+                int green = (color & 0xff00) >> 8;
+                int red = (color & 0xff0000) >> 16;
+
+                this.setColorPixel(x,y, (byte)(red-128), (byte)(green-128), (byte)(blue-128));
+
+                continue;
+            }
+        }
+    }
 
     public BufferedImage getBufferedImageImage(){
         BufferedImage bufferedImage = new BufferedImage( getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
@@ -62,19 +91,6 @@ public class BinaryImage {
                 int green = pixel[1] + 128;
                 int blue = pixel[2] + 128;
                 Color color = new Color(red, green, blue);
-
-                /*
-                int pixel = getGrayscalePixel(x,y) + 128;
-                Color color = new Color(pixel, pixel, pixel);
-                */
-
-                /*
-                boolean pixel = getBinaryPixel(x,y);
-                Color color;
-                if (pixel) color = new Color(255, 255, 255);
-                else color = new Color(0, 0, 0);
-                */
-
                 bufferedImage.setRGB(x, y, color.getRGB());
             }
         }
@@ -347,5 +363,40 @@ public class BinaryImage {
 
         return binaryImage_color;
     }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public BinaryImage filter_crop(int x0, int y0, int x1, int y1){
+        if(x0<0) x0=0;
+        if(x1<0) x1=0;
+        if(y0<0) y0=0;
+        if(y1<0) y1=0;
+        return filter_crop((char) x0, (char) y0, (char) x1, (char) y1);
+    }
+
+    public void drawImage(int x0, int y0, BinaryImage binaryImage){
+        drawImage(x0, y0, binaryImage, null);
+    }
+
+    public void drawImage(int x0, int y0, BinaryImage binaryImage, byte[] alfaColor){
+        byte[] imagepixel;
+        for (int x=Math.max(-x0, 0); x<Math.min(binaryImage.getWidth(), getWidth() - x0); x++){
+            for (int y=Math.max(-y0, 0); y<Math.min(binaryImage.getHeight(), getHeight() - y0); y++) {
+                imagepixel = binaryImage.getColorPixel(x,y);
+                if(
+                        alfaColor == null ||
+                        (
+                            imagepixel[0]!=alfaColor[0] ||
+                            imagepixel[1]!=alfaColor[1] ||
+                            imagepixel[2]!=alfaColor[2]
+                        )
+                )
+                setColorPixel(x + x0,y + y0, imagepixel);
+            }
+        }
+    }
+
 
 }

@@ -5,6 +5,7 @@ import ru.cubos.connectors.emulator.Emulator;
 import ru.cubos.server.helpers.Colors;
 import ru.cubos.server.helpers.framebuffer.Display;
 import ru.cubos.server.settings.Settings;
+import ru.cubos.server.system.ButtonBar;
 import ru.cubos.server.system.StatusBar;
 import ru.cubos.server.system.Time;
 
@@ -18,6 +19,7 @@ public class Server {
     public Display display;
     public Settings settings;
     public StatusBar statusBar;
+    public ButtonBar buttonBar;
     public Time time;
 
     public static void main(String[] args) {
@@ -34,6 +36,7 @@ public class Server {
         display = new Display(connector.getScreenWidth(), connector.getScreenHeight());
         settings = new Settings();
         statusBar = new StatusBar(this);
+        buttonBar = new ButtonBar(this);
         time = new Time();
 
         //display.drawLine(0,0,100,100, Colors.COLOR_RED);
@@ -43,8 +46,7 @@ public class Server {
         System.out.println("Server: Server started");
         Thread serverThread = new Thread(()->{
             while(true) {
-                if(statusBar.isRepaintPending()) statusBar.paint();
-                sendFrameBufferCommands();
+                paint();
 
                 try {
                     Thread.sleep(1000);
@@ -53,8 +55,13 @@ public class Server {
                 }
             }
         });
-
         serverThread.start();
+    }
+
+    void paint(){
+        if(statusBar.isRepaintPending()) statusBar.paint();
+        if(buttonBar.isRepaintPending()) buttonBar.paint();
+        sendFrameBufferCommands();
     }
 
     void sendFrameBufferCommands(){

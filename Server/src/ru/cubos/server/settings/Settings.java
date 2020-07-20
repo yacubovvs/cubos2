@@ -1,9 +1,13 @@
 package ru.cubos.server.settings;
 
+import ru.cubos.server.helpers.Colors;
+
 public class Settings {
 
     /*
-     *  System
+     *
+     *  SYSTEM
+     *
      * */
 
     private char systemCharWidth = 6;
@@ -11,15 +15,30 @@ public class Settings {
 
 
     /*
+    *
     *  STATUSBAR
+    *
     * */
 
-    private boolean     statusBarEnable         = true;
-    private char        statusBarHeight         = 32;
-    private byte[]      statusBarColor          = new byte[]{100, 100, 100};
-    private byte[]      statusTextColor         = new byte[]{-100, -100, -100};
-    private char        statusTextSize          = 2;
-    private char        statusLeftRightMargin   = 5;
+    private boolean     statusBarEnable             = true;
+    private char        statusBarHeight             = 32;
+    private byte[]      statusBarColor              = Colors.COLOR_LIGHT_GRAY;
+    private byte[]      statusBarTextColor          = Colors.COLOR_DARK_GRAY;
+    private char        statusBarTextSize           = 2;
+    private char        statusBarLeftRightMargin    = 10;
+
+    /*
+     *
+     *  BUTTONBAR
+     *
+     * */
+
+    private boolean     buttonBarEnable         = true;
+    private char        buttonBarHeight         = 32;
+    private byte[]      buttonBarColor          = Colors.COLOR_LIGHT_GRAY;
+    private byte[]      buttonBarButtonsColor   = Colors.COLOR_DARK_GRAY;
+    private char        buttonBarButtonSize     = 12;
+    private char        buttonBarButtonMargin   = 70;
 
     /*
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -55,20 +74,20 @@ public class Settings {
         this.statusBarColor = statusBarColor;
     }
 
-    public char getStatusTextSize() {
-        return statusTextSize;
+    public char getStatusBarTextSize() {
+        return statusBarTextSize;
     }
 
-    public void setStatusTextSize(char statusTextSize) {
-        this.statusTextSize = statusTextSize;
+    public void setStatusBarTextSize(char statusBarTextSize) {
+        this.statusBarTextSize = statusBarTextSize;
     }
 
-    public byte[] getStatusTextColor() {
-        return statusTextColor;
+    public byte[] getStatusBarTextColor() {
+        return statusBarTextColor;
     }
 
-    public void setStatusTextColor(byte[] statusTextColor) {
-        this.statusTextColor = statusTextColor;
+    public void setStatusBarTextColor(byte[] statusBarTextColor) {
+        this.statusBarTextColor = statusBarTextColor;
     }
 
     public char getSystemCharWidth() {
@@ -87,11 +106,59 @@ public class Settings {
         this.systemCharHeight = systemCharHeight;
     }
 
-    public char getStatusLeftRightMargin() {
-        return statusLeftRightMargin;
+    public char getStatusBarLeftRightMargin() {
+        return statusBarLeftRightMargin;
     }
 
-    public void setStatusLeftRightMargin(char statusLeftRightMargin) {
-        this.statusLeftRightMargin = statusLeftRightMargin;
+    public void setStatusBarLeftRightMargin(char statusBarLeftRightMargin) {
+        this.statusBarLeftRightMargin = statusBarLeftRightMargin;
+    }
+
+    public boolean isButtonBarEnable() {
+        return buttonBarEnable;
+    }
+
+    public void setButtonBarEnable(boolean buttonBarEnable) {
+        this.buttonBarEnable = buttonBarEnable;
+    }
+
+    public char getButtonBarHeight() {
+        return buttonBarHeight;
+    }
+
+    public void setButtonBarHeight(char buttonBarHeight) {
+        this.buttonBarHeight = buttonBarHeight;
+    }
+
+    public byte[] getButtonBarColor() {
+        return buttonBarColor;
+    }
+
+    public void setButtonBarColor(byte[] buttonBarColor) {
+        this.buttonBarColor = buttonBarColor;
+    }
+
+    public byte[] getButtonBarButtonsColor() {
+        return buttonBarButtonsColor;
+    }
+
+    public void setButtonBarButtonsColor(byte[] buttonBarButtonsColor) {
+        this.buttonBarButtonsColor = buttonBarButtonsColor;
+    }
+
+    public char getButtonBarButtonSize() {
+        return buttonBarButtonSize;
+    }
+
+    public void setButtonBarButtonSize(char buttonBarButtonSize) {
+        this.buttonBarButtonSize = buttonBarButtonSize;
+    }
+
+    public char getButtonBarButtonMargin() {
+        return buttonBarButtonMargin;
+    }
+
+    public void setButtonBarButtonMargin(char buttonBarButtonMargin) {
+        this.buttonBarButtonMargin = buttonBarButtonMargin;
     }
 }
