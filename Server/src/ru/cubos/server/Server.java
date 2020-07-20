@@ -3,17 +3,22 @@ package ru.cubos.server;
 import ru.cubos.connectors.Connector;
 import ru.cubos.connectors.emulator.Emulator;
 import ru.cubos.server.helpers.Colors;
-import ru.cubos.server.helpers.framebuffer.FrameBuffer;
+import ru.cubos.server.helpers.framebuffer.Display;
+import ru.cubos.server.settings.Settings;
+import ru.cubos.server.system.StatusBar;
+import ru.cubos.server.system.Time;
 
 import java.util.List;
 
 import static ru.cubos.server.helpers.ByteConverter.uByte;
-import static ru.cubos.server.helpers.Protocol.*;
 
 public class Server {
 
-    Connector connector;
-    FrameBuffer display;
+    public Connector connector;
+    public Display display;
+    public Settings settings;
+    public StatusBar statusBar;
+    public Time time;
 
     public static void main(String[] args) {
         startServerEmulator();
@@ -26,18 +31,20 @@ public class Server {
 
     public Server(Connector connector){
         this.connector = connector;
-        display = new FrameBuffer(connector.getScreenWidth(), connector.getScreenHeight());
-        display.drawRect(0,0,2,2, Colors.COLOR_RED, true);
-        display.drawRect(3,3,5,5, Colors.COLOR_GREEN, true);
-        display.drawRect(6,6,9,9, Colors.COLOR_BLUE, true);
+        display = new Display(connector.getScreenWidth(), connector.getScreenHeight());
+        settings = new Settings();
+        statusBar = new StatusBar(this);
+        time = new Time();
+
+        //display.drawLine(0,0,100,100, Colors.COLOR_RED);
     }
 
     public void start(){
         System.out.println("Server: Server started");
         Thread serverThread = new Thread(()->{
             while(true) {
-                updateFrameBuffer();
-
+                if(statusBar.isRepaintPending()) statusBar.paint();
+                sendFrameBufferCommands();
 
                 try {
                     Thread.sleep(1000);
@@ -50,13 +57,13 @@ public class Server {
         serverThread.start();
     }
 
-    void updateFrameBuffer(){
-        List<FrameBuffer.DisplayCommand> commands =  display.getFrame();
+    void sendFrameBufferCommands(){
+        List<Display.DisplayCommand> commands =  display.getFrame();
         //System.out.println("Server: Server loop");
 
         if(commands.size()!=0){
             int messageLength = 0;
-            for(FrameBuffer.DisplayCommand command: commands){
+            for(Display.DisplayCommand command: commands){
                 messageLength += command.params.length;
                 messageLength += 1; // Command type
             }
@@ -64,7 +71,7 @@ public class Server {
             byte message[] = new byte[messageLength];
             int messagePosition = 0;
 
-            for(FrameBuffer.DisplayCommand command: commands){
+            for(Display.DisplayCommand command: commands){
                 message[messagePosition] = command.type;
                 messagePosition++;
                 for(char p=0; p<command.params.length; p++){

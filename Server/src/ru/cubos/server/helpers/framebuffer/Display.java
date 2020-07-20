@@ -7,11 +7,11 @@ import static ru.cubos.server.helpers.ByteConverter.char_to_bytes;
 import static ru.cubos.server.helpers.ByteConverter.uByte;
 import static ru.cubos.server.helpers.Protocol.DRWING_PIXEL;
 
-public class FrameBuffer extends BinaryImage{
+public class Display extends BinaryImage{
     private BinaryImage last_frame;
     private List<DisplayCommand> displayCommands;
 
-    public FrameBuffer(int width, int height){
+    public Display(int width, int height){
         super(width, height);
         last_frame   = new BinaryImage(width, height);
     }

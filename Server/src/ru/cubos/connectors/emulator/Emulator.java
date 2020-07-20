@@ -56,8 +56,10 @@ public class Emulator extends JFrame implements Connector {
     public boolean transmitData(byte[] data) {
 
         if(data.length==0){
-            return false; // No data
+            return true; // No data
         }
+
+        System.out.println("Emulator client: data received " + data.length + " bytes");
 
         char x0, y0, x1, y1, r, g, b;
         int current_position = 0;
@@ -107,13 +109,15 @@ public class Emulator extends JFrame implements Connector {
                     System.out.println("Emulator client: unknown protocol command");
                     return false;
             }
+
+            repaint();
         }
 
         return true;
     }
 
     @Override
-    public byte[] recieveData() {
+    public byte[] receiveData() {
         return new byte[0];
     }
 
