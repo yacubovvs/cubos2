@@ -164,7 +164,7 @@ public class BinaryImage {
     static final char FONT_CHAR_WIDTH   = 6;
     static final char FONT_CHAR_HEIGHT  = 8;
 
-    public void drawString(int x, int y, String string, byte[] color, char fontSize){
+    public void drawString(int x, int y, String string, byte[] color, int fontSize){
 
         byte[] stringBytes = string.getBytes();
         for (int i=0; i<string.length(); i++){
