@@ -51,8 +51,8 @@ public class Server {
         Thread serverThread = new Thread(()->{
             while(true) {
                 paint();
-                sendFrameBufferCommands();
                 currentApp.repaint();
+                sendFrameBufferCommands();
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
