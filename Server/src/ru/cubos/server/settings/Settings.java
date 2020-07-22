@@ -11,7 +11,7 @@ public class Settings {
      * */
 
     private char systemCharWidth = 6;
-    private char systemCharHeight = 7;
+    private char systemCharHeight = 8;
 
 
     /*

@@ -177,7 +177,7 @@ public class BinaryImage {
                         if(fontSize>1){
                             for(int j=0; j<fontSize; j++){
                                 for(int jj=0; jj<fontSize; jj++){
-                                    setColorPixel((char)(x + char_part*fontSize + i*FONT_CHAR_WIDTH*fontSize + jj), (char)(y + bit*fontSize - j), color);
+                                    setColorPixel((char)(x + char_part*fontSize + i*FONT_CHAR_WIDTH*fontSize + jj), (char)(y + bit*fontSize - j + (fontSize-1)), color);
                                 }
                             }
                         }else{

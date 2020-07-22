@@ -1,6 +1,7 @@
-package ru.cubos.server.system.views;
+package ru.cubos.server.system.views.containers;
 
 import ru.cubos.server.system.apps.App;
+import ru.cubos.server.system.views.View;
 
 import java.util.ArrayList;
 import java.util.List;

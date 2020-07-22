@@ -2,7 +2,7 @@ package ru.cubos.server.system.apps;
 
 import ru.cubos.server.Server;
 import ru.cubos.server.helpers.BinaryImage;
-import ru.cubos.server.system.views.LinearContainer;
+import ru.cubos.server.system.views.containers.LinearContainer;
 import ru.cubos.server.system.views.View;
 
 public abstract class App {

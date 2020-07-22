@@ -2,28 +2,46 @@ package ru.cubos.server.system.views;
 
 import ru.cubos.server.Server;
 import ru.cubos.server.helpers.BinaryImage;
-
-import java.util.List;
+import ru.cubos.server.helpers.Colors;
 
 public abstract class View {
-    static final byte SIZE_SOURCE_CONTENT = 0;
-    static final byte SIZE_SOURCE_FIXED = 1;
-    static final byte SIZE_SOURCE_PERCENT = 2;
+    public static final byte SIZE_SOURCE_CONTENT = 0;
+    public static final byte SIZE_SOURCE_FIXED = 1;
+    public static final byte SIZE_SOURCE_PERCENT = 2;
+    public static final byte SIZE_SOURCE_PARENT = 3;
+
+    public static final byte ALIGN_VERTICAL_TOP = 0;
+    public static final byte ALIGN_VERTICAL_BOTTOM = 1;
+    public static final byte ALIGN_VERTICAL_CENTER = 2;
+    public static final byte ALIGN_HORIZONTAL_LEFT = 3;
+    public static final byte ALIGN_HORIZONTAL_RIGHT = 4;
+    public static final byte ALIGN_HORIZONTAL_CENTER = 5;
+
+    private byte verticalAlign = ALIGN_VERTICAL_TOP;
+    private byte horizontalAlign = ALIGN_HORIZONTAL_LEFT;
 
     private String id;
     private boolean visible = true;
     private View parent = null;
+
     private int marginLeft = 0;
     private int marginRight = 0;
     private int marginTop = 0;
     private int marginBottom = 0;
+    private int paddingLeft = 0;
+    private int paddingRight = 0;
+    private int paddingTop = 0;
+    private int paddingBottom = 0;
+
     private boolean repaintPending = true;
     private int height;
     private int width;
     private Server server;
 
+    private byte[] backgroundColor = Colors.COLOR_BLACK;
+
     private byte height_source = SIZE_SOURCE_CONTENT;
-    private byte width_source = SIZE_SOURCE_CONTENT;
+    private byte width_source = SIZE_SOURCE_PARENT;
 
     protected BinaryImage renderImage;
 
@@ -142,7 +160,7 @@ public abstract class View {
         this.width = width;
     }
 
-    public void setMarging(int marging){
+    public void setMargin(int marging){
         setMarginBottom(marging);
         setMarginTop(marging);
         setMarginLeft(marging);
@@ -171,5 +189,68 @@ public abstract class View {
 
     public void setWidth_source(byte width_source) {
         this.width_source = width_source;
+    }
+
+    public byte[] getBackgroundColor() {
+        return backgroundColor;
+    }
+
+    public void setBackgroundColor(byte[] backgroundColor) {
+        this.backgroundColor = backgroundColor;
+    }
+
+    public int getPaddingLeft() {
+        return paddingLeft;
+    }
+
+    public void setPaddingLeft(int paddingLeft) {
+        this.paddingLeft = paddingLeft;
+    }
+
+    public int getPaddingRight() {
+        return paddingRight;
+    }
+
+    public void setPaddingRight(int paddingRight) {
+        this.paddingRight = paddingRight;
+    }
+
+    public int getPaddingTop() {
+        return paddingTop;
+    }
+
+    public void setPaddingTop(int paddingTop) {
+        this.paddingTop = paddingTop;
+    }
+
+    public int getPaddingBottom() {
+        return paddingBottom;
+    }
+
+    public void setPaddingBottom(int paddingBottom) {
+        this.paddingBottom = paddingBottom;
+    }
+
+    public void setPadding(int padding){
+        setPaddingBottom(padding);
+        setPaddingTop(padding);
+        setPaddingLeft(padding);
+        setPaddingRight(padding);
+    }
+
+    public byte getVerticalAlign() {
+        return verticalAlign;
+    }
+
+    public void setVerticalAlign(byte verticalAlign) {
+        this.verticalAlign = verticalAlign;
+    }
+
+    public byte getHorizontalAlign() {
+        return horizontalAlign;
+    }
+
+    public void setHorizontalAlign(byte horizontalAlign) {
+        this.horizontalAlign = horizontalAlign;
     }
 }

@@ -1,6 +1,8 @@
-package ru.cubos.server.system.views;
+package ru.cubos.server.system.views.containers;
 
 import ru.cubos.server.helpers.BinaryImage;
+import ru.cubos.server.system.views.View;
+import ru.cubos.server.system.views.containers.ContainerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,8 +11,10 @@ public class LinearContainer extends ContainerView {
     static final byte VERTICAL = 0;
     static final byte HORIZONTAL = 1;
 
-    public LinearContainer(){
+    private byte type = 0;
 
+    public LinearContainer(){
+        super();
     }
 
     @Override
@@ -34,8 +38,6 @@ public class LinearContainer extends ContainerView {
 
         if(getAppParent()!=null) getAppParent().setRenderImage(renderImage);
     }
-
-    private byte type = 0;
 
     public byte getType() {
         return type;
