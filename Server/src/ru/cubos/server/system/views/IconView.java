@@ -13,6 +13,11 @@ public class IconView extends View {
         super();
     }
 
+    public IconView(String path) throws IOException {
+        super();
+        loadImage(path);
+    }
+
     public void loadImage(String path) throws IOException {
         icon = new BinaryImage(path);
     }
@@ -24,9 +29,16 @@ public class IconView extends View {
 
     @Override
     public void draw() {
-        renderImage = new BinaryImage(getWidth(), icon.getHeight() + getMarginTop() + getMarginBottom());
+        renderImage = new BinaryImage(getWidth(), icon.getHeight() + getPaddingTop() + getMarginTop() + getMarginBottom() + getPaddingBottom());
 
-        renderImage.drawImage(getMarginLeft(), getMarginTop(), icon, alfaColor);
+        if(getHorizontalAlign()==ALIGN_HORIZONTAL_LEFT) {
+            renderImage.drawImage(getMarginLeft() + getPaddingLeft(), getMarginTop() + getPaddingTop(), icon, alfaColor);
+        }else if(getHorizontalAlign()==ALIGN_HORIZONTAL_RIGHT){
+            renderImage.drawImage(getWidth() - getMarginLeft() - getPaddingLeft() - getIcon().getWidth(), getMarginTop() + getPaddingTop(), icon, alfaColor);
+        }else if(getHorizontalAlign()==ALIGN_HORIZONTAL_CENTER){
+            renderImage.drawImage(getMarginLeft() + getPaddingLeft() + (getWidth() - getMarginLeft() - getPaddingLeft() - getMarginRight() - getPaddingRight() - getIcon().getWidth())/2, getMarginTop() + getPaddingTop(), icon, alfaColor);
+        }
+
         super.onRender();
     }
 
@@ -46,5 +58,9 @@ public class IconView extends View {
 
     public void setScale(int scale) {
         this.scale = scale;
+    }
+
+    public BinaryImage getIcon(){
+        return icon;
     }
 }

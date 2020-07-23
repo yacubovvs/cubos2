@@ -1,5 +1,6 @@
 package ru.cubos.server.system.views.containers;
 
+import ru.cubos.server.Server;
 import ru.cubos.server.system.apps.App;
 import ru.cubos.server.system.views.View;
 
@@ -17,6 +18,15 @@ public abstract class ContainerView extends View {
     public void add(View view){
         view.setServer(getServer());
         children.add(view);
+    }
+
+    @Override
+    public void setServer(Server server) {
+        super.setServer(server);
+
+        for(View view: getChildren()){
+            view.setServer(server);
+        }
     }
 
     public List<View> getChildren() {

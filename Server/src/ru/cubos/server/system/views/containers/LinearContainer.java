@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LinearContainer extends ContainerView {
-    static final byte VERTICAL = 0;
-    static final byte HORIZONTAL = 1;
+    static public final byte VERTICAL = 0;
+    static public final byte HORIZONTAL = 1;
 
     private byte type = 0;
 
@@ -20,20 +20,30 @@ public class LinearContainer extends ContainerView {
     @Override
     public void draw() {
         List<BinaryImage> imageList = new ArrayList<>();
-        int height = 0;
+        int size = 0;
 
         for(View view: children){
             view.repaint();
             BinaryImage image = view.getRenderImage();
             imageList.add(image);
-            height += view.getHeight();
+            if(getType()==HORIZONTAL) size += view.getWidth();
+            else size += view.getHeight();
         }
 
-        renderImage = new BinaryImage(getWidth(), height);
-        int height_position = 0;
+        if(getType()==HORIZONTAL) renderImage = new BinaryImage(size, getHeight());
+        else renderImage = new BinaryImage(getWidth(), size);
+
+        drawBackGround();
+
+        int position = 0;
         for(BinaryImage image: imageList){
-            renderImage.drawImage(0, height_position, image);
-            height_position += image.getHeight();
+            if(getType()==HORIZONTAL){
+                renderImage.drawImage(position, 0, image);
+                position += image.getWidth();
+            }else{
+                renderImage.drawImage(0, position, image);
+                position += image.getHeight();
+            }
         }
 
         if(getAppParent()!=null) getAppParent().setRenderImage(renderImage);
@@ -47,28 +57,36 @@ public class LinearContainer extends ContainerView {
         this.type = type;
     }
 
+    /*
     protected void updateChildrenWidth(){
         if(getType()==VERTICAL) {
             for (View view : children) {
                 view.setWidth(getWidth());
             }
         }else{
-            // TODO: Change in last
+            // TODO: Change in past
             for (View view : children) {
                 view.setWidth(getWidth());
             }
         }
     }
+    */
 
     @Override
     public void add(View view){
         super.add(view);
-        updateChildrenWidth();
+        view.setParent(this);
+        //updateChildrenWidth();
     }
 
     @Override
     public void setWidth(int width){
         super.setWidth(width);
-        updateChildrenWidth();
+        //updateChildrenWidth();
+    }
+
+    @Override
+    public boolean isLinearContainer(){
+        return true;
     }
 }

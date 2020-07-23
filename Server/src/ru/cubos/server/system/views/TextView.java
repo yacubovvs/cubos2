@@ -13,18 +13,17 @@ public class TextView extends View {
     private int fontSize = 1;
     private boolean multiString = true;
     private byte[] textColor = Colors.COLOR_WHITE;
-    private int lineSpacing = 5;
+    private int lineSpacing = 5; // TODO: Need to update on fontsize change
 
     public TextView(String text){
         super();
         this.text = text;
-        setMargin(10);
+        setPadding(10);
     }
 
     public TextView(){
         super();
-        setMargin(10);
-        setPadding(0);
+        setPadding(10);
     }
 
     @Override
@@ -41,7 +40,9 @@ public class TextView extends View {
             renderImage = new BinaryImage(getWidth(), getMarginTop() + getPaddingTop() + getMarginBottom() + getPaddingBottom() + getServer().settings.getSystemCharHeight() * getFontSize());
         }
 
-        if(getPaddingTop()==0 && getPaddingLeft()==0 && getPaddingBottom()==0 && getPaddingLeft()==0){
+        drawBackGround();
+        /*
+        if(getMarginTop()==0 && getMarginLeft()==0 && getMarginBottom()==0 && getMarginLeft()==0){
             renderImage.drawRect(0, 0, renderImage.getWidth(), renderImage.getHeight(), getBackgroundColor(), true);
         }else {
             byte parentBackgroundColor[];
@@ -52,8 +53,8 @@ public class TextView extends View {
             }
 
             renderImage.drawRect(0, 0, renderImage.getWidth(), renderImage.getHeight(), parentBackgroundColor, true);
-            renderImage.drawRect(getPaddingLeft(), getPaddingTop(), renderImage.getWidth() - getPaddingRight(), renderImage.getHeight() - getPaddingBottom(), getBackgroundColor(), true);
-        }
+            renderImage.drawRect(getMarginLeft(), getMarginTop(), renderImage.getWidth() - getMarginRight(), renderImage.getHeight() - getMarginBottom(), getBackgroundColor(), true);
+        }*/
 
         String string = "";
         if(isMultiString()){

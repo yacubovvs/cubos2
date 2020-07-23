@@ -6,6 +6,8 @@ import ru.cubos.server.system.apps.App;
 import ru.cubos.server.system.views.IconView;
 import ru.cubos.server.system.views.TextView;
 import ru.cubos.server.system.views.View;
+import ru.cubos.server.system.views.containers.HorizontalContainer;
+import ru.cubos.server.system.views.containers.VerticalContainer;
 
 import java.io.IOException;
 
@@ -13,64 +15,27 @@ public class TestingApp extends App {
     public TestingApp(Server server){
         super(server);
 
-        TextView textView = new TextView("Long long multi line string for few lines testing with any font size");
-        textView.setLineSpacing(5);
-        textView.setFontSize(1);
-        textView.setMargin(10);
-        textView.setTextColor(Colors.COLOR_WHITE);
-        textView.setMultiString(true);
-        textView.setHorizontalAlign(View.ALIGN_HORIZONTAL_LEFT);
+        HorizontalContainer container = new HorizontalContainer();
+        VerticalContainer container2 = new VerticalContainer();
 
-        TextView textView2 = new TextView("Testing long long string for multi string for TextView with many words");
-        textView2.setPadding(0);
-        textView2.setMargin(10);
-        textView2.setTextColor(Colors.COLOR_WHITE);
-        textView2.setMultiString(true);
-        textView2.setHorizontalAlign(View.ALIGN_HORIZONTAL_RIGHT);
+        TextView textView = new TextView("Long long multi line string for few lines testing and any font size");
+        textView.setBackgroundColor(Colors.COLOR_BLUE);
+        textView.setMargin(5);
+        TextView textView2 = new TextView("Long long multi line string for few lines testing and any font size");
+        TextView textView3 = new TextView("Long long multi line string for few lines testing and any font size");
 
-        TextView textView3 = new TextView("Testing long long string for multi string for TextView with many words");
-        textView3.setPadding(0);
-        textView3.setMargin(10);
-        textView3.setTextColor(Colors.COLOR_WHITE);
-        textView3.setMultiString(true);
-        textView3.setHorizontalAlign(View.ALIGN_HORIZONTAL_CENTER);
+        TextView textView4 = new TextView("Long long multi line string for few lines testing and any font size");
+        TextView textView5 = new TextView("Long long multi line string for few lines testing and any font size");
 
-        TextView textView4 = new TextView("Testing long long string for multi string for TextView with many words");
-        textView4.setPadding(0);
-        textView4.setMargin(10);
-        textView4.setTextColor(Colors.COLOR_WHITE);
-        textView4.setMultiString(true);
-        textView4.setHorizontalAlign(View.ALIGN_HORIZONTAL_LEFT);
+        container.add(textView);
+        container.setBackgroundColor(Colors.COLOR_DARK_RED);
+        container.add(textView2);
+        container.add(textView3);
 
+        container2.add(textView4);
+        container2.add(textView5);
 
-
-        TextView textView5 = new TextView("Testing not long string");
-        textView2.setPadding(0);
-        textView2.setMargin(10);
-        textView2.setTextColor(Colors.COLOR_WHITE);
-        textView2.setMultiString(true);
-        textView2.setHorizontalAlign(View.ALIGN_HORIZONTAL_RIGHT);
-
-        TextView textView6 = new TextView("Testing not long string");
-        textView3.setPadding(0);
-        textView3.setMargin(10);
-        textView3.setTextColor(Colors.COLOR_WHITE);
-        textView3.setMultiString(true);
-        textView3.setHorizontalAlign(View.ALIGN_HORIZONTAL_CENTER);
-
-        TextView textView7 = new TextView("Testing not long string");
-        textView4.setPadding(0);
-        textView4.setMargin(10);
-        textView4.setTextColor(Colors.COLOR_WHITE);
-        textView4.setMultiString(true);
-        textView4.setHorizontalAlign(View.ALIGN_HORIZONTAL_LEFT);
-
-        addView(textView);
-        //addView(textView2);
-        //addView(textView3);
-        //addView(textView4);
-        //addView(textView5);
-        //addView(textView6);
-        //addView(textView7);
+        addView(container);
+        //addView(container2);
     }
 }
