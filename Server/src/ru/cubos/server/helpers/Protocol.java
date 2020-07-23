@@ -3,10 +3,10 @@ package ru.cubos.server.helpers;
 public class Protocol {
 
     //Drawind
-    public static final byte DRWING_PIXEL           = 0x01;
-    public static final byte DRWING_RECT            = 0x02;
-    public static final byte DRWING_PIXELS_ARRAY    = 0x03;
-    public static final byte DRWING_RECTS_ARRAY     = 0x04;
+    public static final byte DRAWING_PIXEL          = 0x01;
+    public static final byte DRAWING_RECT           = 0x02;
+    public static final byte DRAWING_PIXELS_ARRAY   = 0x03;
+    public static final byte DRAWING_RECTS_ARRAY    = 0x04;
 
     // Parameters
     public static final byte SET_PARAM = 0x20;

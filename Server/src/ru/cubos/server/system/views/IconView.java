@@ -13,9 +13,14 @@ public class IconView extends View {
         super();
     }
 
-    public IconView(String path) throws IOException {
+    public IconView(String path){
         super();
-        loadImage(path);
+        try {
+            loadImage(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Server: Counldn't find icon path " + path);
+        }
     }
 
     public void loadImage(String path) throws IOException {
@@ -31,11 +36,11 @@ public class IconView extends View {
     public void draw() {
         renderImage = new BinaryImage(getWidth(), icon.getHeight() + getPaddingTop() + getMarginTop() + getMarginBottom() + getPaddingBottom());
 
-        if(getHorizontalAlign()==ALIGN_HORIZONTAL_LEFT) {
+        if(getHorizontalAlign()==View.HorizontalAlign.ALIGN_HORIZONTAL_LEFT) {
             renderImage.drawImage(getMarginLeft() + getPaddingLeft(), getMarginTop() + getPaddingTop(), icon, alfaColor);
-        }else if(getHorizontalAlign()==ALIGN_HORIZONTAL_RIGHT){
+        }else if(getHorizontalAlign()==View.HorizontalAlign.ALIGN_HORIZONTAL_RIGHT){
             renderImage.drawImage(getWidth() - getMarginLeft() - getPaddingLeft() - getIcon().getWidth(), getMarginTop() + getPaddingTop(), icon, alfaColor);
-        }else if(getHorizontalAlign()==ALIGN_HORIZONTAL_CENTER){
+        }else if(getHorizontalAlign()==View.HorizontalAlign.ALIGN_HORIZONTAL_CENTER){
             renderImage.drawImage(getMarginLeft() + getPaddingLeft() + (getWidth() - getMarginLeft() - getPaddingLeft() - getMarginRight() - getPaddingRight() - getIcon().getWidth())/2, getMarginTop() + getPaddingTop(), icon, alfaColor);
         }
 

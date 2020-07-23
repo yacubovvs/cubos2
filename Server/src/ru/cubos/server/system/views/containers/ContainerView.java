@@ -17,6 +17,7 @@ public abstract class ContainerView extends View {
 
     public void add(View view){
         view.setServer(getServer());
+        view.setParent(this);
         children.add(view);
     }
 

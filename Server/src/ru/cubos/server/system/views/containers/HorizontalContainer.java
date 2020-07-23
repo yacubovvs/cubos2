@@ -5,7 +5,7 @@ import ru.cubos.server.system.views.View;
 public class HorizontalContainer extends LinearContainer {
     public HorizontalContainer(){
         super();
-        setType(LinearContainer.HORIZONTAL);
+        setType(LinearContainer.Type.HORIZONTAL);
     }
 
     @Override

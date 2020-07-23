@@ -2,14 +2,13 @@ package ru.cubos.server;
 
 import ru.cubos.connectors.Connector;
 import ru.cubos.connectors.emulator.Emulator;
-import ru.cubos.server.helpers.Colors;
 import ru.cubos.server.helpers.framebuffer.Display;
 import ru.cubos.server.settings.Settings;
 import ru.cubos.server.system.ButtonBar;
 import ru.cubos.server.system.StatusBar;
 import ru.cubos.server.system.Time;
 import ru.cubos.server.system.apps.App;
-import ru.cubos.server.system.apps.customApp.TestingApp;
+import ru.cubos.server.system.apps.customApps.TestingApp;
 
 import java.util.List;
 
@@ -49,7 +48,7 @@ public class Server {
     public void start(){
         System.out.println("Server: Server started");
         Thread serverThread = new Thread(()->{
-            while(true) {
+            //while(true) {
                 paint();
                 currentApp.repaint();
                 sendFrameBufferCommands();
@@ -58,7 +57,7 @@ public class Server {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }
+            //}
         });
         serverThread.start();
     }

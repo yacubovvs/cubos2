@@ -61,13 +61,17 @@ public class TextView extends View {
             // Multi string
             for (int i=0; i<stringList.size(); i++){
                 string = stringList.get(i);
+                int topOffset = i*getServer().settings.getSystemCharHeight()*getFontSize() + i*getLineSpacing();
+                int LeftOffset = getPaddingLeft() + getMarginLeft();
+                int placeForContent = renderImage.getWidth() - getMarginRight() - getMarginLeft() - getPaddingRight() - getPaddingLeft();
                 int string_size = Strings.getStringWidth(getServer(), string, getFontSize());
-                if(getHorizontalAlign()==ALIGN_HORIZONTAL_LEFT) {
-                    renderImage.drawString(getMarginLeft() + getPaddingLeft(), getMarginTop() + getPaddingTop() + i*getServer().settings.getSystemCharHeight()*getFontSize() + i*getLineSpacing(), string, getTextColor(), getFontSize());
-                }else if(getHorizontalAlign()==ALIGN_HORIZONTAL_RIGHT){
-                    renderImage.drawString(renderImage.getWidth() - getMarginLeft() - getPaddingLeft() - string_size, getMarginTop() + getPaddingTop() + i*getServer().settings.getSystemCharHeight()*getFontSize() + i*getLineSpacing(), string, getTextColor(), getFontSize());
-                }else if(getHorizontalAlign()==ALIGN_HORIZONTAL_CENTER){
-                    renderImage.drawString((renderImage.getWidth() - getMarginLeft() - getPaddingLeft() - string_size)/2, getMarginTop() + getPaddingTop() + i*getServer().settings.getSystemCharHeight()*getFontSize() + i*getLineSpacing(), string, getTextColor(), getFontSize());
+
+                if(getHorizontalAlign()==View.HorizontalAlign.ALIGN_HORIZONTAL_LEFT) {
+                    renderImage.drawString(getMarginLeft() + getPaddingLeft(), getMarginTop() + getPaddingTop() + topOffset, string, getTextColor(), getFontSize());
+                }else if(getHorizontalAlign()==View.HorizontalAlign.ALIGN_HORIZONTAL_RIGHT){
+                    renderImage.drawString(renderImage.getWidth() - getMarginLeft() - getPaddingLeft() - string_size, getMarginTop() + getPaddingTop() + topOffset, string, getTextColor(), getFontSize());
+                }else if(getHorizontalAlign()==View.HorizontalAlign.ALIGN_HORIZONTAL_CENTER){
+                    renderImage.drawString( LeftOffset + (placeForContent - string_size)/2, getMarginTop() + getPaddingTop() + topOffset, string, getTextColor(), getFontSize());
                 }
             }
 
@@ -81,11 +85,11 @@ public class TextView extends View {
             }
 
             int string_size = Strings.getStringWidth(getServer(), string, getFontSize());
-            if(getHorizontalAlign()==ALIGN_HORIZONTAL_LEFT) {
+            if(getHorizontalAlign()==View.HorizontalAlign.ALIGN_HORIZONTAL_LEFT) {
                 renderImage.drawString(getMarginLeft() + getPaddingLeft(), getMarginTop() + getPaddingTop(), string, getTextColor(), getFontSize());
-            }else if(getHorizontalAlign()==ALIGN_HORIZONTAL_RIGHT){
+            }else if(getHorizontalAlign()==View.HorizontalAlign.ALIGN_HORIZONTAL_RIGHT){
                 renderImage.drawString(renderImage.getWidth() - getMarginLeft() - getPaddingLeft() - string_size, getMarginTop() + getPaddingTop(), string, getTextColor(), getFontSize());
-            }else if(getHorizontalAlign()==ALIGN_HORIZONTAL_CENTER){
+            }else if(getHorizontalAlign()==View.HorizontalAlign.ALIGN_HORIZONTAL_CENTER){
                 renderImage.drawString((renderImage.getWidth() - getMarginLeft() - getPaddingLeft() - string_size)/2, getMarginTop() + getPaddingTop(), string, getTextColor(), getFontSize());
             }
         }

@@ -16,7 +16,6 @@ public abstract class App {
         baseContainer = new LinearContainer();
         baseContainer.setServer(server);
         baseContainer.setAppParent(this);
-        baseContainer.setWidth(server.display.getWidth());
         this.server = server;
     }
 

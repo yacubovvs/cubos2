@@ -6,20 +6,27 @@ import ru.cubos.server.helpers.Colors;
 import ru.cubos.server.system.views.containers.LinearContainer;
 
 public abstract class View {
-    public static final byte SIZE_SOURCE_CONTENT = 0;
-    public static final byte SIZE_SOURCE_FIXED = 1;
-    public static final byte SIZE_SOURCE_PERCENT = 2;
-    public static final byte SIZE_SOURCE_PARENT = 3;
+    public enum SizeSource{
+        SIZE_SOURCE_CONTENT,
+        SIZE_SOURCE_FIXED,
+        SIZE_SOURCE_K,
+        SIZE_SOURCE_PARENT
+    }
 
-    public static final byte ALIGN_VERTICAL_TOP = 0;
-    public static final byte ALIGN_VERTICAL_BOTTOM = 1;
-    public static final byte ALIGN_VERTICAL_CENTER = 2;
-    public static final byte ALIGN_HORIZONTAL_LEFT = 3;
-    public static final byte ALIGN_HORIZONTAL_RIGHT = 4;
-    public static final byte ALIGN_HORIZONTAL_CENTER = 5;
+    public enum VerticalAlign{
+        ALIGN_VERTICAL_TOP,
+        ALIGN_VERTICAL_BOTTOM,
+        ALIGN_VERTICAL_CENTER
+    }
 
-    private byte verticalAlign = ALIGN_VERTICAL_TOP;
-    private byte horizontalAlign = ALIGN_HORIZONTAL_LEFT;
+    public enum HorizontalAlign{
+        ALIGN_HORIZONTAL_LEFT,
+        ALIGN_HORIZONTAL_RIGHT,
+        ALIGN_HORIZONTAL_CENTER
+    }
+
+    private View.VerticalAlign verticalAlign = View.VerticalAlign.ALIGN_VERTICAL_TOP;
+    private View.HorizontalAlign horizontalAlign = View.HorizontalAlign.ALIGN_HORIZONTAL_LEFT;
 
     private String id;
     private boolean visible = true;
@@ -43,8 +50,8 @@ public abstract class View {
 
     private byte[] backgroundColor = null;
 
-    private byte height_source = SIZE_SOURCE_CONTENT;
-    private byte width_source = SIZE_SOURCE_PARENT;
+    private SizeSource height_source = View.SizeSource.SIZE_SOURCE_CONTENT;
+    private SizeSource width_source = View.SizeSource.SIZE_SOURCE_PARENT;
 
     protected BinaryImage renderImage;
 
@@ -62,10 +69,10 @@ public abstract class View {
     public abstract void draw();
 
     protected void onRender(){
-        if(height_source==SIZE_SOURCE_CONTENT){
+        if(height_source==View.SizeSource.SIZE_SOURCE_CONTENT){
             height = renderImage.getHeight();
         }
-        if(width_source==SIZE_SOURCE_CONTENT){
+        if(width_source==View.SizeSource.SIZE_SOURCE_CONTENT){
             width = renderImage.getWidth();
         }
     }
@@ -152,7 +159,7 @@ public abstract class View {
     }
 
     public int getHeight() {
-        if(getHeight_source()==SIZE_SOURCE_CONTENT){
+        if(getHeight_source()==View.SizeSource.SIZE_SOURCE_CONTENT){
             return getContentHeight();
         } else{
             return height;
@@ -160,7 +167,7 @@ public abstract class View {
     }
 
     public void setHeight(int height) {
-        setHeight_source(SIZE_SOURCE_FIXED);
+        setHeight_source(View.SizeSource.SIZE_SOURCE_FIXED);
         this.height = height;
     }
 
@@ -170,15 +177,15 @@ public abstract class View {
         // SIZE_SOURCE_PERCENT = 2;
         // SIZE_SOURCE_PARENT = 3;
 
-        if (getWidth_source()==SIZE_SOURCE_FIXED){
+        if (getWidth_source()==View.SizeSource.SIZE_SOURCE_FIXED){
             return width;
-        }else if (getWidth_source()==SIZE_SOURCE_PERCENT){
+        }else if (getWidth_source()==View.SizeSource.SIZE_SOURCE_K){
             if(getParent()!=null) return (int)(getParent().getWidth()* width_k);
             else return (int)(server.display.getWidth()* width_k);
-        }else if (getWidth_source()==SIZE_SOURCE_PARENT){
+        }else if (getWidth_source()==View.SizeSource.SIZE_SOURCE_PARENT){
             if(getParent()!=null){
                 if(getParent().isLinearContainer()){
-                    if(((LinearContainer)getParent()).getType()==LinearContainer.HORIZONTAL){
+                    if(((LinearContainer)getParent()).getType()==LinearContainer.Type.HORIZONTAL){
                         return (getParent().getWidth()) / (((LinearContainer) getParent()).getChildren().size());
                     }
                 }
@@ -193,7 +200,7 @@ public abstract class View {
     }
 
     public void setWidth(int width) {
-        setWidth_source(SIZE_SOURCE_FIXED);
+        setWidth_source(View.SizeSource.SIZE_SOURCE_FIXED);
         this.width = width;
     }
 
@@ -212,19 +219,19 @@ public abstract class View {
         this.server = server;
     }
 
-    protected byte getHeight_source() {
+    protected View.SizeSource getHeight_source() {
         return height_source;
     }
 
-    protected void setHeight_source(byte height_source) {
+    protected void setHeight_source(View.SizeSource height_source) {
         this.height_source = height_source;
     }
 
-    protected byte getWidth_source() {
+    protected View.SizeSource getWidth_source() {
         return width_source;
     }
 
-    protected void setWidth_source(byte width_source) {
+    protected void setWidth_source(View.SizeSource width_source) {
         this.width_source = width_source;
     }
 
@@ -278,19 +285,19 @@ public abstract class View {
         setPaddingRight(padding);
     }
 
-    public byte getVerticalAlign() {
+    public View.VerticalAlign getVerticalAlign() {
         return verticalAlign;
     }
 
-    public void setVerticalAlign(byte verticalAlign) {
+    public void setVerticalAlign(View.VerticalAlign verticalAlign) {
         this.verticalAlign = verticalAlign;
     }
 
-    public byte getHorizontalAlign() {
+    public View.HorizontalAlign getHorizontalAlign() {
         return horizontalAlign;
     }
 
-    public void setHorizontalAlign(byte horizontalAlign) {
+    public void setHorizontalAlign(View.HorizontalAlign horizontalAlign) {
         this.horizontalAlign = horizontalAlign;
     }
 
@@ -303,12 +310,12 @@ public abstract class View {
     }
 
     public void setWidth_k(float width_k) {
-        setWidth_source(SIZE_SOURCE_PERCENT);
+        setWidth_source(View.SizeSource.SIZE_SOURCE_K);
         this.width_k = width_k;
     }
 
     public float getHeight_k() {
-        setHeight_source(SIZE_SOURCE_PERCENT);
+        setHeight_source(View.SizeSource.SIZE_SOURCE_K);
         return height_k;
     }
 
@@ -321,7 +328,7 @@ public abstract class View {
     }
 
     protected void drawBackGround(){
-        if(getMarginTop()==0 && getMarginLeft()==0 && getMarginBottom()==0 && getMarginLeft()==0){
+        if(getMarginTop()==0 && getMarginLeft()==0 && getMarginBottom()==0 && getMarginRight()==0){
             renderImage.drawRect(0, 0, renderImage.getWidth(), renderImage.getHeight(), getBackgroundColor(), true);
         }else {
             byte parentBackgroundColor[];
@@ -334,5 +341,13 @@ public abstract class View {
             renderImage.drawRect(0, 0, renderImage.getWidth(), renderImage.getHeight(), parentBackgroundColor, true);
             renderImage.drawRect(getMarginLeft(), getMarginTop(), renderImage.getWidth() - getMarginRight(), renderImage.getHeight() - getMarginBottom(), getBackgroundColor(), true);
         }
+    }
+
+    protected int getPaddingTopBottom(){
+        return getPaddingBottom() + getPaddingTop();
+    }
+
+    protected int getMarginTopBottom(){
+        return getMarginBottom() + getMarginTop();
     }
 }

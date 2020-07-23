@@ -7,7 +7,7 @@ import java.util.List;
 
 import static ru.cubos.server.helpers.ByteConverter.char_to_bytes;
 import static ru.cubos.server.helpers.ByteConverter.uByte;
-import static ru.cubos.server.helpers.Protocol.DRWING_PIXEL;
+import static ru.cubos.server.helpers.Protocol.DRAWING_PIXEL;
 
 public class Display extends BinaryImage {
     private BinaryImage last_frame;
@@ -42,7 +42,7 @@ public class Display extends BinaryImage {
                     byte x_bytes[] = char_to_bytes((char) x);
                     byte y_bytes[] = char_to_bytes((char) y);
 
-                    displayCommand.type = DRWING_PIXEL;
+                    displayCommand.type = DRAWING_PIXEL;
                     displayCommand.params = new byte[]{
                         uByte(x_bytes[0]),   // X0
                         uByte(x_bytes[1]),   // X0
