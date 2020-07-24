@@ -2,11 +2,28 @@ package ru.cubos.connectors.emulator;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 public class ImagePanel extends JPanel {
     private BufferedImage image;
     private JPanel imageWrapper;
+
+    private int xPosition;
+    private int yPosition;
+
+    public ImagePanel() {
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                xPosition = e.getX();
+                yPosition = e.getY();
+                System.out.println("Emulator client: Click mouse position: " + xPosition + ", " + yPosition);
+            }
+        });
+
+    }
 
     public void loadImage(BufferedImage image){
         setLayout(new BorderLayout());
