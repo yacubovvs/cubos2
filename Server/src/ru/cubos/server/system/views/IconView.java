@@ -7,7 +7,7 @@ import java.io.IOException;
 public class IconView extends View {
     private int scale = 1;
     BinaryImage icon;
-    byte alfaColor[];
+    private byte alfaColor[];
 
     public IconView(){
         super();
@@ -17,6 +17,16 @@ public class IconView extends View {
         super();
         try {
             loadImage(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Server: Counldn't find icon path " + path);
+        }
+    }
+
+    public IconView(String path,  byte[] alfaColor){
+        super();
+        try {
+            loadImage(path, alfaColor);
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Server: Counldn't find icon path " + path);
