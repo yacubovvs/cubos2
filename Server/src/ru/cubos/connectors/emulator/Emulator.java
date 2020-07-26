@@ -1,6 +1,7 @@
 package ru.cubos.connectors.emulator;
 
 import ru.cubos.connectors.Connector;
+import ru.cubos.server.Server;
 import ru.cubos.server.helpers.ByteConverter;
 
 import javax.swing.*;
@@ -14,11 +15,13 @@ public class Emulator extends JFrame implements Connector {
     private JPanel mainpanel;
     private JPanel imageWrapper;
     BufferedImage image;
+    private Server server;
 
     private int width = 320;
     private int height = 480;
 
     public Emulator(int width, int height){
+        setServer(server);
         setContentPane(mainpanel);
         setTitle("CubOS2 Emulator");
 
@@ -38,7 +41,7 @@ public class Emulator extends JFrame implements Connector {
     }
 
     private void createUIComponents() {
-        imageWrapper = new ImagePanel();
+        imageWrapper = new EmulatorImagePanel(this);
     }
 
     /*
@@ -110,15 +113,12 @@ public class Emulator extends JFrame implements Connector {
                     return false;
             }
 
-            repaint();
+
         }
 
+        // TODO: make repaint on special command
+        repaint();
         return true;
-    }
-
-    @Override
-    public byte[] receiveData() {
-        return new byte[0];
     }
 
     /*
@@ -308,5 +308,13 @@ public class Emulator extends JFrame implements Connector {
 
     public int getScreenHeight() {
         return height;
+    }
+
+    public Server getServer() {
+        return server;
+    }
+
+    public void setServer(Server server) {
+        this.server = server;
     }
 }

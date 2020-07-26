@@ -2,6 +2,16 @@ package ru.cubos.server.helpers;
 
 public class Protocol {
 
+    /*
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * *                                                                                                             * *
+     * *                                               SERVER -> SCREEN                                              * *
+     * *                                                                                                             * *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     */
+
     //Drawind
     public static final byte DRAWING_PIXEL          = 0x01;
     public static final byte DRAWING_RECT           = 0x02;
@@ -17,5 +27,18 @@ public class Protocol {
     public static final byte GO_SLEEP = 0x31;
     public static final byte WAKE_UP = 0x32;
 
+
+    /*
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * *                                                                                                             * *
+     * *                                               SCREEN -> SERVER                                              * *
+     * *                                                                                                             * *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     */
+
+    // Touch screen or mouse click
+    public static final byte EVENT_CLICK          = 0x01;
 
 }

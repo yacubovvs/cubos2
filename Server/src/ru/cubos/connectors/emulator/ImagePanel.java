@@ -10,19 +10,7 @@ public class ImagePanel extends JPanel {
     private BufferedImage image;
     private JPanel imageWrapper;
 
-    private int xPosition;
-    private int yPosition;
-
     public ImagePanel() {
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                xPosition = e.getX();
-                yPosition = e.getY();
-                System.out.println("Emulator client: Click mouse position: " + xPosition + ", " + yPosition);
-            }
-        });
-
     }
 
     public void loadImage(BufferedImage image){
