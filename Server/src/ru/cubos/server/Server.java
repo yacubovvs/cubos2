@@ -126,6 +126,8 @@ public class Server {
                     System.out.println("Server: on screen click " + (int)x0 + ", " + (int)y0);
 
                     current_position += 5;
+
+                    break;
                 default:
                     System.out.println("Server: unknown protocol command recieved");
                     return false;
