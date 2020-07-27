@@ -27,27 +27,39 @@ public abstract class App {
         baseContainer = new LinearContainer();
         baseContainer.setServer(server);
         baseContainer.setAppParent(this);
+
+        baseContainer.setHorizontalScrollEnable();
+        baseContainer.setVerticalScrollEnable();
+
         this.server = server;
     }
 
     public void repaint(){
 
         int app_image_y = server.settings.getStatusBarHeight();
-        int app_image_width = server.display.getHeight() - server.settings.getStatusBarHeight() - server.settings.getButtonBarHeight();
+        int app_image_height = server.display.getHeight() - server.settings.getStatusBarHeight() - server.settings.getButtonBarHeight();
 
         if(this.repaintPending){
             baseContainer.draw();
             setRepaintPending(false);
 
-            // TODO: add crop of app renderImage size
-            int renderSize[] = server.display.drawImage(0, app_image_y, renderImage.getWidth(), app_image_width, renderImage);
+            int renderSize[] = server.display.drawImage(0, app_image_y, renderImage.getWidth(), app_image_height, renderImage);
+
+            //Drawing scrolls
+            if(baseContainer.isHorizontalScrollEnable() && renderImage.getWidth()>server.display.getWidth()){
+                baseContainer.getHorizontalScroll().draw(server, server.display, 0, app_image_y, 0, server.settings.getStatusBarHeight());
+            }
+
+            if(baseContainer.isVerticalScrollEnable() && renderImage.getHeight()>app_image_height) {
+                baseContainer.getVerticalScroll().draw(server, server.display, 0, app_image_y, 0, server.settings.getStatusBarHeight());
+            }
 
             baseContainer.setPositionOnRenderImage(0, app_image_y);
             baseContainer.setSizeOnRenderImage(renderSize[0], renderSize[1] - app_image_y);
             baseContainer.recountRenderPositions();
         }else{
             //server.display.drawImage(0, app_image_y, renderImage);
-            server.display.drawImage(0, app_image_y, renderImage.getWidth(), app_image_width, renderImage);
+            server.display.drawImage(0, app_image_y, renderImage.getWidth(), app_image_height, renderImage);
         }
 
         return;

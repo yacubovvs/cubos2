@@ -1,6 +1,8 @@
 package ru.cubos.server.system.views.viewElements;
 
+import ru.cubos.server.Server;
 import ru.cubos.server.helpers.BinaryImage;
+import ru.cubos.server.helpers.framebuffer.Display;
 
 public class ScrollBar {
     private Type type;
@@ -40,8 +42,16 @@ public class ScrollBar {
         this.contentlength = contentlength;
     }
 
-    public void draw(BinaryImage image){
+    public void draw(Server server, BinaryImage image, int leftOffset, int topOffset, int rightOffset, int bottomOffset){
+        final int scrollSize = server.settings.getScrollbarWidth();
+        final Display display = server.display;
+        final byte[] scrollColor = server.settings.getScrollbarColor();
 
+        if(type==Type.HORIZONTAL){
+            image.drawLine(scrollSize/2 + leftOffset, display.getHeight()-scrollSize/2 - topOffset, display.getWidth()-scrollSize/2 - rightOffset, display.getHeight()-scrollSize/2 - bottomOffset, scrollColor);
+        }else{
+            image.drawLine(display.getWidth()-scrollSize/2 - leftOffset, scrollSize/2 + topOffset, display.getWidth()-scrollSize/2 - rightOffset, display.getHeight()-scrollSize/2 - bottomOffset, scrollColor);
+        }
     }
 
     public boolean isVisible() {

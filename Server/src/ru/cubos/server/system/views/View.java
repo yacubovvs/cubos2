@@ -5,8 +5,10 @@ import ru.cubos.server.helpers.BinaryImage;
 import ru.cubos.server.helpers.Colors;
 import ru.cubos.server.system.apps.App;
 import ru.cubos.server.system.views.containers.LinearContainer;
+import ru.cubos.server.system.views.viewElements.ScrollBar;
 
 public abstract class View {
+
     private App appParent;
 
     public App getAppParent() {
@@ -26,20 +28,20 @@ public abstract class View {
         app.addEventView(this);
     }
 
-    public enum SizeSource{
+    public enum SizeSource {
         SIZE_SOURCE_CONTENT,
         SIZE_SOURCE_FIXED,
         SIZE_SOURCE_K,
         SIZE_SOURCE_PARENT
     }
 
-    public enum VerticalAlign{
+    public enum VerticalAlign {
         ALIGN_VERTICAL_TOP,
         ALIGN_VERTICAL_BOTTOM,
         ALIGN_VERTICAL_CENTER
     }
 
-    public enum HorizontalAlign{
+    public enum HorizontalAlign {
         ALIGN_HORIZONTAL_LEFT,
         ALIGN_HORIZONTAL_RIGHT,
         ALIGN_HORIZONTAL_CENTER
@@ -50,32 +52,35 @@ public abstract class View {
     int render_height; // Size on rendered image, used for listeners
     int render_width; // Size on rendered image, used for listeners
 
-    public int getRenderX(){
+    public int getRenderX() {
         return render_x;
     }
-    public int getRenderY(){
+
+    public int getRenderY() {
         return render_y;
     }
-    public int getRenderHeight(){
+
+    public int getRenderHeight() {
         return render_height;
     }
-    public int getRenderWidth(){
+
+    public int getRenderWidth() {
         return render_width;
     }
 
-    public void recountPositionOnRenderImage(int x, int y){
+    public void recountPositionOnRenderImage(int x, int y) {
         this.render_x += x;
         this.render_y += y;
 
         //if(getId()!=null) System.out.println("Recount " + getId() + ": " + this.content_x + ", " + this.content_y + "    -    " + content_width + ", " + content_height);
     }
 
-    public void setPositionOnRenderImage(int x, int y){
+    public void setPositionOnRenderImage(int x, int y) {
         this.render_x = x;
         this.render_y = y;
     }
 
-    public void setSizeOnRenderImage(int width, int height){
+    public void setSizeOnRenderImage(int width, int height) {
         this.render_width = width;
         this.render_height = height;
     }
@@ -112,19 +117,19 @@ public abstract class View {
 
     private Runnable onClickListener;
 
-    public View(){
+    public View() {
 
     }
 
-    public App getApp(){
-        if(getAppParent()==null){
-            if(getParent()==null) return null;
+    public App getApp() {
+        if (getAppParent() == null) {
+            if (getParent() == null) return null;
             return getParent().getAppParent();
         } else return getAppParent();
     }
 
-    public void repaint(){
-        if(this.repaintPending){
+    public void repaint() {
+        if (this.repaintPending) {
             draw();
             setRepaintPending(false);
         }
@@ -132,16 +137,16 @@ public abstract class View {
 
     public abstract void draw();
 
-    protected void onRender(){
-        if(height_source==View.SizeSource.SIZE_SOURCE_CONTENT){
+    protected void onRender() {
+        if (height_source == View.SizeSource.SIZE_SOURCE_CONTENT) {
             height = renderImage.getHeight();
         }
-        if(width_source==View.SizeSource.SIZE_SOURCE_CONTENT){
+        if (width_source == View.SizeSource.SIZE_SOURCE_CONTENT) {
             width = renderImage.getWidth();
         }
     }
 
-    public BinaryImage getRenderImage(){
+    public BinaryImage getRenderImage() {
         return renderImage;
     }
 
@@ -209,14 +214,14 @@ public abstract class View {
         this.marginBottom = marginBottom;
     }
 
-    protected int getContentHeight(){
+    protected int getContentHeight() {
         return renderImage.getHeight();
     }
 
     public int getHeight() {
-        if(getHeight_source()==View.SizeSource.SIZE_SOURCE_CONTENT){
+        if (getHeight_source() == View.SizeSource.SIZE_SOURCE_CONTENT) {
             return getContentHeight();
-        } else{
+        } else {
             return height;
         }
     }
@@ -232,23 +237,22 @@ public abstract class View {
         // SIZE_SOURCE_PERCENT = 2;
         // SIZE_SOURCE_PARENT = 3;
 
-        if (getWidth_source()==View.SizeSource.SIZE_SOURCE_FIXED){
+        if (getWidth_source() == View.SizeSource.SIZE_SOURCE_FIXED) {
             return width;
-        }else if (getWidth_source()==View.SizeSource.SIZE_SOURCE_K){
-            if(getParent()!=null) return (int)(getParent().getWidth()* width_k);
-            else return (int)(server.display.getWidth()* width_k);
-        }else if (getWidth_source()==View.SizeSource.SIZE_SOURCE_PARENT){
-            if(getParent()!=null){
-                if(getParent().isLinearContainer()){
-                    if(((LinearContainer)getParent()).getType()==LinearContainer.Type.HORIZONTAL){
+        } else if (getWidth_source() == View.SizeSource.SIZE_SOURCE_K) {
+            if (getParent() != null) return (int) (getParent().getWidth() * width_k);
+            else return (int) (server.display.getWidth() * width_k);
+        } else if (getWidth_source() == View.SizeSource.SIZE_SOURCE_PARENT) {
+            if (getParent() != null) {
+                if (getParent().isLinearContainer()) {
+                    if (((LinearContainer) getParent()).getType() == LinearContainer.Type.HORIZONTAL) {
                         return (getParent().getWidth()) / (((LinearContainer) getParent()).getChildren().size());
                     }
                 }
-                return (int)(getParent().getWidth());
-            }
-            else return (int)(server.display.getWidth());
-        //}else if (getWidth_source()==SIZE_SOURCE_CONTENT){ //TODO: Make it later, width by content size
-        }else{
+                return (int) (getParent().getWidth());
+            } else return (int) (server.display.getWidth());
+            //}else if (getWidth_source()==SIZE_SOURCE_CONTENT){ //TODO: Make it later, width by content size
+        } else {
             return getParent().getWidth();
         }
 
@@ -259,7 +263,7 @@ public abstract class View {
         this.width = width;
     }
 
-    public void setMargin(int marging){
+    public void setMargin(int marging) {
         setMarginBottom(marging);
         setMarginTop(marging);
         setMarginLeft(marging);
@@ -291,8 +295,8 @@ public abstract class View {
     }
 
     public byte[] getBackgroundColor() {
-        if(backgroundColor==null){
-            if(getParent()==null) return Colors.COLOR_BLACK;
+        if (backgroundColor == null) {
+            if (getParent() == null) return Colors.COLOR_BLACK;
             else return getParent().getBackgroundColor();
         } else return backgroundColor;
     }
@@ -333,7 +337,7 @@ public abstract class View {
         this.paddingBottom = paddingBottom;
     }
 
-    public void setPadding(int padding){
+    public void setPadding(int padding) {
         setPaddingBottom(padding);
         setPaddingTop(padding);
         setPaddingLeft(padding);
@@ -361,7 +365,7 @@ public abstract class View {
     }
 
     public void setWidth_k(double width_k) {
-        setWidth_k((float)width_k);
+        setWidth_k((float) width_k);
     }
 
     public void setWidth_k(float width_k) {
@@ -378,14 +382,14 @@ public abstract class View {
         this.height_k = height_k;
     }
 
-    public boolean isLinearContainer(){
+    public boolean isLinearContainer() {
         return false;
     }
 
-    protected void drawBackGround(){
-        if(getMarginTop()==0 && getMarginLeft()==0 && getMarginBottom()==0 && getMarginRight()==0){
+    protected void drawBackGround() {
+        if (getMarginTop() == 0 && getMarginLeft() == 0 && getMarginBottom() == 0 && getMarginRight() == 0) {
             renderImage.drawRect(0, 0, renderImage.getWidth(), renderImage.getHeight(), getBackgroundColor(), true);
-        }else {
+        } else {
             byte parentBackgroundColor[];
             if (getParent() != null) {
                 parentBackgroundColor = getParent().getBackgroundColor();
@@ -398,11 +402,11 @@ public abstract class View {
         }
     }
 
-    protected int getPaddingTopBottom(){
+    protected int getPaddingTopBottom() {
         return getPaddingBottom() + getPaddingTop();
     }
 
-    protected int getMarginTopBottom(){
+    protected int getMarginTopBottom() {
         return getMarginBottom() + getMarginTop();
     }
 }

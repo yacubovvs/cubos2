@@ -81,6 +81,9 @@ public class LinearContainer extends ContainerView {
             getAppParent().setRenderImage(renderImage);
         }
 
+        //if (isHorizontalScrollEnable()) getHorizontalScroll().draw(getServer(), renderImage);
+        //if (isVerticalScrollEnable()) getVerticalScroll().draw(getServer(), renderImage);
+
     }
 
     public LinearContainer.Type getType() {

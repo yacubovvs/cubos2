@@ -19,7 +19,7 @@ public class Settings {
      *
      * */
 
-    private int     scrollbarWidth          = 6;
+    private int     scrollbarWidth          = 12;
     private byte[]  scrollbarColor          = Colors.COLOR_LIGHT_GRAY;
 
     /*
@@ -177,5 +177,13 @@ public class Settings {
 
     public void setScrollbarWidth(int scrollbarWidth) {
         this.scrollbarWidth = scrollbarWidth;
+    }
+
+    public byte[] getScrollbarColor() {
+        return scrollbarColor;
+    }
+
+    public void setScrollbarColor(byte[] scrollbarColor) {
+        this.scrollbarColor = scrollbarColor;
     }
 }
