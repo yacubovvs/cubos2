@@ -1,4 +1,4 @@
-package ru.cubos.server.system.apps.customApps;
+package ru.cubos.server.system.apps.systemApps;
 
 import ru.cubos.server.Server;
 import ru.cubos.server.helpers.Colors;
@@ -9,12 +9,10 @@ import ru.cubos.server.system.views.View;
 import ru.cubos.server.system.views.containers.TabelContainer;
 import ru.cubos.server.system.views.containers.VerticalContainer;
 
-import java.io.IOException;
-
-public class TestingApp extends App {
+public class MainMenu extends App {
     TabelContainer tabelContainer;
 
-    public TestingApp(Server server){
+    public MainMenu(Server server) {
         super(server);
 
         tabelContainer = new TabelContainer(TabelContainer.TableType.FIXED_ROWS,3);
@@ -25,7 +23,7 @@ public class TestingApp extends App {
         addIcon("File browser" , "images//icons//apps//filebrowser.png");
         addIcon("Text editor" , "images//icons//apps//texteditor.png");
         addIcon("Paint" , "images//icons//apps//paint.png");
-        for(int i=0; i<20; i++){
+        for(int i=0; i<6; i++){
             addIcon("Application " + i, "images//icons//testicon.png");
         }
 

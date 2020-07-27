@@ -32,21 +32,22 @@ public abstract class App {
 
     public void repaint(){
 
+        int app_image_y = server.settings.getStatusBarHeight();
+        int app_image_width = server.display.getHeight() - server.settings.getStatusBarHeight() - server.settings.getButtonBarHeight();
+
         if(this.repaintPending){
             baseContainer.draw();
             setRepaintPending(false);
 
-            int app_image_y = server.settings.getStatusBarHeight();
             // TODO: add crop of app renderImage size
-            int renderSize[] = server.display.drawImage(0, app_image_y, renderImage);
+            int renderSize[] = server.display.drawImage(0, app_image_y, renderImage.getWidth(), app_image_width, renderImage);
+
             baseContainer.setPositionOnRenderImage(0, app_image_y);
             baseContainer.setSizeOnRenderImage(renderSize[0], renderSize[1] - app_image_y);
             baseContainer.recountRenderPositions();
         }else{
-            int app_image_y = server.settings.getStatusBarHeight();
-            // TODO: add crop of app renderImage size
-            server.display.drawImage(0, app_image_y, renderImage);
-
+            //server.display.drawImage(0, app_image_y, renderImage);
+            server.display.drawImage(0, app_image_y, renderImage.getWidth(), app_image_width, renderImage);
         }
 
         return;

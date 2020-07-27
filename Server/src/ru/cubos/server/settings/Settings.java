@@ -6,13 +6,21 @@ public class Settings {
 
     /*
      *
-     *  SYSTEM
+     *  FONTS
      *
      * */
 
     private char systemCharWidth = 6;
     private char systemCharHeight = 8;
 
+    /*
+     *
+     *  SCROLLBAR
+     *
+     * */
+
+    private int     scrollbarWidth          = 6;
+    private byte[]  scrollbarColor          = Colors.COLOR_LIGHT_GRAY;
 
     /*
     *
@@ -123,7 +131,8 @@ public class Settings {
     }
 
     public char getButtonBarHeight() {
-        return buttonBarHeight;
+        if(isButtonBarEnable()) return buttonBarHeight;
+        else return 0;
     }
 
     public void setButtonBarHeight(char buttonBarHeight) {
@@ -160,5 +169,13 @@ public class Settings {
 
     public void setButtonBarButtonMargin(char buttonBarButtonMargin) {
         this.buttonBarButtonMargin = buttonBarButtonMargin;
+    }
+
+    public int getScrollbarWidth() {
+        return scrollbarWidth;
+    }
+
+    public void setScrollbarWidth(int scrollbarWidth) {
+        this.scrollbarWidth = scrollbarWidth;
     }
 }
