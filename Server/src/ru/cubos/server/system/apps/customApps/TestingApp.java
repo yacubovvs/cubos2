@@ -47,7 +47,10 @@ public class TestingApp extends App {
 
         VerticalContainer appContainer = new VerticalContainer();
 
-
+        appContainer.setId(name);
+        appContainer.setOnClickListener(() -> {
+            System.out.println("OnClick listener ID: " + name);
+        }, this);
 
         appContainer.add(appIcon);
         appContainer.add(appName);

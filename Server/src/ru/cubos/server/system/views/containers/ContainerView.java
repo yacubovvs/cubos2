@@ -9,11 +9,11 @@ import java.util.List;
 
 public abstract class ContainerView extends View {
     protected List<View> children = new ArrayList<>();
-    private App appParent;
 
     public ContainerView(){
         super();
     }
+    public abstract void recountRenderPositions();
 
     public void add(View view){
         view.setServer(getServer());
@@ -34,11 +34,4 @@ public abstract class ContainerView extends View {
         return children;
     }
 
-    public App getAppParent() {
-        return appParent;
-    }
-
-    public void setAppParent(App appParent) {
-        this.appParent = appParent;
-    }
 }

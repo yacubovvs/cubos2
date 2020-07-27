@@ -376,14 +376,18 @@ public class BinaryImage {
         return filter_crop((char) x0, (char) y0, (char) x1, (char) y1);
     }
 
-    public void drawImage(int x0, int y0, BinaryImage binaryImage){
-        drawImage(x0, y0, binaryImage, null);
+    public int[] drawImage(int x0, int y0, BinaryImage binaryImage){
+        return drawImage(x0, y0, binaryImage, null);
     }
 
-    public void drawImage(int x0, int y0, BinaryImage binaryImage, byte[] alfaColor){
+    public int[] drawImage(int x0, int y0, BinaryImage binaryImage, byte[] alfaColor){
+
         byte[] imagepixel;
-        for (int x=Math.max(-x0, 0); x<Math.min(binaryImage.getWidth(), getWidth() - x0); x++){
-            for (int y=Math.max(-y0, 0); y<Math.min(binaryImage.getHeight(), getHeight() - y0); y++) {
+        int x_limit = Math.min(binaryImage.getWidth(), getWidth() - x0);
+        int y_limit = Math.min(binaryImage.getHeight(), getHeight() - y0);
+
+        for (int x=Math.max(-x0, 0); x<x_limit; x++){
+            for (int y=Math.max(-y0, 0); y<y_limit; y++) {
                 imagepixel = binaryImage.getColorPixel(x,y);
                 if(
                         alfaColor == null ||
@@ -396,6 +400,8 @@ public class BinaryImage {
                 setColorPixel(x + x0,y + y0, imagepixel);
             }
         }
+
+        return new int[]{x_limit, y_limit};
     }
 
 

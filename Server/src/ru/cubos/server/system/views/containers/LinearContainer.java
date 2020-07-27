@@ -20,14 +20,25 @@ public class LinearContainer extends ContainerView {
     }
 
     @Override
+    public void recountRenderPositions(){
+        // Recount elements positions
+        for(View view: children){
+            view.recountPositionOnRenderImage(this.render_x, this.render_y);
+        }
+    }
+
+    @Override
+    public void recountPositionOnRenderImage(int x, int y){
+        super.recountPositionOnRenderImage(x,y);
+        recountRenderPositions();
+    }
+
+    @Override
     public void draw() {
-        List<BinaryImage> imageList = new ArrayList<>();
         int size = 0;
 
         for(View view: children){
             view.repaint();
-            BinaryImage image = view.getRenderImage();
-            imageList.add(image);
             if(getType()==LinearContainer.Type.HORIZONTAL) size += view.getWidth();
             else size += view.getHeight();
         }
@@ -45,17 +56,31 @@ public class LinearContainer extends ContainerView {
         if(getType()== Type.VERTICAL){
             position += getMarginTop() + getPaddingTop();
         }
-        for(BinaryImage image: imageList){
+
+        for(View view: children){
+            int draw_x;
+            int draw_y;
+            int renderSizes[];
+
             if(getType()==LinearContainer.Type.HORIZONTAL){
-                renderImage.drawImage(position, 0, image);
-                position += image.getWidth();
+                draw_x = position;
+                draw_y = 0;
+                position += view.getRenderImage().getWidth();
             }else{
-                renderImage.drawImage(getMarginLeft() + getPaddingLeft(), position, image);
-                position += image.getHeight();
+                draw_x = getMarginLeft() + getPaddingLeft();
+                draw_y = position;
+                position += view.getRenderImage().getHeight();
             }
+
+            renderSizes = renderImage.drawImage(draw_x, draw_y, view.getRenderImage());
+            view.setPositionOnRenderImage(draw_x, draw_y);
+            view.setSizeOnRenderImage(renderSizes[0], renderSizes[1]);
         }
 
-        if(getAppParent()!=null) getAppParent().setRenderImage(renderImage);
+        if(getAppParent()!=null){
+            getAppParent().setRenderImage(renderImage);
+        }
+
     }
 
     public LinearContainer.Type getType() {

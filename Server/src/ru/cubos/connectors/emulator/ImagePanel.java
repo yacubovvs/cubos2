@@ -2,17 +2,16 @@ package ru.cubos.connectors.emulator;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 public class ImagePanel extends JPanel {
-    private BufferedImage image;
+    BufferedImage image;
     private JPanel imageWrapper;
 
     float image_k = 1;
-    boolean vertivalOffset = false;
+    boolean verticalOffset = false;
     int offsetSize = 0;
+    float scale_k = 1;
 
     public ImagePanel() {
     }
@@ -35,12 +34,14 @@ public class ImagePanel extends JPanel {
             image_k = (float)image.getWidth()/(float)image.getHeight();
 
             if(panel_k>image_k){
-                vertivalOffset = false;
+                verticalOffset = false;
                 offsetSize = (getWidth() - (int)(getHeight()*image_k))/2;
+                scale_k = (float)getHeight()/(float)image.getHeight();
                 g.drawImage(image,  offsetSize, 0, (int)(getHeight()*image_k), getHeight(), null);
             }else{
-                vertivalOffset = true;
+                verticalOffset = true;
                 offsetSize = (getHeight() - (int)(getWidth()/image_k))/2;
+                scale_k = (float)getWidth()/(float)image.getWidth();
                 g.drawImage(image, 0, offsetSize, getWidth(),  (int)(getWidth()/image_k), null);
             }
 

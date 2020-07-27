@@ -39,6 +39,6 @@ public class Protocol {
      */
 
     // Touch screen or mouse click
-    public static final byte EVENT_CLICK          = 0x01;
+    public static final byte EVENT_CLICK_DOWN = 0x01;
 
 }

@@ -3,9 +3,29 @@ package ru.cubos.server.system.views;
 import ru.cubos.server.Server;
 import ru.cubos.server.helpers.BinaryImage;
 import ru.cubos.server.helpers.Colors;
+import ru.cubos.server.system.apps.App;
 import ru.cubos.server.system.views.containers.LinearContainer;
 
 public abstract class View {
+    private App appParent;
+
+    public App getAppParent() {
+        return appParent;
+    }
+
+    public void setAppParent(App appParent) {
+        this.appParent = appParent;
+    }
+
+    public Runnable getOnClickListener() {
+        return onClickListener;
+    }
+
+    public void setOnClickListener(Runnable onClickListener, App app) {
+        this.onClickListener = onClickListener;
+        app.addEventView(this);
+    }
+
     public enum SizeSource{
         SIZE_SOURCE_CONTENT,
         SIZE_SOURCE_FIXED,
@@ -23,6 +43,41 @@ public abstract class View {
         ALIGN_HORIZONTAL_LEFT,
         ALIGN_HORIZONTAL_RIGHT,
         ALIGN_HORIZONTAL_CENTER
+    }
+
+    protected int render_x; // Position on rendered image, used for listeners
+    protected int render_y; // Position on rendered image, used for listeners
+    int render_height; // Size on rendered image, used for listeners
+    int render_width; // Size on rendered image, used for listeners
+
+    public int getRenderX(){
+        return render_x;
+    }
+    public int getRenderY(){
+        return render_y;
+    }
+    public int getRenderHeight(){
+        return render_height;
+    }
+    public int getRenderWidth(){
+        return render_width;
+    }
+
+    public void recountPositionOnRenderImage(int x, int y){
+        this.render_x += x;
+        this.render_y += y;
+
+        //if(getId()!=null) System.out.println("Recount " + getId() + ": " + this.content_x + ", " + this.content_y + "    -    " + content_width + ", " + content_height);
+    }
+
+    public void setPositionOnRenderImage(int x, int y){
+        this.render_x = x;
+        this.render_y = y;
+    }
+
+    public void setSizeOnRenderImage(int width, int height){
+        this.render_width = width;
+        this.render_height = height;
     }
 
     private View.VerticalAlign verticalAlign = View.VerticalAlign.ALIGN_VERTICAL_TOP;
@@ -55,8 +110,17 @@ public abstract class View {
 
     protected BinaryImage renderImage;
 
+    private Runnable onClickListener;
+
     public View(){
 
+    }
+
+    public App getApp(){
+        if(getAppParent()==null){
+            if(getParent()==null) return null;
+            return getParent().getAppParent();
+        } else return getAppParent();
     }
 
     public void repaint(){
@@ -76,15 +140,6 @@ public abstract class View {
             width = renderImage.getWidth();
         }
     }
-    /*
-     * # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-     * # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-     * # #                                                                                             # #
-     * # #                                      GETTERS-N-SETTER                                       # #
-     * # #                                                                                             # #
-     * # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-     * # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-     * */
 
     public BinaryImage getRenderImage(){
         return renderImage;

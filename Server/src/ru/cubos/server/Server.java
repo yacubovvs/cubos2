@@ -10,8 +10,8 @@ import ru.cubos.server.system.StatusBar;
 import ru.cubos.server.system.Time;
 import ru.cubos.server.system.apps.App;
 import ru.cubos.server.system.apps.customApps.TestingApp;
+import ru.cubos.server.system.events.ClickEvent;
 
-import java.awt.*;
 import java.util.List;
 
 import static ru.cubos.server.helpers.ByteConverter.uByte;
@@ -109,7 +109,7 @@ public class Server {
             return true; // No data
         }
 
-        System.out.println("Server: received " + data.length + " bytes");
+        //System.out.println("Server: received " + data.length + " bytes");
 
         char x0, y0, x1, y1, r, g, b;
         int current_position = 0;
@@ -118,12 +118,13 @@ public class Server {
 
             switch (data[current_position]) {
 
-                case EVENT_CLICK:
+                case EVENT_CLICK_DOWN:
                     //System.out.println("Emulator client: drawing rectangle command");
                     x0 = ByteConverter.bytesToChar(uByte(data[current_position + 1]), uByte(data[current_position + 2]));
                     y0 = ByteConverter.bytesToChar(uByte(data[current_position + 3]), uByte(data[current_position + 4]));
 
                     System.out.println("Server: on screen click " + (int)x0 + ", " + (int)y0);
+                    currentApp.execEvent(new ClickEvent(x0, y0));
 
                     current_position += 5;
 
