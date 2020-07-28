@@ -10,7 +10,7 @@ import ru.cubos.server.system.StatusBar;
 import ru.cubos.server.system.Time;
 import ru.cubos.server.system.apps.App;
 import ru.cubos.server.system.apps.customApps.TestingApp;
-import ru.cubos.server.system.events.TouchDownEvent;
+import ru.cubos.server.system.events.TouchTapEvent;
 
 import java.util.List;
 
@@ -119,13 +119,13 @@ public class Server {
 
             switch (data[current_position]) {
 
-                case EVENT_TOUCH_DOWN:
+                case EVENT_TOUCH_TAP:
                     //System.out.println("Emulator client: drawing rectangle command");
                     x0 = ByteConverter.bytesToChar(uByte(data[current_position + 1]), uByte(data[current_position + 2]));
                     y0 = ByteConverter.bytesToChar(uByte(data[current_position + 3]), uByte(data[current_position + 4]));
 
                     System.out.println("Server: on screen click " + (int)x0 + ", " + (int)y0);
-                    currentApp.execEvent(new TouchDownEvent(x0, y0));
+                    currentApp.execEvent(new TouchTapEvent(x0, y0));
 
                     current_position += 5;
 

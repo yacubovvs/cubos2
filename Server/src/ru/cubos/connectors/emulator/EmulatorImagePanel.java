@@ -33,7 +33,7 @@ public class EmulatorImagePanel extends ImagePanel {
 
                 byte clickData[] = new byte[5];
 
-                clickData[0] = Protocol.EVENT_TOUCH_DOWN;
+                clickData[0] = Protocol.EVENT_TOUCH_TAP;
                 clickData[1] = x_bytes[0];
                 clickData[2] = x_bytes[1];
                 clickData[3] = y_bytes[0];

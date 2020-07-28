@@ -18,12 +18,12 @@ public abstract class View {
         this.appParent = appParent;
     }
 
-    public Runnable getOnTouchDownListener() {
-        return onTouchDownListener;
+    public Runnable getOnTouchTapListener() {
+        return onTouchTapListener;
     }
 
     public void setOnClickListener(Runnable onClickListener, App app) {
-        this.onTouchDownListener = onClickListener;
+        this.onTouchTapListener = onClickListener;
         app.addEventView(this);
     }
 
@@ -67,6 +67,22 @@ public abstract class View {
         this.onTouchZoomOutListener = onTouchZoomOutListener;
     }
 
+    public Runnable getOnTouchZoomFinishedListener() {
+        return onTouchZoomFinishedListener;
+    }
+
+    public void setOnTouchZoomFinishedListener(Runnable onTouchZoomFinishedListener) {
+        this.onTouchZoomFinishedListener = onTouchZoomFinishedListener;
+    }
+
+    public Runnable getOnTouchDownListener() {
+        return onTouchDownListener;
+    }
+
+    public void setOnTouchDownListener(Runnable onTouchDownListener) {
+        this.onTouchDownListener = onTouchDownListener;
+    }
+
     public enum SizeSource {
         SIZE_SOURCE_CONTENT,
         SIZE_SOURCE_FIXED,
@@ -86,6 +102,8 @@ public abstract class View {
         ALIGN_HORIZONTAL_CENTER
     }
 
+    private int render_x_def; // Position on rendered image, used for listeners
+    private int render_y_def; // Position on rendered image, used for listeners
     protected int render_x; // Position on rendered image, used for listeners
     protected int render_y; // Position on rendered image, used for listeners
     int render_height; // Size on rendered image, used for listeners
@@ -114,7 +132,14 @@ public abstract class View {
         //if(getId()!=null) System.out.println("Recount " + getId() + ": " + this.content_x + ", " + this.content_y + "    -    " + content_width + ", " + content_height);
     }
 
+    public void resetPositionsRenderImage(){
+        this.render_x = render_x_def;
+        this.render_y = render_y_def;
+    }
+
     public void setPositionOnRenderImage(int x, int y) {
+        this.render_x_def = x;
+        this.render_y_def = y;
         this.render_x = x;
         this.render_y = y;
     }
@@ -154,12 +179,14 @@ public abstract class View {
 
     protected BinaryImage renderImage;
 
-    private Runnable onTouchDownListener;
+    private Runnable onTouchTapListener;
     private Runnable onTouchUpListener;
+    private Runnable onTouchDownListener;
     private Runnable onTouchMoveListener;
     private Runnable onTouchMoveFinishedListener;
     private Runnable onTouchZoomInListener;
     private Runnable onTouchZoomOutListener;
+    private Runnable onTouchZoomFinishedListener;
 
     public View() {
 

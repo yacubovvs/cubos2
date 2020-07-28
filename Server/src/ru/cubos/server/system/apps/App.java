@@ -17,12 +17,11 @@ public abstract class App {
     private Server server;
     protected BinaryImage renderImage;
 
-    protected List<View> eventViews = new ArrayList<>();
+    protected List<View> eventTouchTapViews = new ArrayList<>();
 
     public void addEventView(View view){
-        eventViews.add(view);
+        eventTouchTapViews.add(view);
     }
-
 
     public App(Server server){
         baseContainer = new LinearContainer();
@@ -65,9 +64,13 @@ public abstract class App {
                 scrollBar.draw(server.display, 0, app_image_y, 0, server.settings.getStatusBarHeight());
             }
 
-            baseContainer.setPositionOnRenderImage(0, app_image_y);
+
+            baseContainer.resetPositionsRenderImage();
+            baseContainer.setPositionOnRenderImage(0, app_image_y - baseContainer.getScrollY());
             baseContainer.setSizeOnRenderImage(renderSize[0], renderSize[1] - app_image_y);
             baseContainer.recountRenderPositions();
+
+            baseContainer.setRepaintPending(false);
         }else{
             //server.display.drawImage(0, app_image_y, renderImage.getWidth(), app_image_height, renderImage);
             server.display.drawImage(0, app_image_y, renderImage);
@@ -135,7 +138,8 @@ public abstract class App {
         System.out.println("On scroll Y listener");
     }
 
-    public void execEvent(Event event ){
-        event.executeViewsHandlers(eventViews, this);
+    public void execEvent(Event event){
+        if(event.getType()== Event.Type.EVENT_TOUCH_TAP)
+        event.executeViewsHandlers(eventTouchTapViews, this);
     }
 }

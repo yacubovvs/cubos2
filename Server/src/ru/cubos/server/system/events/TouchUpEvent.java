@@ -11,7 +11,7 @@ public class TouchUpEvent extends Event{
 
     public TouchUpEvent(int x, int y){
         super();
-        this.setType(Type.EVENT_TOUCH_DOWN);
+        this.setType(Type.EVENT_TOUCH_TAP);
         setX(x);
         setY(y);
     }
@@ -22,7 +22,7 @@ public class TouchUpEvent extends Event{
         // Check clicks on elements
         for(View view: viewList){
             if(
-                    view.getOnTouchDownListener()!=null &&
+                    view.getOnTouchTapListener()!=null &&
                             view.isVisible() &&
                             view.getRenderX() <= x &&
                             view.getRenderY() <= y &&

@@ -12,7 +12,6 @@ public abstract class ContainerView extends View {
 
     private ScrollBar verticalScroll;
     protected ScrollBar horizontalScroll;
-    private int scrollPosition = 0;
 
     protected List<View> children = new ArrayList<>();
 
@@ -90,11 +89,12 @@ public abstract class ContainerView extends View {
         return children;
     }
 
-    public int getScrollPosition() {
-        return scrollPosition;
+    @Override
+    public void resetPositionsRenderImage(){
+        super.resetPositionsRenderImage();
+        for(View view: children){
+            view.resetPositionsRenderImage();
+        }
     }
 
-    public void setScrollPosition(int scrollPosition) {
-        this.scrollPosition = scrollPosition;
-    }
 }

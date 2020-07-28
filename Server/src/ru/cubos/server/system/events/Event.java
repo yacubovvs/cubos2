@@ -9,8 +9,9 @@ public abstract class Event{
     private Type type;
 
     public enum Type{
-        EVENT_TOUCH_DOWN,
+        EVENT_TOUCH_TAP,
         EVENT_TOUCH_UP,
+        EVENT_TOUCH_DOWN,
         EVENT_TOUCH_MOVE,
         EVENT_TOUCH_MOVE_FINISHED,
         EVENT_TOUCH_ZOOM_IN,
