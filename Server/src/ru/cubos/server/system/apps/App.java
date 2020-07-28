@@ -32,7 +32,7 @@ public abstract class App {
         //baseContainer.setHorizontalScrollEnable(this);
         baseContainer.setVerticalScrollEnable(this);
 
-        baseContainer.setScrollY(300);
+        baseContainer.setScrollY(0);
         //baseContainer.setScrollX(0);
 
         this.server = server;
@@ -125,6 +125,14 @@ public abstract class App {
         // TODO: Remove this in future
         this.repaint();
         getServer().sendFrameBufferCommands();
+    }
+
+    public void onScrollXListener(int coord_new, int coord_old){
+        System.out.println("On scroll X listener");
+    }
+
+    public void onScrollYListener(int coord_new, int coord_old){
+        System.out.println("On scroll Y listener");
     }
 
     public void execEvent(Event event ){

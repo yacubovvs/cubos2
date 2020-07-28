@@ -9,7 +9,12 @@ public abstract class Event{
     private Type type;
 
     public enum Type{
-        CLICK
+        EVENT_TOUCH_DOWN,
+        EVENT_TOUCH_UP,
+        EVENT_TOUCH_MOVE,
+        EVENT_TOUCH_MOVE_FINISHED,
+        EVENT_TOUCH_ZOOM_IN,
+        EVENT_TOUCH_ZOOM_OUT
     }
 
     public Type getType() {

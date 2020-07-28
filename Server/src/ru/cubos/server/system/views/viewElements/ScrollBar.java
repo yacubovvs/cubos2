@@ -111,7 +111,7 @@ public class ScrollBar {
             int scollBarPosition    = screenPosition - app.getServer().settings.getScrollbarWidth() - topOffset;
             if(scollBarPosition<0) scollBarPosition = 0;
             if(scollBarPosition>scollBarLength) scollBarPosition = scollBarLength;
-            System.out.println("Click on scrollbar " + scollBarPosition + " of " + scollBarLength);
+            //System.out.println("Click on scrollbar " + scollBarPosition + " of " + scollBarLength);
 
             int scoll = (int)((float)scollBarPosition/(float)scollBarLength*(float)(getTotalContentLength() - visibleContentlength));
 

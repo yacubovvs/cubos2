@@ -5,7 +5,6 @@ import ru.cubos.server.helpers.BinaryImage;
 import ru.cubos.server.helpers.Colors;
 import ru.cubos.server.system.apps.App;
 import ru.cubos.server.system.views.containers.LinearContainer;
-import ru.cubos.server.system.views.viewElements.ScrollBar;
 
 public abstract class View {
 
@@ -19,13 +18,53 @@ public abstract class View {
         this.appParent = appParent;
     }
 
-    public Runnable getOnClickListener() {
-        return onClickListener;
+    public Runnable getOnTouchDownListener() {
+        return onTouchDownListener;
     }
 
     public void setOnClickListener(Runnable onClickListener, App app) {
-        this.onClickListener = onClickListener;
+        this.onTouchDownListener = onClickListener;
         app.addEventView(this);
+    }
+
+    public Runnable getOnTouchUpListener() {
+        return onTouchUpListener;
+    }
+
+    public void setOnTouchUpListener(Runnable onTouchUpListener) {
+        this.onTouchUpListener = onTouchUpListener;
+    }
+
+    public Runnable getOnTouchMoveListener() {
+        return onTouchMoveListener;
+    }
+
+    public void setOnTouchMoveListener(Runnable onTouchMoveListener) {
+        this.onTouchMoveListener = onTouchMoveListener;
+    }
+
+    public Runnable getOnTouchMoveFinishedListener() {
+        return onTouchMoveFinishedListener;
+    }
+
+    public void setOnTouchMoveFinishedListener(Runnable onTouchMoveFinishedListener) {
+        this.onTouchMoveFinishedListener = onTouchMoveFinishedListener;
+    }
+
+    public Runnable getOnTouchZoomInListener() {
+        return onTouchZoomInListener;
+    }
+
+    public void setOnTouchZoomInListener(Runnable onTouchZoomInListener) {
+        this.onTouchZoomInListener = onTouchZoomInListener;
+    }
+
+    public Runnable getOnTouchZoomOutListener() {
+        return onTouchZoomOutListener;
+    }
+
+    public void setOnTouchZoomOutListener(Runnable onTouchZoomOutListener) {
+        this.onTouchZoomOutListener = onTouchZoomOutListener;
     }
 
     public enum SizeSource {
@@ -115,7 +154,12 @@ public abstract class View {
 
     protected BinaryImage renderImage;
 
-    private Runnable onClickListener;
+    private Runnable onTouchDownListener;
+    private Runnable onTouchUpListener;
+    private Runnable onTouchMoveListener;
+    private Runnable onTouchMoveFinishedListener;
+    private Runnable onTouchZoomInListener;
+    private Runnable onTouchZoomOutListener;
 
     public View() {
 

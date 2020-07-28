@@ -5,13 +5,13 @@ import ru.cubos.server.system.views.View;
 
 import java.util.List;
 
-public class ClickEvent extends Event{
+public class TouchDownEvent extends Event{
     private int x = 0;
     private int y = 0;
 
-    public ClickEvent(int x, int y){
+    public TouchDownEvent(int x, int y){
         super();
-        this.setType(Type.CLICK);
+        this.setType(Type.EVENT_TOUCH_DOWN);
         setX(x);
         setY(y);
     }
@@ -46,14 +46,14 @@ public class ClickEvent extends Event{
         // Check clicks on elements
         for(View view: viewList){
             if(
-                    view.getOnClickListener()!=null &&
+                    view.getOnTouchDownListener()!=null &&
                             view.isVisible() &&
                             view.getRenderX() <= x &&
                             view.getRenderY() <= y &&
                             view.getRenderX() + view.getWidth() > x &&
                             view.getRenderY() + view.getHeight() > y
             ){
-                view.getOnClickListener().run();
+                view.getOnTouchDownListener().run();
             }
         }
 

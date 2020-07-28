@@ -15,6 +15,9 @@ public class EmulatorImagePanel extends ImagePanel {
 
         MouseAdapter mouseAdapter = new MouseAdapter() {
 
+            byte[] startDragPosition = null;
+            byte[] lastPosition = null;
+
             @Override
             public void mousePressed(MouseEvent e) {
                 int xPosition;
@@ -36,11 +39,20 @@ public class EmulatorImagePanel extends ImagePanel {
                 clickData[3] = y_bytes[0];
                 clickData[4] = y_bytes[1];
 
+                startDragPosition = new byte[4];
+                startDragPosition[0] = x_bytes[0];
+                startDragPosition[1] = x_bytes[1];
+                startDragPosition[2] = y_bytes[0];
+                startDragPosition[3] = y_bytes[1];
+
                 emulator.getServer().transmitData(clickData);
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
+                startDragPosition = null;
+                lastPosition = null;
+
                 int xPosition;
                 int yPosition;
 
@@ -76,13 +88,29 @@ public class EmulatorImagePanel extends ImagePanel {
                 byte x_bytes[] = ByteConverter.char_to_bytes((char)(mousePosition[0]));
                 byte y_bytes[] = ByteConverter.char_to_bytes((char)(mousePosition[1]));
 
-                byte clickData[] = new byte[5];
+                byte clickData[] = new byte[13];
 
-                clickData[0] = Protocol.EVENT_TOUCH_MOVE;
-                clickData[1] = x_bytes[0];
-                clickData[2] = x_bytes[1];
-                clickData[3] = y_bytes[0];
-                clickData[4] = y_bytes[1];
+                if(lastPosition==null) lastPosition = startDragPosition;
+
+                clickData[0]  = Protocol.EVENT_TOUCH_MOVE;
+                clickData[1]  = x_bytes[0];
+                clickData[2]  = x_bytes[1];
+                clickData[3]  = y_bytes[0];
+                clickData[4]  = y_bytes[1];
+                clickData[5]  = lastPosition[0];
+                clickData[6]  = lastPosition[1];
+                clickData[7]  = lastPosition[2];
+                clickData[8]  = lastPosition[3];
+                clickData[9]  = startDragPosition[0];
+                clickData[10] = startDragPosition[1];
+                clickData[11] = startDragPosition[2];
+                clickData[12] = startDragPosition[3];
+
+                lastPosition = new byte[4];
+                lastPosition[0] = x_bytes[0];
+                lastPosition[1] = x_bytes[1];
+                lastPosition[2] = y_bytes[0];
+                lastPosition[3] = y_bytes[1];
 
                 emulator.getServer().transmitData(clickData);
             }
@@ -109,7 +137,7 @@ public class EmulatorImagePanel extends ImagePanel {
         if(xPosition>image.getWidth()) xPosition = image.getWidth();
         if(yPosition>image.getHeight()) yPosition = image.getHeight();
 
-        System.out.println("Emulator client: Click mouse position: " + (int)xPosition + ", " + (int)yPosition);
+        //System.out.println("Emulator client: Mouse move position: " + (int)xPosition + ", " + (int)yPosition);
 
         return new int[]{xPosition, yPosition};
     }

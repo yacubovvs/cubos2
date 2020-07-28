@@ -10,7 +10,7 @@ import ru.cubos.server.system.StatusBar;
 import ru.cubos.server.system.Time;
 import ru.cubos.server.system.apps.App;
 import ru.cubos.server.system.apps.customApps.TestingApp;
-import ru.cubos.server.system.events.ClickEvent;
+import ru.cubos.server.system.events.TouchDownEvent;
 
 import java.util.List;
 
@@ -111,6 +111,7 @@ public class Server {
 
         //System.out.println("Server: received " + data.length + " bytes");
 
+        char x_start, y_start;
         char x0, y0, x1, y1, r, g, b;
         int current_position = 0;
 
@@ -124,10 +125,28 @@ public class Server {
                     y0 = ByteConverter.bytesToChar(uByte(data[current_position + 3]), uByte(data[current_position + 4]));
 
                     System.out.println("Server: on screen click " + (int)x0 + ", " + (int)y0);
-                    currentApp.execEvent(new ClickEvent(x0, y0));
+                    currentApp.execEvent(new TouchDownEvent(x0, y0));
 
                     current_position += 5;
 
+                    break;
+                case EVENT_TOUCH_UP:
+                    x0      = ByteConverter.bytesToChar(uByte(data[current_position + 1]),  uByte(data[current_position + 2]));
+                    y0      = ByteConverter.bytesToChar(uByte(data[current_position + 3]),  uByte(data[current_position + 4]));
+                    current_position += 5;
+
+                    System.out.println("Server: on screen mouse up");
+                    break;
+                case EVENT_TOUCH_MOVE:
+                    x0      = ByteConverter.bytesToChar(uByte(data[current_position + 1]),  uByte(data[current_position + 2]));
+                    y0      = ByteConverter.bytesToChar(uByte(data[current_position + 3]),  uByte(data[current_position + 4]));
+                    x1      = ByteConverter.bytesToChar(uByte(data[current_position + 5]),  uByte(data[current_position + 6]));
+                    y1      = ByteConverter.bytesToChar(uByte(data[current_position + 7]),  uByte(data[current_position + 8]));
+                    x_start = ByteConverter.bytesToChar(uByte(data[current_position + 9]),  uByte(data[current_position + 10]));
+                    y_start = ByteConverter.bytesToChar(uByte(data[current_position + 11]), uByte(data[current_position + 12]));
+                    current_position += 13;
+
+                    System.out.println("Server: on screen move");
                     break;
                 default:
                     System.out.println("Server: unknown protocol command recieved");
