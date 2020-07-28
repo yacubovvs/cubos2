@@ -5,6 +5,7 @@ import ru.cubos.server.helpers.BinaryImage;
 import ru.cubos.server.system.events.Event;
 import ru.cubos.server.system.views.containers.LinearContainer;
 import ru.cubos.server.system.views.View;
+import ru.cubos.server.system.views.viewElements.ScrollBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +29,11 @@ public abstract class App {
         baseContainer.setServer(server);
         baseContainer.setAppParent(this);
 
-        baseContainer.setHorizontalScrollEnable(this);
+        //baseContainer.setHorizontalScrollEnable(this);
         baseContainer.setVerticalScrollEnable(this);
+
+        baseContainer.setScrollY(300);
+        //baseContainer.setScrollX(0);
 
         this.server = server;
     }
@@ -44,10 +48,10 @@ public abstract class App {
         int app_image_height = server.display.getHeight() - server.settings.getStatusBarHeight() - server.settings.getButtonBarHeight();
 
         if(this.repaintPending){
-            baseContainer.draw();
             setRepaintPending(false);
+            baseContainer.draw();
 
-            int renderSize[] = server.display.drawImage(0, app_image_y, renderImage.getWidth(), app_image_height, 0, 0, renderImage, null);
+            int renderSize[] = server.display.drawImage( -baseContainer.getScrollX(), app_image_y - baseContainer.getScrollY(), renderImage.getWidth() + baseContainer.getScrollX(), app_image_height + baseContainer.getScrollY(), baseContainer.getScrollX(), baseContainer.getScrollY(), renderImage, null);
 
             //Drawing scrolls
             if(baseContainer.isHorizontalScrollEnable() && renderImage.getWidth()>server.display.getWidth()){
@@ -55,15 +59,18 @@ public abstract class App {
             }
 
             if(baseContainer.isVerticalScrollEnable() && renderImage.getHeight()>app_image_height) {
-                baseContainer.getVerticalScroll().draw(server.display, 0, app_image_y, 0, server.settings.getStatusBarHeight());
+                ScrollBar scrollBar = baseContainer.getVerticalScroll();
+                scrollBar.setVisibleContentlength(app_image_height);
+                scrollBar.setTotalContentLength(renderImage.getHeight());
+                scrollBar.draw(server.display, 0, app_image_y, 0, server.settings.getStatusBarHeight());
             }
 
             baseContainer.setPositionOnRenderImage(0, app_image_y);
             baseContainer.setSizeOnRenderImage(renderSize[0], renderSize[1] - app_image_y);
             baseContainer.recountRenderPositions();
         }else{
-            //server.display.drawImage(0, app_image_y, renderImage);
-            server.display.drawImage(0, app_image_y, renderImage.getWidth(), app_image_height, renderImage);
+            //server.display.drawImage(0, app_image_y, renderImage.getWidth(), app_image_height, renderImage);
+            server.display.drawImage(0, app_image_y, renderImage);
         }
 
         return;
@@ -114,8 +121,10 @@ public abstract class App {
 
     public void setRepaintIsPending() {
         this.repaintPending = true;
+        this.baseContainer.setRepaintPending(true);
         // TODO: Remove this in future
         this.repaint();
+        getServer().sendFrameBufferCommands();
     }
 
     public void execEvent(Event event ){

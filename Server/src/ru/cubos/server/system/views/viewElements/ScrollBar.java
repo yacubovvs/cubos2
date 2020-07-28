@@ -10,8 +10,8 @@ public class ScrollBar {
     private boolean isVisible           = true;
     private boolean allwaysShow         = false;
     private int visibleContentlength    = 0;
-    private int totalContentlength      = 0;
-    private int screenScrool            = 0;
+    private int totalContentLength = 0;
+    private int screenScroll            = 0;
     private App app;
 
     public ScrollBar(Type type, App app){
@@ -19,20 +19,20 @@ public class ScrollBar {
         setApp(app);
     }
 
-    public int getTotalContentlength() {
-        return totalContentlength;
+    public int getTotalContentLength() {
+        return totalContentLength;
     }
 
-    public void setTotalContentlength(int totalContentlength) {
-        this.totalContentlength = totalContentlength;
+    public void setTotalContentLength(int totalContentLength) {
+        this.totalContentLength = totalContentLength;
     }
 
     public int getScreenScroll() {
-        return screenScrool;
+        return screenScroll;
     }
 
-    public void setScreenScrool(int screenScrool) {
-        this.screenScrool = screenScrool;
+    public void setScreenScroll(int screenScroll) {
+        this.screenScroll = screenScroll;
     }
 
     public int getActionWidth() {
@@ -101,6 +101,7 @@ public class ScrollBar {
     private int rightOffset;
     private int bottomOffset;
     private int scollBarLength;
+    private int pointOffsetHeight; //max height of drawind scrollbar
 
     public void onClick(int screenPosition) {
         if(type==Type.HORIZONTAL){
@@ -108,11 +109,13 @@ public class ScrollBar {
         }else{
             // Vertical
             int scollBarPosition    = screenPosition - app.getServer().settings.getScrollbarWidth() - topOffset;
-            //int scollBarLength      =
             if(scollBarPosition<0) scollBarPosition = 0;
             if(scollBarPosition>scollBarLength) scollBarPosition = scollBarLength;
             System.out.println("Click on scrollbar " + scollBarPosition + " of " + scollBarLength);
 
+            int scoll = (int)((float)scollBarPosition/(float)scollBarLength*(float)(getTotalContentLength() - visibleContentlength));
+
+            app.getBaseContainer().setScrollY(scoll);
             app.setRepaintIsPending();
             return;
         }
@@ -145,11 +148,13 @@ public class ScrollBar {
             image.drawLine( x0, y0, x1, y1, scrollColor);
 
             final int pointWidth  = server.settings.getScrollbarPointWidth();
-            final int pointHeight = 30;
-            final int pointOffset = 50;
+            final int pointHeight = (int)((float)scollBarLength * ((float)visibleContentlength/ (float)totalContentLength));
+            pointOffsetHeight = scollBarLength - pointHeight;
+            final int pointOffset = (int)((float)pointOffsetHeight * (float)getScreenScroll()/ (float)(getTotalContentLength() - visibleContentlength));
 
             image.drawRect(x0 - pointWidth/2, y0 + pointOffset, x0 + pointWidth/2, y0 + pointOffset + pointHeight, scrollColor, true);
         }
+
     }
 
     public boolean isVisible() {

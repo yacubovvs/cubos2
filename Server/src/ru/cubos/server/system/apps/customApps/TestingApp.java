@@ -26,7 +26,9 @@ public class TestingApp extends App {
         addIcon("Text editor" , "images//icons//apps//texteditor.png");
         addIcon("Paint" , "images//icons//apps//paint.png");
         addIcon("Server terminal" , "images//icons//apps//terminal.png");
-        for(int i=0; i<15; i++){
+        addIcon("Screen calibration" , "images//icons//apps//calibration.png");
+
+        for(int i=0; i<105; i++){
             addIcon("Application " + i, "images//icons//testicon.png");
         }
 

@@ -53,14 +53,22 @@ public abstract class ContainerView extends View {
         return horizontalScroll!=null;
     }
 
-    public int getScroolX(){
+    public int getScrollX(){
         if (isHorizontalScrollEnable()) return getHorizontalScroll().getScreenScroll();
         else return 0;
     }
 
-    public int getScroolY(){
+    public int getScrollY(){
         if (isVerticalScrollEnable()) return getVerticalScroll().getScreenScroll();
         else return 0;
+    }
+
+    public void setScrollX(int scroll){
+        if (isHorizontalScrollEnable()) getHorizontalScroll().setScreenScroll(scroll);
+    }
+
+    public void setScrollY(int scroll){
+        if (isVerticalScrollEnable()) getVerticalScroll().setScreenScroll(scroll);
     }
 
     public void add(View view){

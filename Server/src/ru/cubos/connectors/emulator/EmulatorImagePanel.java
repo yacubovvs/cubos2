@@ -13,10 +13,10 @@ public class EmulatorImagePanel extends ImagePanel {
         super();
         this.emulator = emulator;
 
-        addMouseListener(new MouseAdapter() {
+        MouseAdapter mouseAdapter = new MouseAdapter() {
 
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 int xPosition;
                 int yPosition;
 
@@ -30,7 +30,7 @@ public class EmulatorImagePanel extends ImagePanel {
 
                 byte clickData[] = new byte[5];
 
-                clickData[0] = Protocol.EVENT_CLICK_DOWN;
+                clickData[0] = Protocol.EVENT_TOUCH_DOWN;
                 clickData[1] = x_bytes[0];
                 clickData[2] = x_bytes[1];
                 clickData[3] = y_bytes[0];
@@ -38,7 +38,59 @@ public class EmulatorImagePanel extends ImagePanel {
 
                 emulator.getServer().transmitData(clickData);
             }
-        });
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                int xPosition;
+                int yPosition;
+
+                xPosition = (char)e.getX();
+                yPosition = (char)e.getY();
+
+                int mousePosition[] = getPositionOnScreen(xPosition, yPosition);
+
+                byte x_bytes[] = ByteConverter.char_to_bytes((char)(mousePosition[0]));
+                byte y_bytes[] = ByteConverter.char_to_bytes((char)(mousePosition[1]));
+
+                byte clickData[] = new byte[5];
+
+                clickData[0] = Protocol.EVENT_TOUCH_UP;
+                clickData[1] = x_bytes[0];
+                clickData[2] = x_bytes[1];
+                clickData[3] = y_bytes[0];
+                clickData[4] = y_bytes[1];
+
+                emulator.getServer().transmitData(clickData);
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                int xPosition;
+                int yPosition;
+
+                xPosition = (char)e.getX();
+                yPosition = (char)e.getY();
+
+                int mousePosition[] = getPositionOnScreen(xPosition, yPosition);
+
+                byte x_bytes[] = ByteConverter.char_to_bytes((char)(mousePosition[0]));
+                byte y_bytes[] = ByteConverter.char_to_bytes((char)(mousePosition[1]));
+
+                byte clickData[] = new byte[5];
+
+                clickData[0] = Protocol.EVENT_TOUCH_MOVE;
+                clickData[1] = x_bytes[0];
+                clickData[2] = x_bytes[1];
+                clickData[3] = y_bytes[0];
+                clickData[4] = y_bytes[1];
+
+                emulator.getServer().transmitData(clickData);
+            }
+        };
+
+        addMouseListener(mouseAdapter);
+        addMouseMotionListener(mouseAdapter);
+        addMouseWheelListener(mouseAdapter);
     }
 
     public int[] getPositionOnScreen(int xPosition, int yPosition){

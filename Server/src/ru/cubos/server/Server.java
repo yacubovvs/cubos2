@@ -74,7 +74,7 @@ public class Server {
 
     }
 
-    void sendFrameBufferCommands() {
+    public void sendFrameBufferCommands() {
         List<Display.DisplayCommand> commands = display.getFrame();
         //System.out.println("Server: Server loop");
 
@@ -118,7 +118,7 @@ public class Server {
 
             switch (data[current_position]) {
 
-                case EVENT_CLICK_DOWN:
+                case EVENT_TOUCH_DOWN:
                     //System.out.println("Emulator client: drawing rectangle command");
                     x0 = ByteConverter.bytesToChar(uByte(data[current_position + 1]), uByte(data[current_position + 2]));
                     y0 = ByteConverter.bytesToChar(uByte(data[current_position + 3]), uByte(data[current_position + 4]));

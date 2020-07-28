@@ -20,7 +20,7 @@ public class Settings {
      * */
 
     private int     scrollbarWidth          = 6;
-    private int scrollbarPointWidth = 6;
+    private int     scrollbarPointWidth     = 6;
     private byte[]  scrollbarColor          = Colors.COLOR_LIGHT_GRAY;
 
     /*
