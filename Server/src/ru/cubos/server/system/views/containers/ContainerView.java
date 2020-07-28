@@ -12,6 +12,7 @@ public abstract class ContainerView extends View {
 
     private ScrollBar verticalScroll;
     protected ScrollBar horizontalScroll;
+    private int scrollPosition = 0;
 
     protected List<View> children = new ArrayList<>();
 
@@ -20,8 +21,8 @@ public abstract class ContainerView extends View {
     }
     public abstract void recountRenderPositions();
 
-    public void setVerticalScrollEnable(){
-        verticalScroll = new ScrollBar(ScrollBar.Type.VERTICAL);
+    public void setVerticalScrollEnable(App app){
+        verticalScroll = new ScrollBar(ScrollBar.Type.VERTICAL, app);
     }
 
     public void setVerticalScrollDisable(){
@@ -32,8 +33,8 @@ public abstract class ContainerView extends View {
         return verticalScroll!=null;
     }
 
-    public void setHorizontalScrollEnable(){
-        horizontalScroll = new ScrollBar(ScrollBar.Type.HORIZONTAL);
+    public void setHorizontalScrollEnable(App app){
+        horizontalScroll = new ScrollBar(ScrollBar.Type.HORIZONTAL, app);
     }
 
     public void setHorizontalScrollDisable(){
@@ -50,6 +51,16 @@ public abstract class ContainerView extends View {
 
     public boolean isHorizontalScrollEnable(){
         return horizontalScroll!=null;
+    }
+
+    public int getScroolX(){
+        if (isHorizontalScrollEnable()) return getHorizontalScroll().getScreenScroll();
+        else return 0;
+    }
+
+    public int getScroolY(){
+        if (isVerticalScrollEnable()) return getVerticalScroll().getScreenScroll();
+        else return 0;
     }
 
     public void add(View view){
@@ -71,4 +82,11 @@ public abstract class ContainerView extends View {
         return children;
     }
 
+    public int getScrollPosition() {
+        return scrollPosition;
+    }
+
+    public void setScrollPosition(int scrollPosition) {
+        this.scrollPosition = scrollPosition;
+    }
 }

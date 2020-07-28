@@ -14,6 +14,7 @@ public class EmulatorImagePanel extends ImagePanel {
         this.emulator = emulator;
 
         addMouseListener(new MouseAdapter() {
+
             @Override
             public void mouseClicked(MouseEvent e) {
                 int xPosition;
@@ -22,25 +23,10 @@ public class EmulatorImagePanel extends ImagePanel {
                 xPosition = (char)e.getX();
                 yPosition = (char)e.getY();
 
-                if(verticalOffset){
-                    yPosition -= offsetSize;
-                }else{
-                    xPosition -= offsetSize;
-                }
+                int mousePosition[] = getPositionOnScreen(xPosition, yPosition);
 
-                if(xPosition<0) xPosition = 0;
-                if(yPosition<0) yPosition = 0;
-
-                xPosition /= scale_k;
-                yPosition /= scale_k;
-
-                if(xPosition>image.getWidth()) xPosition = image.getWidth();
-                if(yPosition>image.getHeight()) yPosition = image.getHeight();
-
-                System.out.println("Emulator client: Click mouse position: " + (int)xPosition + ", " + (int)yPosition);
-
-                byte x_bytes[] = ByteConverter.char_to_bytes((char)(xPosition));
-                byte y_bytes[] = ByteConverter.char_to_bytes((char)(yPosition));
+                byte x_bytes[] = ByteConverter.char_to_bytes((char)(mousePosition[0]));
+                byte y_bytes[] = ByteConverter.char_to_bytes((char)(mousePosition[1]));
 
                 byte clickData[] = new byte[5];
 
@@ -51,9 +37,28 @@ public class EmulatorImagePanel extends ImagePanel {
                 clickData[4] = y_bytes[1];
 
                 emulator.getServer().transmitData(clickData);
-
             }
         });
+    }
 
+    public int[] getPositionOnScreen(int xPosition, int yPosition){
+        if(verticalOffset){
+            yPosition -= offsetSize;
+        }else{
+            xPosition -= offsetSize;
+        }
+
+        if(xPosition<0) xPosition = 0;
+        if(yPosition<0) yPosition = 0;
+
+        xPosition /= scale_k;
+        yPosition /= scale_k;
+
+        if(xPosition>image.getWidth()) xPosition = image.getWidth();
+        if(yPosition>image.getHeight()) yPosition = image.getHeight();
+
+        System.out.println("Emulator client: Click mouse position: " + (int)xPosition + ", " + (int)yPosition);
+
+        return new int[]{xPosition, yPosition};
     }
 }

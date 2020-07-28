@@ -387,20 +387,27 @@ public class BinaryImage {
         return drawImage(x0, y0, binaryImage.getWidth(), binaryImage.getHeight(), binaryImage, alfaColor);
     }
 
-    public int[] drawImage(int x0, int y0, int x1, int y1, BinaryImage binaryImage){
-        return drawImage(x0, y0, x1, y1, binaryImage, null);
+    public int[] drawImage(int x0, int y0, int x_max_limit, int y_max_limit, BinaryImage binaryImage){
+        return drawImage(x0, y0, x_max_limit, y_max_limit, binaryImage, null);
     }
 
-    public int[] drawImage(int x0, int y0, int x1, int y1, BinaryImage binaryImage, byte[] alfaColor){
+    public int[] drawImage(int x0, int y0, int x_max_limit, int y_max_limit, BinaryImage binaryImage, byte[] alfaColor){
+        return drawImage(x0, y0, x_max_limit, y_max_limit, 0, 0, binaryImage, alfaColor);
+    }
+
+    public int[] drawImage(int x0, int y0, int x_max_limit, int y_max_limit, int x_min_limit, int y_min_limit, BinaryImage binaryImage, byte[] alfaColor){
 
         // x1 and y1 - maximum of image drawing (limits)
 
         byte[] imagepixel;
-        int x_limit = Math.min(x1, Math.min(binaryImage.getWidth(), getWidth() - x0));
-        int y_limit = Math.min(y1, Math.min(binaryImage.getHeight(), getHeight() - y0));
+        int x_limit = Math.min(x_max_limit, Math.min(binaryImage.getWidth(), getWidth() - x0));
+        int y_limit = Math.min(y_max_limit, Math.min(binaryImage.getHeight(), getHeight() - y0));
 
-        for (int x=Math.max(-x0, 0); x<x_limit; x++){
-            for (int y=Math.max(-y0, 0); y<y_limit; y++) {
+        int x_start = Math.max(Math.max(-x0, 0), x_min_limit);
+        int y_start = Math.max(Math.max(-y0, 0), y_min_limit);
+
+        for (int x=x_start; x<x_limit; x++){
+            for (int y=y_start; y<y_limit; y++) {
                 imagepixel = binaryImage.getColorPixel(x,y);
                 if(
                         alfaColor == null ||

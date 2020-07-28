@@ -1,5 +1,6 @@
 package ru.cubos.server.system.events;
 
+import ru.cubos.server.system.apps.App;
 import ru.cubos.server.system.views.View;
 
 import java.util.List;
@@ -19,6 +20,6 @@ public abstract class Event{
         this.type = type;
     }
 
-    public abstract void executeViewsHandlers(List<View> viewList);
+    public abstract void executeViewsHandlers(List<View> viewList, App app);
 
 }

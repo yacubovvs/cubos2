@@ -28,10 +28,14 @@ public abstract class App {
         baseContainer.setServer(server);
         baseContainer.setAppParent(this);
 
-        baseContainer.setHorizontalScrollEnable();
-        baseContainer.setVerticalScrollEnable();
+        baseContainer.setHorizontalScrollEnable(this);
+        baseContainer.setVerticalScrollEnable(this);
 
         this.server = server;
+    }
+
+    public Server getServer(){
+        return this.server;
     }
 
     public void repaint(){
@@ -43,15 +47,15 @@ public abstract class App {
             baseContainer.draw();
             setRepaintPending(false);
 
-            int renderSize[] = server.display.drawImage(0, app_image_y, renderImage.getWidth(), app_image_height, renderImage);
+            int renderSize[] = server.display.drawImage(0, app_image_y, renderImage.getWidth(), app_image_height, 0, 0, renderImage, null);
 
             //Drawing scrolls
             if(baseContainer.isHorizontalScrollEnable() && renderImage.getWidth()>server.display.getWidth()){
-                baseContainer.getHorizontalScroll().draw(server, server.display, 0, app_image_y, 0, server.settings.getStatusBarHeight());
+                baseContainer.getHorizontalScroll().draw(server.display, 0, app_image_y, 0, server.settings.getStatusBarHeight());
             }
 
             if(baseContainer.isVerticalScrollEnable() && renderImage.getHeight()>app_image_height) {
-                baseContainer.getVerticalScroll().draw(server, server.display, 0, app_image_y, 0, server.settings.getStatusBarHeight());
+                baseContainer.getVerticalScroll().draw(server.display, 0, app_image_y, 0, server.settings.getStatusBarHeight());
             }
 
             baseContainer.setPositionOnRenderImage(0, app_image_y);
@@ -104,11 +108,17 @@ public abstract class App {
         return repaintPending;
     }
 
-    public void setRepaintPending(boolean repaintPending) {
+    protected void setRepaintPending(boolean repaintPending) {
         this.repaintPending = repaintPending;
     }
 
+    public void setRepaintIsPending() {
+        this.repaintPending = true;
+        // TODO: Remove this in future
+        this.repaint();
+    }
+
     public void execEvent(Event event ){
-        event.executeViewsHandlers(eventViews);
+        event.executeViewsHandlers(eventViews, this);
     }
 }
