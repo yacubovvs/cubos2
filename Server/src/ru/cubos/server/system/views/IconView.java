@@ -46,6 +46,8 @@ public class IconView extends View {
     public void draw() {
         renderImage = new BinaryImage(getWidth(), icon.getHeight() + getPaddingTop() + getMarginTop() + getMarginBottom() + getPaddingBottom());
 
+        drawBackGround();
+
         if(getHorizontalAlign()==View.HorizontalAlign.ALIGN_HORIZONTAL_LEFT) {
             renderImage.drawImage(getMarginLeft() + getPaddingLeft(), getMarginTop() + getPaddingTop(), icon, alfaColor);
         }else if(getHorizontalAlign()==View.HorizontalAlign.ALIGN_HORIZONTAL_RIGHT){

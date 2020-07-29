@@ -15,7 +15,8 @@ public abstract class Event{
         EVENT_TOUCH_MOVE,
         EVENT_TOUCH_MOVE_FINISHED,
         EVENT_TOUCH_ZOOM_IN,
-        EVENT_TOUCH_ZOOM_OUT
+        EVENT_TOUCH_ZOOM_OUT,
+        EVENT_TOUCH_LONG,
     }
 
     public Type getType() {

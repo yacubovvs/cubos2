@@ -17,6 +17,8 @@ public class TestingApp extends App {
     public TestingApp(Server server){
         super(server);
 
+        getBaseContainer().setBackgroundColor(new byte[]{-96, -96, -96});
+
         tabelContainer = new TabelContainer(TabelContainer.TableType.FIXED_ROWS,3);
         tabelContainer.setMarginTop(15);
 

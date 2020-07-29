@@ -17,6 +17,11 @@ public abstract class App {
     private Server server;
     protected BinaryImage renderImage;
 
+    private int leftOffset;
+    private int topOffset;
+    private int rightOffset;
+    private int bottomOffset;
+
     protected List<View> eventTouchTapViews = new ArrayList<>();
 
     public void addEventView(View view){
@@ -34,6 +39,11 @@ public abstract class App {
         baseContainer.setScrollY(0);
         //baseContainer.setScrollX(0);
 
+        setLeftOffset(0);
+        setRightOffset(0);
+        setTopOffset(server.settings.getStatusBarHeight());
+        setBottomOffset(server.settings.getButtonBarHeight());
+
         this.server = server;
     }
 
@@ -43,37 +53,43 @@ public abstract class App {
 
     public void repaint(){
 
-        int app_image_y = server.settings.getStatusBarHeight();
-        int app_image_height = server.display.getHeight() - server.settings.getStatusBarHeight() - server.settings.getButtonBarHeight();
-
         if(this.repaintPending){
             setRepaintPending(false);
             baseContainer.draw();
 
-            int renderSize[] = server.display.drawImage( -baseContainer.getScrollX(), app_image_y - baseContainer.getScrollY(), renderImage.getWidth() + baseContainer.getScrollX(), app_image_height + baseContainer.getScrollY(), baseContainer.getScrollX(), baseContainer.getScrollY(), renderImage, null);
+            int renderSize[] = server.display.drawImage(
+                    getLeftOffset()-baseContainer.getScrollX(),
+                    getTopOffset() - baseContainer.getScrollY(),
+                    renderImage.getWidth() + baseContainer.getScrollX(),
+                    getWindowHeight() + baseContainer.getScrollY(),
+                    0 + baseContainer.getScrollX(),
+                    0 + baseContainer.getScrollY(),
+                    renderImage, null);
 
             //Drawing scrolls
             if(baseContainer.isHorizontalScrollEnable() && renderImage.getWidth()>server.display.getWidth()){
-                baseContainer.getHorizontalScroll().draw(server.display, 0, app_image_y, 0, server.settings.getStatusBarHeight());
+                baseContainer.getHorizontalScroll().draw(server.display, 0, getTopOffset(), 0, server.settings.getStatusBarHeight());
             }
 
-            if(baseContainer.isVerticalScrollEnable() && renderImage.getHeight()>app_image_height) {
+            if(baseContainer.isVerticalScrollEnable() && renderImage.getHeight()>getWindowHeight()) {
                 ScrollBar scrollBar = baseContainer.getVerticalScroll();
-                scrollBar.setVisibleContentlength(app_image_height);
+                scrollBar.setVisibleContentlength(getWindowHeight());
                 scrollBar.setTotalContentLength(renderImage.getHeight());
-                scrollBar.draw(server.display, 0, app_image_y, 0, server.settings.getStatusBarHeight());
+                scrollBar.draw(server.display, getLeftOffset(), getTopOffset(), getRightOffset(), getBottomOffset());
+
+                //int leftOffset, int topOffset, int rightOffset, int bottomOffset
             }
 
 
             baseContainer.resetPositionsRenderImage();
-            baseContainer.setPositionOnRenderImage(0, app_image_y - baseContainer.getScrollY());
-            baseContainer.setSizeOnRenderImage(renderSize[0], renderSize[1] - app_image_y);
+            baseContainer.setPositionOnRenderImage(0, getTopOffset() - baseContainer.getScrollY());
+            baseContainer.setSizeOnRenderImage(renderSize[0], renderSize[1] - getTopOffset());
             baseContainer.recountRenderPositions();
 
             baseContainer.setRepaintPending(false);
         }else{
             //server.display.drawImage(0, app_image_y, renderImage.getWidth(), app_image_height, renderImage);
-            server.display.drawImage(0, app_image_y, renderImage);
+            server.display.drawImage(0, getTopOffset(), renderImage);
         }
 
         return;
@@ -141,5 +157,45 @@ public abstract class App {
     public void execEvent(Event event){
         if(event.getType()== Event.Type.EVENT_TOUCH_TAP)
         event.executeViewsHandlers(eventTouchTapViews, this);
+    }
+
+    public int getLeftOffset() {
+        return leftOffset;
+    }
+
+    public void setLeftOffset(int leftOffset) {
+        this.leftOffset = leftOffset;
+    }
+
+    public int getTopOffset() {
+        return topOffset;
+    }
+
+    public void setTopOffset(int topOffset) {
+        this.topOffset = topOffset;
+    }
+
+    public int getRightOffset() {
+        return rightOffset;
+    }
+
+    public void setRightOffset(int rightOffset) {
+        this.rightOffset = rightOffset;
+    }
+
+    public int getBottomOffset() {
+        return bottomOffset;
+    }
+
+    public void setBottomOffset(int bottomOffset) {
+        this.bottomOffset = bottomOffset;
+    }
+
+    public int getWindowWidth(){
+        return getServer().display.getWidth() - getLeftOffset() - getRightOffset();
+    }
+
+    public int getWindowHeight(){
+        return getServer().display.getHeight() - getTopOffset() - getBottomOffset();
     }
 }

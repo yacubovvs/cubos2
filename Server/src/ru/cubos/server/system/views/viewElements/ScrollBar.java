@@ -139,10 +139,11 @@ public class ScrollBar {
 
         }else{
             // Vertical
+            //final int x0 = display.getWidth()-scrollSize - leftOffset;
             final int x0 = display.getWidth()-scrollSize - leftOffset;
             final int y0 = scrollSize + topOffset;
             final int x1 = display.getWidth()-scrollSize - rightOffset;
-            final int y1 = display.getHeight()-scrollSize - bottomOffset;
+            final int y1 = y0 + app.getWindowHeight()-scrollSize*2;
 
             scollBarLength = y1 - y0;
             image.drawLine( x0, y0, x1, y1, scrollColor);

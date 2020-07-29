@@ -83,6 +83,14 @@ public abstract class View {
         this.onTouchDownListener = onTouchDownListener;
     }
 
+    public Runnable getOnTouchZoomLongListener() {
+        return onTouchZoomLongListener;
+    }
+
+    public void setOnTouchZoomLongListener(Runnable onTouchZoomLongListener) {
+        this.onTouchZoomLongListener = onTouchZoomLongListener;
+    }
+
     public enum SizeSource {
         SIZE_SOURCE_CONTENT,
         SIZE_SOURCE_FIXED,
@@ -187,6 +195,7 @@ public abstract class View {
     private Runnable onTouchZoomInListener;
     private Runnable onTouchZoomOutListener;
     private Runnable onTouchZoomFinishedListener;
+    private Runnable onTouchZoomLongListener;
 
     public View() {
 
@@ -312,7 +321,8 @@ public abstract class View {
             return width;
         } else if (getWidth_source() == View.SizeSource.SIZE_SOURCE_K) {
             if (getParent() != null) return (int) (getParent().getWidth() * width_k);
-            else return (int) (server.display.getWidth() * width_k);
+            //else return (int) (server.display.getWidth() * width_k);
+            else return (int) (getApp().getWindowWidth() * width_k);
         } else if (getWidth_source() == View.SizeSource.SIZE_SOURCE_PARENT) {
             if (getParent() != null) {
                 if (getParent().isLinearContainer()) {
@@ -321,7 +331,8 @@ public abstract class View {
                     }
                 }
                 return (int) (getParent().getWidth());
-            } else return (int) (server.display.getWidth());
+            //} else return (int) (server.display.getWidth());
+            } else return (int) (getApp().getWindowWidth());
             //}else if (getWidth_source()==SIZE_SOURCE_CONTENT){ //TODO: Make it later, width by content size
         } else {
             return getParent().getWidth();
