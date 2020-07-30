@@ -23,6 +23,9 @@ public abstract class App {
     private int rightOffset;
     private int bottomOffset;
 
+    private boolean haveXScroll;
+    private boolean haveYScroll;
+
     private HashMap<Event.Type, List<View>> eventViewLists = new HashMap<>();
     public List<View> getEventList(Event.Type type){
         return eventViewLists.get(type);
@@ -39,6 +42,7 @@ public abstract class App {
     }
 
     public App(Server server){
+        this.server = server;
         baseContainer = new LinearContainer();
         baseContainer.setServer(server);
         baseContainer.setAppParent(this);
@@ -54,7 +58,6 @@ public abstract class App {
         setTopOffset(server.settings.getStatusBarHeight());
         setBottomOffset(server.settings.getButtonBarHeight());
 
-        this.server = server;
     }
 
     public Server getServer(){
@@ -76,8 +79,11 @@ public abstract class App {
                     0 + baseContainer.getScrollY(),
                     renderImage, null);
 
+            setHaveXScroll(renderImage.getWidth()>getWindowWidth());
+            setHaveYScroll(renderImage.getHeight()>getWindowHeight());
+
             //Drawing scrolls
-            if(baseContainer.isHorizontalScrollEnable() && renderImage.getWidth()>server.display.getWidth()){
+            if(baseContainer.isHorizontalScrollEnable() && renderImage.getWidth()>getWindowWidth()){
                 baseContainer.getHorizontalScroll().draw(server.display, 0, getTopOffset(), 0, server.settings.getStatusBarHeight());
             }
 
@@ -101,9 +107,9 @@ public abstract class App {
             //server.display.drawImage(0, app_image_y, renderImage.getWidth(), app_image_height, renderImage);
             server.display.drawImage(0, getTopOffset(), renderImage);
         }
-
         return;
     }
+
 
 
     /*
@@ -206,5 +212,37 @@ public abstract class App {
 
     public int getWindowHeight(){
         return getServer().display.getHeight() - getTopOffset() - getBottomOffset();
+    }
+
+    public boolean isHaveXScroll() {
+        return haveXScroll;
+    }
+
+    public void setHaveXScroll(boolean haveXScroll) {
+        this.haveXScroll = haveXScroll;
+    }
+
+    public boolean isHaveYScroll() {
+        return haveYScroll;
+    }
+
+    public void setHaveYScroll(boolean haveYScroll) {
+        this.haveYScroll = haveYScroll;
+    }
+
+    public int getScrollX(){
+        return getBaseContainer().getScrollX();
+    }
+
+    public int getScrollY(){
+        return getBaseContainer().getScrollY();
+    }
+
+    public void setScrollX(int scroll){
+        getBaseContainer().setScrollX(scroll);
+    }
+
+    public void setScrollY(int scroll){
+        getBaseContainer().setScrollY(scroll);
     }
 }

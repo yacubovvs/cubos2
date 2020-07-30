@@ -24,6 +24,7 @@ public class Settings {
     private int     scrollbarTouchActiveArea    = scrollbarWidth + scrollbarPointWidth + 10;
     private byte[]  scrollbarColor              = Colors.COLOR_LIGHT_GRAY;
     private boolean dragScollBarEnable          = true;
+    private boolean scrollingByContentDrag      = true;
 
     /*
     *
@@ -212,5 +213,13 @@ public class Settings {
 
     public void setScrollbarTouchActiveArea(int scrollbarTouchActiveArea) {
         this.scrollbarTouchActiveArea = scrollbarTouchActiveArea;
+    }
+
+    public boolean isScrollingByContentDrag() {
+        return scrollingByContentDrag;
+    }
+
+    public void setScrollingByContentDrag(boolean scrollingByContentDrag) {
+        this.scrollingByContentDrag = scrollingByContentDrag;
     }
 }
