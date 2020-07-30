@@ -10,6 +10,8 @@ import ru.cubos.server.system.StatusBar;
 import ru.cubos.server.system.Time;
 import ru.cubos.server.system.apps.App;
 import ru.cubos.server.system.apps.customApps.TestingApp;
+import ru.cubos.server.system.events.TouchDownEvent;
+import ru.cubos.server.system.events.TouchMoveEvent;
 import ru.cubos.server.system.events.TouchTapEvent;
 
 import java.util.List;
@@ -124,7 +126,7 @@ public class Server {
                     x0 = ByteConverter.bytesToChar(uByte(data[current_position + 1]), uByte(data[current_position + 2]));
                     y0 = ByteConverter.bytesToChar(uByte(data[current_position + 3]), uByte(data[current_position + 4]));
 
-                    System.out.println("Server: on screen click " + (int)x0 + ", " + (int)y0);
+                    //System.out.println("Server: on screen click " + (int)x0 + ", " + (int)y0);
                     currentApp.execEvent(new TouchTapEvent(x0, y0));
 
                     current_position += 5;
@@ -135,7 +137,15 @@ public class Server {
                     y0      = ByteConverter.bytesToChar(uByte(data[current_position + 3]),  uByte(data[current_position + 4]));
                     current_position += 5;
 
-                    System.out.println("Server: on screen mouse up");
+                    //System.out.println("Server: on screen mouse up");
+                    break;
+                case EVENT_TOUCH_DOWN:
+                    x0      = ByteConverter.bytesToChar(uByte(data[current_position + 1]),  uByte(data[current_position + 2]));
+                    y0      = ByteConverter.bytesToChar(uByte(data[current_position + 3]),  uByte(data[current_position + 4]));
+                    current_position += 5;
+
+                    //System.out.println("Server: on screen mouse down");
+                    currentApp.execEvent(new TouchDownEvent(x0, y0));
                     break;
                 case EVENT_TOUCH_MOVE:
                     x0      = ByteConverter.bytesToChar(uByte(data[current_position + 1]),  uByte(data[current_position + 2]));
@@ -146,7 +156,8 @@ public class Server {
                     y_start = ByteConverter.bytesToChar(uByte(data[current_position + 11]), uByte(data[current_position + 12]));
                     current_position += 13;
 
-                    System.out.println("Server: on screen move");
+                    //System.out.println("Server: on screen move");
+                    currentApp.execEvent(new TouchMoveEvent(x0, y0, x1, y1, x_start, y_start));
                     break;
                 default:
                     System.out.println("Server: unknown protocol command recieved");

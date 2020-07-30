@@ -4,6 +4,7 @@ import ru.cubos.server.Server;
 import ru.cubos.server.helpers.BinaryImage;
 import ru.cubos.server.helpers.Colors;
 import ru.cubos.server.system.apps.App;
+import ru.cubos.server.system.events.Event;
 import ru.cubos.server.system.views.containers.LinearContainer;
 
 public abstract class View {
@@ -22,73 +23,81 @@ public abstract class View {
         return onTouchTapListener;
     }
 
-    public void setOnClickListener(Runnable onClickListener, App app) {
+    public void setOnTouchTapListener(Runnable onClickListener, App app) {
         this.onTouchTapListener = onClickListener;
-        app.addEventView(this);
+        app.addEventView(this, Event.Type.EVENT_TOUCH_TAP);
     }
 
     public Runnable getOnTouchUpListener() {
         return onTouchUpListener;
     }
 
-    public void setOnTouchUpListener(Runnable onTouchUpListener) {
+    public void setOnTouchUpListener(Runnable onTouchUpListener, App app) {
         this.onTouchUpListener = onTouchUpListener;
+        app.addEventView(this, Event.Type.EVENT_TOUCH_UP);
     }
 
     public Runnable getOnTouchMoveListener() {
         return onTouchMoveListener;
     }
 
-    public void setOnTouchMoveListener(Runnable onTouchMoveListener) {
+    public void setOnTouchMoveListener(Runnable onTouchMoveListener, App app) {
         this.onTouchMoveListener = onTouchMoveListener;
+        app.addEventView(this, Event.Type.EVENT_TOUCH_MOVE);
     }
 
     public Runnable getOnTouchMoveFinishedListener() {
         return onTouchMoveFinishedListener;
     }
 
-    public void setOnTouchMoveFinishedListener(Runnable onTouchMoveFinishedListener) {
+    public void setOnTouchMoveFinishedListener(Runnable onTouchMoveFinishedListener, App app) {
         this.onTouchMoveFinishedListener = onTouchMoveFinishedListener;
+        app.addEventView(this, Event.Type.EVENT_TOUCH_MOVE_FINISHED);
     }
 
     public Runnable getOnTouchZoomInListener() {
         return onTouchZoomInListener;
     }
 
-    public void setOnTouchZoomInListener(Runnable onTouchZoomInListener) {
+    public void setOnTouchZoomInListener(Runnable onTouchZoomInListener, App app) {
         this.onTouchZoomInListener = onTouchZoomInListener;
+        app.addEventView(this, Event.Type.EVENT_TOUCH_ZOOM_IN);
     }
 
     public Runnable getOnTouchZoomOutListener() {
         return onTouchZoomOutListener;
     }
 
-    public void setOnTouchZoomOutListener(Runnable onTouchZoomOutListener) {
+    public void setOnTouchZoomOutListener(Runnable onTouchZoomOutListener, App app) {
         this.onTouchZoomOutListener = onTouchZoomOutListener;
+        app.addEventView(this, Event.Type.EVENT_TOUCH_ZOOM_OUT);
     }
 
     public Runnable getOnTouchZoomFinishedListener() {
         return onTouchZoomFinishedListener;
     }
 
-    public void setOnTouchZoomFinishedListener(Runnable onTouchZoomFinishedListener) {
+    public void setOnTouchZoomFinishedListener(Runnable onTouchZoomFinishedListener, App app) {
         this.onTouchZoomFinishedListener = onTouchZoomFinishedListener;
+        app.addEventView(this, Event.Type.EVENT_TOUCH_ZOOM_FINISHED);
     }
 
     public Runnable getOnTouchDownListener() {
         return onTouchDownListener;
     }
 
-    public void setOnTouchDownListener(Runnable onTouchDownListener) {
+    public void setOnTouchDownListener(Runnable onTouchDownListener, App app) {
         this.onTouchDownListener = onTouchDownListener;
+        app.addEventView(this, Event.Type.EVENT_TOUCH_DOWN);
     }
 
-    public Runnable getOnTouchZoomLongListener() {
-        return onTouchZoomLongListener;
+    public Runnable getOnTouchLongListener() {
+        return onTouchLongListener;
     }
 
-    public void setOnTouchZoomLongListener(Runnable onTouchZoomLongListener) {
-        this.onTouchZoomLongListener = onTouchZoomLongListener;
+    public void setOnTouchLongListener(Runnable onTouchLongListener, App app) {
+        this.onTouchLongListener = onTouchLongListener;
+        app.addEventView(this, Event.Type.EVENT_TOUCH_LONG);
     }
 
     public enum SizeSource {
@@ -195,7 +204,7 @@ public abstract class View {
     private Runnable onTouchZoomInListener;
     private Runnable onTouchZoomOutListener;
     private Runnable onTouchZoomFinishedListener;
-    private Runnable onTouchZoomLongListener;
+    private Runnable onTouchLongListener;
 
     public View() {
 

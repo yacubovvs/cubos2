@@ -47,7 +47,7 @@ public class MainMenu extends App {
         VerticalContainer appContainer = new VerticalContainer();
 
         appContainer.setId(name);
-        appContainer.setOnClickListener(() -> {
+        appContainer.setOnTouchTapListener(() -> {
             System.out.println("OnClick listener ID: " + name);
         }, this);
 

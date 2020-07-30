@@ -13,6 +13,7 @@ public class ScrollBar {
     private int totalContentLength = 0;
     private int screenScroll            = 0;
     private App app;
+    private int pointHeight;
 
     public ScrollBar(Type type, App app){
         this.type = type;
@@ -36,7 +37,7 @@ public class ScrollBar {
     }
 
     public int getActionWidth() {
-        return getApp().getServer().settings.getScrollbarPointWidth()/2 + getApp().getServer().settings.getScrollbarPointWidth()-1;
+        return getApp().getServer().settings.getScrollbarTouchActiveArea();
     }
 
     public App getApp() {
@@ -103,19 +104,19 @@ public class ScrollBar {
     private int scollBarLength;
     private int pointOffsetHeight; //max height of drawind scrollbar
 
-    public void onClick(int screenPosition) {
+    public void onClick(int tapPosition) {
         if(type==Type.HORIZONTAL){
             // Horizontal - later
         }else{
             // Vertical
-            int scollBarPosition    = screenPosition - app.getServer().settings.getScrollbarWidth() - topOffset;
+            int scollBarPosition = tapPosition - app.getServer().settings.getScrollbarWidth() - topOffset - pointHeight/2;
             if(scollBarPosition<0) scollBarPosition = 0;
-            if(scollBarPosition>scollBarLength) scollBarPosition = scollBarLength;
+            if(scollBarPosition>scollBarLength - pointHeight) scollBarPosition = scollBarLength - pointHeight;
             //System.out.println("Click on scrollbar " + scollBarPosition + " of " + scollBarLength);
 
-            int scoll = (int)((float)scollBarPosition/(float)scollBarLength*(float)(getTotalContentLength() - visibleContentlength));
+            int scroll = (int)((float)scollBarPosition/(float)(scollBarLength - pointHeight)*(float)(getTotalContentLength() - visibleContentlength));
 
-            app.getBaseContainer().setScrollY(scoll);
+            app.getBaseContainer().setScrollY(scroll);
             app.setRepaintIsPending();
             return;
         }
@@ -149,7 +150,7 @@ public class ScrollBar {
             image.drawLine( x0, y0, x1, y1, scrollColor);
 
             final int pointWidth  = server.settings.getScrollbarPointWidth();
-            final int pointHeight = (int)((float)scollBarLength * ((float)visibleContentlength/ (float)totalContentLength));
+            pointHeight = (int)((float)scollBarLength * ((float)visibleContentlength/ (float)totalContentLength));
             pointOffsetHeight = scollBarLength - pointHeight;
             final int pointOffset = (int)((float)pointOffsetHeight * (float)getScreenScroll()/ (float)(getTotalContentLength() - visibleContentlength));
 

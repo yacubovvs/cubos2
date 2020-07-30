@@ -15,8 +15,11 @@ public class EmulatorImagePanel extends ImagePanel {
 
         MouseAdapter mouseAdapter = new MouseAdapter() {
 
-            byte[] startDragPosition = null;
+            byte[] startPosition = null;
             byte[] lastPosition = null;
+            int[] startPositionCoords = null;
+
+            final char minClickPositionDiff = 5; // If position between touch down and touch up less then N, it is tab, else drag
 
             @Override
             public void mousePressed(MouseEvent e) {
@@ -33,25 +36,25 @@ public class EmulatorImagePanel extends ImagePanel {
 
                 byte clickData[] = new byte[5];
 
-                clickData[0] = Protocol.EVENT_TOUCH_TAP;
+                clickData[0] = Protocol.EVENT_TOUCH_DOWN;
                 clickData[1] = x_bytes[0];
                 clickData[2] = x_bytes[1];
                 clickData[3] = y_bytes[0];
                 clickData[4] = y_bytes[1];
 
-                startDragPosition = new byte[4];
-                startDragPosition[0] = x_bytes[0];
-                startDragPosition[1] = x_bytes[1];
-                startDragPosition[2] = y_bytes[0];
-                startDragPosition[3] = y_bytes[1];
+                startPositionCoords = mousePosition;
+
+                startPosition = new byte[4];
+                startPosition[0] = x_bytes[0];
+                startPosition[1] = x_bytes[1];
+                startPosition[2] = y_bytes[0];
+                startPosition[3] = y_bytes[1];
 
                 emulator.getServer().transmitData(clickData);
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                startDragPosition = null;
-                lastPosition = null;
 
                 int xPosition;
                 int yPosition;
@@ -66,6 +69,24 @@ public class EmulatorImagePanel extends ImagePanel {
 
                 byte clickData[] = new byte[5];
 
+                if(Math.abs(mousePosition[0] - startPositionCoords[0])<minClickPositionDiff && Math.abs(mousePosition[1] - startPositionCoords[1])<minClickPositionDiff){
+                    clickData[0] = Protocol.EVENT_TOUCH_TAP;
+                    clickData[1] = x_bytes[0];
+                    clickData[2] = x_bytes[1];
+                    clickData[3] = y_bytes[0];
+                    clickData[4] = y_bytes[1];
+
+                    emulator.getServer().transmitData(clickData);
+                }else{
+                    clickData[0] = Protocol.EVENT_TOUCH_MOVE_FINISHED;
+                    clickData[1] = x_bytes[0];
+                    clickData[2] = x_bytes[1];
+                    clickData[3] = y_bytes[0];
+                    clickData[4] = y_bytes[1];
+
+                    emulator.getServer().transmitData(clickData);
+                }
+
                 clickData[0] = Protocol.EVENT_TOUCH_UP;
                 clickData[1] = x_bytes[0];
                 clickData[2] = x_bytes[1];
@@ -73,6 +94,9 @@ public class EmulatorImagePanel extends ImagePanel {
                 clickData[4] = y_bytes[1];
 
                 emulator.getServer().transmitData(clickData);
+
+                startPosition = null;
+                lastPosition = null;
             }
 
             @Override
@@ -90,7 +114,7 @@ public class EmulatorImagePanel extends ImagePanel {
 
                 byte clickData[] = new byte[13];
 
-                if(lastPosition==null) lastPosition = startDragPosition;
+                if(lastPosition==null) lastPosition = startPosition;
 
                 clickData[0]  = Protocol.EVENT_TOUCH_MOVE;
                 clickData[1]  = x_bytes[0];
@@ -101,10 +125,10 @@ public class EmulatorImagePanel extends ImagePanel {
                 clickData[6]  = lastPosition[1];
                 clickData[7]  = lastPosition[2];
                 clickData[8]  = lastPosition[3];
-                clickData[9]  = startDragPosition[0];
-                clickData[10] = startDragPosition[1];
-                clickData[11] = startDragPosition[2];
-                clickData[12] = startDragPosition[3];
+                clickData[9]  = startPosition[0];
+                clickData[10] = startPosition[1];
+                clickData[11] = startPosition[2];
+                clickData[12] = startPosition[3];
 
                 lastPosition = new byte[4];
                 lastPosition[0] = x_bytes[0];

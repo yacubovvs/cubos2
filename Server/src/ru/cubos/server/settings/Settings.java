@@ -19,9 +19,11 @@ public class Settings {
      *
      * */
 
-    private int     scrollbarWidth          = 6;
-    private int     scrollbarPointWidth     = 6;
-    private byte[]  scrollbarColor          = Colors.COLOR_LIGHT_GRAY;
+    private int     scrollbarWidth              = 6;
+    private int     scrollbarPointWidth         = 6;
+    private int     scrollbarTouchActiveArea    = scrollbarWidth + scrollbarPointWidth + 10;
+    private byte[]  scrollbarColor              = Colors.COLOR_LIGHT_GRAY;
+    private boolean dragScollBarEnable          = true;
 
     /*
     *
@@ -194,5 +196,21 @@ public class Settings {
 
     public void setScrollbarPointWidth(int scrollbarPointWidth) {
         this.scrollbarPointWidth = scrollbarPointWidth;
+    }
+
+    public boolean isDragScollBarEnable() {
+        return dragScollBarEnable;
+    }
+
+    public void setDragScollBarEnable(boolean dragScollBarEnable) {
+        this.dragScollBarEnable = dragScollBarEnable;
+    }
+
+    public int getScrollbarTouchActiveArea() {
+        return scrollbarTouchActiveArea;
+    }
+
+    public void setScrollbarTouchActiveArea(int scrollbarTouchActiveArea) {
+        this.scrollbarTouchActiveArea = scrollbarTouchActiveArea;
     }
 }

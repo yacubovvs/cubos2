@@ -9,8 +9,6 @@ import ru.cubos.server.system.views.View;
 import ru.cubos.server.system.views.containers.TabelContainer;
 import ru.cubos.server.system.views.containers.VerticalContainer;
 
-import java.io.IOException;
-
 public class TestingApp extends App {
     TabelContainer tabelContainer;
 
@@ -54,7 +52,7 @@ public class TestingApp extends App {
         VerticalContainer appContainer = new VerticalContainer();
 
         appContainer.setId(name);
-        appContainer.setOnClickListener(() -> {
+        appContainer.setOnTouchTapListener(() -> {
             System.out.println("OnClick listener ID: " + name);
         }, this);
 

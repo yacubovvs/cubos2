@@ -8,6 +8,7 @@ import ru.cubos.server.system.views.View;
 import ru.cubos.server.system.views.viewElements.ScrollBar;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public abstract class App {
@@ -22,10 +23,50 @@ public abstract class App {
     private int rightOffset;
     private int bottomOffset;
 
-    protected List<View> eventTouchTapViews = new ArrayList<>();
+    HashMap<Event.Type, List<View>> eventViewLists;
 
-    public void addEventView(View view){
-        eventTouchTapViews.add(view);
+
+    protected List<View> EVENT_TOUCH_TAP_Views = new ArrayList<>();
+    protected List<View> EVENT_TOUCH_UP_Views = new ArrayList<>();
+    protected List<View> EVENT_TOUCH_DOWN_Views = new ArrayList<>();
+    protected List<View> EVENT_TOUCH_MOVE_Views = new ArrayList<>();
+    protected List<View> EVENT_TOUCH_MOVE_FINISHED_Views = new ArrayList<>();
+    protected List<View> EVENT_TOUCH_ZOOM_IN_Views = new ArrayList<>();
+    protected List<View> EVENT_TOUCH_ZOOM_OUT_Views = new ArrayList<>();
+    protected List<View> EVENT_TOUCH_ZOOM_FINISHED_Views = new ArrayList<>();
+    protected List<View> EVENT_TOUCH_LONG_Views = new ArrayList<>();
+
+    public void addEventView(View view, Event.Type type){
+
+        switch(type){
+            case EVENT_TOUCH_TAP:
+                EVENT_TOUCH_TAP_Views.add(view);
+                break;
+            case EVENT_TOUCH_UP:
+                EVENT_TOUCH_UP_Views.add(view);
+                break;
+            case EVENT_TOUCH_DOWN:
+                EVENT_TOUCH_DOWN_Views.add(view);
+                break;
+            case EVENT_TOUCH_MOVE:
+                EVENT_TOUCH_MOVE_Views.add(view);
+                break;
+            case EVENT_TOUCH_MOVE_FINISHED:
+                EVENT_TOUCH_MOVE_FINISHED_Views.add(view);
+                break;
+            case EVENT_TOUCH_ZOOM_IN:
+                EVENT_TOUCH_ZOOM_IN_Views.add(view);
+                break;
+            case EVENT_TOUCH_ZOOM_OUT:
+                EVENT_TOUCH_ZOOM_OUT_Views.add(view);
+                break;
+            case EVENT_TOUCH_ZOOM_FINISHED:
+                EVENT_TOUCH_ZOOM_FINISHED_Views.add(view);
+                break;
+            case EVENT_TOUCH_LONG:
+                EVENT_TOUCH_LONG_Views.add(view);
+                break;
+        }
     }
 
     public App(Server server){
@@ -156,7 +197,7 @@ public abstract class App {
 
     public void execEvent(Event event){
         if(event.getType()== Event.Type.EVENT_TOUCH_TAP)
-        event.executeViewsHandlers(eventTouchTapViews, this);
+        event.executeViewsHandlers(EVENT_TOUCH_TAP_Views, this);
     }
 
     public int getLeftOffset() {

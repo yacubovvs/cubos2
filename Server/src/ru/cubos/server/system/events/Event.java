@@ -7,6 +7,15 @@ import java.util.List;
 
 public abstract class Event{
     private Type type;
+    private boolean preventEvent = false;
+
+    public boolean isPreventEvent() {
+        return preventEvent;
+    }
+
+    public void setPreventEvent(boolean preventEvent) {
+        this.preventEvent = preventEvent;
+    }
 
     public enum Type{
         EVENT_TOUCH_TAP,
@@ -16,6 +25,7 @@ public abstract class Event{
         EVENT_TOUCH_MOVE_FINISHED,
         EVENT_TOUCH_ZOOM_IN,
         EVENT_TOUCH_ZOOM_OUT,
+        EVENT_TOUCH_ZOOM_FINISHED,
         EVENT_TOUCH_LONG,
     }
 
