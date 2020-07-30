@@ -23,50 +23,19 @@ public abstract class App {
     private int rightOffset;
     private int bottomOffset;
 
-    HashMap<Event.Type, List<View>> eventViewLists;
-
-
-    protected List<View> EVENT_TOUCH_TAP_Views = new ArrayList<>();
-    protected List<View> EVENT_TOUCH_UP_Views = new ArrayList<>();
-    protected List<View> EVENT_TOUCH_DOWN_Views = new ArrayList<>();
-    protected List<View> EVENT_TOUCH_MOVE_Views = new ArrayList<>();
-    protected List<View> EVENT_TOUCH_MOVE_FINISHED_Views = new ArrayList<>();
-    protected List<View> EVENT_TOUCH_ZOOM_IN_Views = new ArrayList<>();
-    protected List<View> EVENT_TOUCH_ZOOM_OUT_Views = new ArrayList<>();
-    protected List<View> EVENT_TOUCH_ZOOM_FINISHED_Views = new ArrayList<>();
-    protected List<View> EVENT_TOUCH_LONG_Views = new ArrayList<>();
+    private HashMap<Event.Type, List<View>> eventViewLists = new HashMap<>();
+    public List<View> getEventList(Event.Type type){
+        return eventViewLists.get(type);
+    }
 
     public void addEventView(View view, Event.Type type){
-
-        switch(type){
-            case EVENT_TOUCH_TAP:
-                EVENT_TOUCH_TAP_Views.add(view);
-                break;
-            case EVENT_TOUCH_UP:
-                EVENT_TOUCH_UP_Views.add(view);
-                break;
-            case EVENT_TOUCH_DOWN:
-                EVENT_TOUCH_DOWN_Views.add(view);
-                break;
-            case EVENT_TOUCH_MOVE:
-                EVENT_TOUCH_MOVE_Views.add(view);
-                break;
-            case EVENT_TOUCH_MOVE_FINISHED:
-                EVENT_TOUCH_MOVE_FINISHED_Views.add(view);
-                break;
-            case EVENT_TOUCH_ZOOM_IN:
-                EVENT_TOUCH_ZOOM_IN_Views.add(view);
-                break;
-            case EVENT_TOUCH_ZOOM_OUT:
-                EVENT_TOUCH_ZOOM_OUT_Views.add(view);
-                break;
-            case EVENT_TOUCH_ZOOM_FINISHED:
-                EVENT_TOUCH_ZOOM_FINISHED_Views.add(view);
-                break;
-            case EVENT_TOUCH_LONG:
-                EVENT_TOUCH_LONG_Views.add(view);
-                break;
+        List<View> list = getEventList(type);
+        if(list==null){
+            list = new ArrayList<>();
+            eventViewLists.put(type, list);
         }
+
+        list.add(view);
     }
 
     public App(Server server){
@@ -196,8 +165,7 @@ public abstract class App {
     }
 
     public void execEvent(Event event){
-        if(event.getType()== Event.Type.EVENT_TOUCH_TAP)
-        event.executeViewsHandlers(EVENT_TOUCH_TAP_Views, this);
+        event.executeViewsHandlers(getEventList(event.getType()), this);
     }
 
     public int getLeftOffset() {

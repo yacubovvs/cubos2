@@ -101,7 +101,7 @@ public class Server {
 
             connector.transmitData(message);
         } else {
-            System.out.println("Server: no frame change");
+            //System.out.println("Server: no frame change");
         }
     }
 

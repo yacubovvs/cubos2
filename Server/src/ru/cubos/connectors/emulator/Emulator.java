@@ -62,7 +62,7 @@ public class Emulator extends JFrame implements Connector {
             return true; // No data
         }
 
-        System.out.println("Emulator client: data received " + data.length + " bytes");
+        //System.out.println("Emulator client: data received " + data.length + " bytes");
 
         char x0, y0, x1, y1, r, g, b;
         int current_position = 0;
