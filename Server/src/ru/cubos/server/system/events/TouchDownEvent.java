@@ -22,9 +22,10 @@ public class TouchDownEvent extends EventTouch {
 
         if(!isInWindowEvent(app)) return;
 
+
         // # # # # # # # # # # # # # # # # # # # SCROLLBARS EVENTS # # # # # # # # # # # # # # # # # # # # # # #
 
-        if(app.getServer().settings.isDragScollBarEnable()){
+        if(app.getServer().settings.isDragScrollBarEnable()){
             if(app.getBaseContainer().isVerticalScrollEnable()){
                 //Check touch on vertical scrollbar
                 if(x>app.getLeftOffset() + app.getWindowWidth() - app.getBaseContainer().getVerticalScroll().getActionWidth()){

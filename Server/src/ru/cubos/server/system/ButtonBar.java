@@ -16,7 +16,7 @@ public class ButtonBar {
     }
 
     public void paint(){
-        if (server.settings.isStatusBarEnable()){
+        if (server.settings.isButtonBarEnable()){
             server.display.drawRect(0,server.display.getHeight(), server.display.getWidth(), server.display.getHeight() - server.settings.getStatusBarHeight(), server.settings.getStatusBarColor(), true);
             String timeString = server.time.getCurrentTime();
 
@@ -37,8 +37,6 @@ public class ButtonBar {
             server.display.drawRect_custom(x_button1, y_button1 + server.settings.getButtonBarButtonSize()/2, x_button1, y_button1 + server.settings.getButtonBarButtonSize()/2, x_button1 + server.settings.getButtonBarButtonSize(), y_button1,x_button1 + server.settings.getButtonBarButtonSize(), y_button1 + server.settings.getButtonBarButtonSize(), server.settings.getButtonBarButtonsColor(),true);
             server.display.drawRect(x_button2, y_button2, x_button2 + server.settings.getButtonBarButtonSize(), y_button2 + server.settings.getButtonBarButtonSize(), server.settings.getButtonBarButtonsColor(),true);
             server.display.drawRect_custom(x_button3, y_button3, x_button3, y_button3, x_button3, y_button3 + server.settings.getButtonBarButtonSize(),x_button3 + server.settings.getButtonBarButtonSize(), y_button3 + server.settings.getButtonBarButtonSize()/2, server.settings.getButtonBarButtonsColor(),true);
-
-
 
             //server.display.drawString(time_x, time_y, timeString, server.settings.getStatusBarTextColor(), server.settings.getStatusBarTextSize());
 

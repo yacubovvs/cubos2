@@ -10,9 +10,7 @@ import ru.cubos.server.system.StatusBar;
 import ru.cubos.server.system.Time;
 import ru.cubos.server.system.apps.App;
 import ru.cubos.server.system.apps.customApps.TestingApp;
-import ru.cubos.server.system.events.TouchDownEvent;
-import ru.cubos.server.system.events.TouchMoveEvent;
-import ru.cubos.server.system.events.TouchTapEvent;
+import ru.cubos.server.system.events.*;
 
 import java.util.List;
 
@@ -138,6 +136,7 @@ public class Server {
                     current_position += 5;
 
                     //System.out.println("Server: on screen mouse up");
+                    currentApp.execEvent(new TouchUpEvent(x0, y0));
                     break;
                 case EVENT_TOUCH_DOWN:
                     x0      = ByteConverter.bytesToChar(uByte(data[current_position + 1]),  uByte(data[current_position + 2]));
@@ -158,6 +157,16 @@ public class Server {
 
                     //System.out.println("Server: on screen move");
                     currentApp.execEvent(new TouchMoveEvent(x0, y0, x1, y1, x_start, y_start));
+                    break;
+                case EVENT_TOUCH_MOVE_FINISHED:
+                    x0      = ByteConverter.bytesToChar(uByte(data[current_position + 1]),  uByte(data[current_position + 2]));
+                    y0      = ByteConverter.bytesToChar(uByte(data[current_position + 3]),  uByte(data[current_position + 4]));
+                    x_start = ByteConverter.bytesToChar(uByte(data[current_position + 5]),  uByte(data[current_position + 6]));
+                    y_start = ByteConverter.bytesToChar(uByte(data[current_position + 7]),  uByte(data[current_position + 8]));
+                    current_position += 9;
+
+                    //System.out.println("Server: on screen move");
+                    currentApp.execEvent(new TouchMoveFinishedEvent(x0, y0, x_start, y_start));
                     break;
                 default:
                     System.out.println("Server: unknown protocol command recieved");

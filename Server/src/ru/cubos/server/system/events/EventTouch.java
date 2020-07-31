@@ -9,17 +9,29 @@ public abstract class EventTouch extends Event {
     protected int x = 0;
     protected int y = 0;
 
+    public boolean isOnTitleBarEvent(App app){
+        if(
+            app.getServer().settings.isWindowMode()
+            && y <= app.getTopOffset()
+            && y > app.getTopOffset() - app.getServer().settings.getWindowTitleBarHeight()
+            && x > app.getLeftOffset()
+            && x < app.getRightOffset() + app.getWindowWidth()
+        ) return true;
+        else return false;
+    }
+
     public boolean isInWindowEvent(App app){
         if(
-                y > app.getTopOffset()
-                        && y < app.getBottomOffset() + app.getWindowHeight()
-                        && x > app.getLeftOffset()
-                        && x < app.getRightOffset() + app.getWindowWidth()
+            y > app.getTopOffset()
+            && y < app.getBottomOffset() + app.getWindowHeight()
+            && x > app.getLeftOffset()
+            && x < app.getRightOffset() + app.getWindowWidth()
         ) return true;
         else return false;
     }
 
     public void checkViewsForEvent(List<View> viewList){
+        if(viewList==null) return;
         for(View view: viewList){
             if(
                     view.getOnTouchTapListener()!=null &&

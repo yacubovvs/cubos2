@@ -67,9 +67,10 @@ public class EmulatorImagePanel extends ImagePanel {
                 byte x_bytes[] = ByteConverter.char_to_bytes((char)(mousePosition[0]));
                 byte y_bytes[] = ByteConverter.char_to_bytes((char)(mousePosition[1]));
 
-                byte clickData[] = new byte[5];
+                byte clickData[];
 
                 if(Math.abs(mousePosition[0] - startPositionCoords[0])<minClickPositionDiff && Math.abs(mousePosition[1] - startPositionCoords[1])<minClickPositionDiff){
+                    clickData = new byte[5];
                     clickData[0] = Protocol.EVENT_TOUCH_TAP;
                     clickData[1] = x_bytes[0];
                     clickData[2] = x_bytes[1];
@@ -78,15 +79,21 @@ public class EmulatorImagePanel extends ImagePanel {
 
                     emulator.getServer().transmitData(clickData);
                 }else{
+                    clickData = new byte[9];
                     clickData[0] = Protocol.EVENT_TOUCH_MOVE_FINISHED;
                     clickData[1] = x_bytes[0];
                     clickData[2] = x_bytes[1];
                     clickData[3] = y_bytes[0];
                     clickData[4] = y_bytes[1];
+                    clickData[5] = startPosition[0];
+                    clickData[6] = startPosition[1];
+                    clickData[7] = startPosition[2];
+                    clickData[8] = startPosition[3];
 
                     emulator.getServer().transmitData(clickData);
                 }
 
+                clickData = new byte[5];
                 clickData[0] = Protocol.EVENT_TOUCH_UP;
                 clickData[1] = x_bytes[0];
                 clickData[2] = x_bytes[1];

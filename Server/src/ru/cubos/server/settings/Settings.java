@@ -23,7 +23,7 @@ public class Settings {
     private int     scrollbarPointWidth         = 6;
     private int     scrollbarTouchActiveArea    = scrollbarWidth + scrollbarPointWidth + 10;
     private byte[]  scrollbarColor              = Colors.COLOR_LIGHT_GRAY;
-    private boolean dragScollBarEnable          = true;
+    private boolean dragScrollBarEnable         = true;
     private boolean scrollingByContentDrag      = true;
 
     /*
@@ -45,7 +45,7 @@ public class Settings {
      *
      * */
 
-    private boolean     buttonBarEnable         = true;
+    private boolean     buttonBarEnable         = false;
     private char        buttonBarHeight         = 32;
     private byte[]      buttonBarColor          = Colors.COLOR_LIGHT_GRAY;
     private byte[]      buttonBarButtonsColor   = Colors.COLOR_DARK_GRAY;
@@ -59,11 +59,12 @@ public class Settings {
      *
      * */
 
-    private boolean     windowMode              = true;
-    private int         windowBorderWidth       = 2;
-    private int         windowTitleHeight       = 30;
-    private byte[]      windowBorderColor       = Colors.COLOR_DARK_GRAY;
-    private byte[]      windowTitleColor        = Colors.COLOR_DARK_BLUE;
+    private boolean     windowMode                      = true;
+    private int         windowBorderWidth               = 2;
+    private int         windowBorderActiveOffsetWidth   = 2;
+    private int         windowTitleBarHeight            = 30;
+    private byte[]      windowBorderColor               = Colors.COLOR_DARK_GRAY;
+    private byte[]      windowTitleColor                = Colors.COLOR_DARK_BLUE;
 
 
     /*
@@ -174,7 +175,8 @@ public class Settings {
     }
 
     public char getButtonBarButtonSize() {
-        return buttonBarButtonSize;
+        if(isButtonBarEnable()) return buttonBarButtonSize;
+        else return 0;
     }
 
     public void setButtonBarButtonSize(char buttonBarButtonSize) {
@@ -213,12 +215,12 @@ public class Settings {
         this.scrollbarPointWidth = scrollbarPointWidth;
     }
 
-    public boolean isDragScollBarEnable() {
-        return dragScollBarEnable;
+    public boolean isDragScrollBarEnable() {
+        return dragScrollBarEnable;
     }
 
-    public void setDragScollBarEnable(boolean dragScollBarEnable) {
-        this.dragScollBarEnable = dragScollBarEnable;
+    public void setDragScrollBarEnable(boolean dragScrollBarEnable) {
+        this.dragScrollBarEnable = dragScrollBarEnable;
     }
 
     public int getScrollbarTouchActiveArea() {
@@ -254,14 +256,14 @@ public class Settings {
         this.windowBorderWidth = windowBorderWidth;
     }
 
-    public int getWindowTitleHeight() {
-        if(isWindowMode()) return windowTitleHeight;
+    public int getWindowTitleBarHeight() {
+        if(isWindowMode()) return windowTitleBarHeight;
         else return 0;
 
     }
 
-    public void setWindowTitleHeight(int windowTitleHeight) {
-        this.windowTitleHeight = windowTitleHeight;
+    public void setWindowTitleBarHeight(int windowTitleBarHeight) {
+        this.windowTitleBarHeight = windowTitleBarHeight;
     }
 
     public byte[] getWindowBorderColor() {
@@ -278,5 +280,13 @@ public class Settings {
 
     public void setWindowTitleColor(byte[] windowTitleColor) {
         this.windowTitleColor = windowTitleColor;
+    }
+
+    public int getWindowBorderActiveOffsetWidth() {
+        return windowBorderActiveOffsetWidth;
+    }
+
+    public void setWindowBorderActiveOffsetWidth(int windowBorderActiveOffsetWidth) {
+        this.windowBorderActiveOffsetWidth = windowBorderActiveOffsetWidth;
     }
 }

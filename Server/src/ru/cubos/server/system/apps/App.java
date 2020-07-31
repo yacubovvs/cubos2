@@ -2,14 +2,14 @@ package ru.cubos.server.system.apps;
 
 import ru.cubos.server.Server;
 import ru.cubos.server.helpers.BinaryImage;
+import ru.cubos.server.helpers.Colors;
 import ru.cubos.server.system.events.Event;
 import ru.cubos.server.system.views.IconView;
 import ru.cubos.server.system.views.TextView;
-import ru.cubos.server.system.views.containers.HorizontalContainer;
 import ru.cubos.server.system.views.containers.LinearContainer;
 import ru.cubos.server.system.views.View;
 import ru.cubos.server.system.views.viewElements.ScrollBar;
-import ru.cubos.server.system.views.viewElements.WindowTitle;
+import ru.cubos.server.system.views.viewElements.WindowTitleBar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,7 +46,17 @@ public abstract class App {
         list.add(view);
     }
 
-    WindowTitle windowTitle;
+    WindowTitleBar windowTitleBar;
+
+    public void move(int x, int y){
+        setLeftOffset( getLeftOffset() + x );
+        setRightOffset( getRightOffset() - x );
+
+        setTopOffset( getTopOffset() + y );
+        setBottomOffset( getBottomOffset() - y );
+
+        setRepaintIsPending();
+    }
 
     public App(Server server){
         this.server = server;
@@ -66,34 +76,34 @@ public abstract class App {
         setBottomOffset(server.settings.getButtonBarHeight());
 
         if(server.settings.isWindowMode()){
-            windowTitle = new WindowTitle();
-            windowTitle.setHeight(server.settings.getWindowTitleHeight());
-            windowTitle.setHorizontalScrollDisable();
-            windowTitle.setVerticalScrollDisable();
+            windowTitleBar = new WindowTitleBar();
+            windowTitleBar.setHeight(server.settings.getWindowTitleBarHeight());
+            windowTitleBar.setHorizontalScrollDisable();
+            windowTitleBar.setVerticalScrollDisable();
 
 
 
             IconView close_button       = new IconView("images//icons//close_button.png");
-            close_button.setMargin((server.settings.getWindowTitleHeight() - close_button.getIcon().getHeight())/2);
+            close_button.setMargin((server.settings.getWindowTitleBarHeight() - close_button.getIcon().getHeight())/2);
             close_button.setWidth_source(View.SizeSource.SIZE_SOURCE_CONTENT);
 
             IconView fullscreen_button  = new IconView("images//icons//fullscreen_button.png");
-            fullscreen_button.setMargin((server.settings.getWindowTitleHeight() - fullscreen_button.getIcon().getHeight())/2);
+            fullscreen_button.setMargin((server.settings.getWindowTitleBarHeight() - fullscreen_button.getIcon().getHeight())/2);
             fullscreen_button.setWidth_source(View.SizeSource.SIZE_SOURCE_CONTENT);
 
             IconView rollup_button      = new IconView("images//icons//rollup_button.png");
-            rollup_button.setMargin((server.settings.getWindowTitleHeight() - rollup_button.getIcon().getHeight())/2);
+            rollup_button.setMargin((server.settings.getWindowTitleBarHeight() - rollup_button.getIcon().getHeight())/2);
             rollup_button.setWidth_source(View.SizeSource.SIZE_SOURCE_CONTENT);
 
 
-            windowTitle.add(close_button);
-            windowTitle.add(fullscreen_button);
-            windowTitle.add(rollup_button);
-            windowTitle.setBackgroundColor(server.settings.getWindowTitleColor());
+            windowTitleBar.add(close_button);
+            windowTitleBar.add(fullscreen_button);
+            windowTitleBar.add(rollup_button);
+            windowTitleBar.setBackgroundColor(server.settings.getWindowTitleColor());
 
             TextView title = new TextView("Window title");
-            windowTitle.add(title);
-            windowTitle.setAppParent(this);
+            windowTitleBar.add(title);
+            windowTitleBar.setAppParent(this);
         }
 
     }
@@ -111,15 +121,19 @@ public abstract class App {
 
     public void repaint(){
 
+        // TODO: remove in multi app server +
+        getServer().display.drawRect(0, getServer().settings.getStatusBarHeight(), getServer().display.getWidth(), getServer().display.getHeight() - getServer().settings.getButtonBarHeight(), Colors.COLOR_BLACK, true);
+        //-
+
         if(this.repaintPending){
             setRepaintPending(false);
             baseContainer.draw();
 
-            renderImage = new BinaryImage(getWindowWidth() + 2*server.settings.getWindowBorderWidth(), getWindowHeight() + server.settings.getWindowBorderWidth()*2 + server.settings.getWindowTitleHeight());
+            renderImage = new BinaryImage(getWindowWidth() + 2*server.settings.getWindowBorderWidth(), getWindowHeight() + server.settings.getWindowBorderWidth()*2 + server.settings.getWindowTitleBarHeight());
 
             renderImage.drawImage(
                     server.settings.getWindowBorderWidth()-baseContainer.getScrollX(),
-                    server.settings.getWindowBorderWidth() + server.settings.getWindowTitleHeight()-baseContainer.getScrollY(),
+                    server.settings.getWindowBorderWidth() + server.settings.getWindowTitleBarHeight()-baseContainer.getScrollY(),
                     getWindowWidth() + baseContainer.getScrollX(),
                     getWindowHeight() + baseContainer.getScrollY(),
                     baseContainer.getScrollX(),
@@ -149,7 +163,7 @@ public abstract class App {
                 scrollBar.setVisibleContentlength(getWindowHeight());
                 scrollBar.setTotalContentLength(contentRenderImage.getHeight());
                 //scrollBar.draw(server.display, getLeftOffset(), getTopOffset(), getRightOffset(), getBottomOffset());
-                scrollBar.draw(renderImage, server.settings.getWindowBorderWidth(), server.settings.getWindowBorderWidth() + server.settings.getWindowTitleHeight(), server.settings.getWindowBorderWidth(), server.settings.getWindowBorderWidth());
+                scrollBar.draw(renderImage, server.settings.getWindowBorderWidth(), server.settings.getWindowBorderWidth() + server.settings.getWindowTitleBarHeight(), server.settings.getWindowBorderWidth(), server.settings.getWindowBorderWidth());
                 //scrollBar.draw(renderImage, 0, 0, 0, 0);
 
 
@@ -168,14 +182,14 @@ public abstract class App {
              */
             if(server.settings.isWindowMode()) {
                 drawWindowBorders(renderImage);
-                windowTitle.draw();
-                renderImage.drawImage(getServer().settings.getWindowBorderWidth(), getServer().settings.getWindowBorderWidth(), windowTitle.getRenderImage());
+                windowTitleBar.draw();
+                renderImage.drawImage(getServer().settings.getWindowBorderWidth(), getServer().settings.getWindowBorderWidth(), windowTitleBar.getRenderImage());
             }
 
 
             int renderSize[] = server.display.drawImage(
                     getLeftOffset() - server.settings.getWindowBorderWidth(),
-                    getTopOffset() - server.settings.getWindowBorderWidth() - server.settings.getWindowTitleHeight(),
+                    getTopOffset() - server.settings.getWindowBorderWidth() - server.settings.getWindowTitleBarHeight(),
 
                     renderImage, null);
 
@@ -187,7 +201,7 @@ public abstract class App {
             baseContainer.setRepaintPending(false);
         }else{
             //server.display.drawImage(0, app_image_y, renderImage.getWidth(), app_image_height, renderImage);
-            server.display.drawImage(getLeftOffset() - server.settings.getWindowBorderWidth(), getTopOffset() - server.settings.getWindowTitleHeight() - server.settings.getWindowBorderWidth(), renderImage);
+            server.display.drawImage(getLeftOffset() - server.settings.getWindowBorderWidth(), getTopOffset() - server.settings.getWindowTitleBarHeight() - server.settings.getWindowBorderWidth(), renderImage);
         }
         return;
     }

@@ -20,9 +20,14 @@ public class TouchTapEvent extends EventTouch {
 
     @Override
     public void executeViewsHandlers(List<View> viewList, App app) {
-        if (!isInWindowEvent(app)) return;
 
-        if(app.getServer().settings.isDragScollBarEnable()) {
+        if (!isInWindowEvent(app)){
+            if(app.getServer().settings.isWindowMode() && isOnTitleBarEvent(app)){
+                //System.out.println("On title bar touch");
+            }else return;
+        }
+
+        if(app.getServer().settings.isDragScrollBarEnable()) {
             if (app.getBaseContainer().isVerticalScrollEnable() || app.getBaseContainer().isHorizontalScrollEnable()) {
                 //Check touch on vertical scrollbar
                 if (x > app.getLeftOffset() + app.getWindowWidth() - app.getBaseContainer().getVerticalScroll().getActionWidth()) {

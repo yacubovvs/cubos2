@@ -5,27 +5,14 @@ import ru.cubos.server.system.views.View;
 
 import java.util.List;
 
-public class TouchMoveEvent extends EventTouch {
+public class TouchMoveFinishedEvent extends EventTouch {
 
-    int x_last;
-    int y_last;
     int x_start;
     int y_start;
 
     @Override
     public void runViewEvent(View view) {
         view.getOnTouchDownListener();
-    }
-
-    public boolean isOnTitleBarEvent(App app){
-        if(
-                app.getServer().settings.isWindowMode()
-                        && y_last <= app.getTopOffset()
-                        && y_last > app.getTopOffset() - app.getServer().settings.getWindowTitleBarHeight()
-                        && x_last > app.getLeftOffset()
-                        && x_last < app.getRightOffset() + app.getWindowWidth()
-        ) return true;
-        else return false;
     }
 
     @Override
@@ -56,12 +43,10 @@ public class TouchMoveEvent extends EventTouch {
         }
     }
 
-    public TouchMoveEvent(int x, int y, int x_last, int y_last, int x_start, int y_start){
+    public TouchMoveFinishedEvent(int x, int y, int x_start, int y_start){
         super(x,y);
-        this.setType(Type.EVENT_TOUCH_MOVE);
+        this.setType(Type.EVENT_TOUCH_MOVE_FINISHED);
 
-        this.x_last     = x_last;
-        this.y_last     = y_last;
         this.x_start    = x_start;
         this.y_start    = y_start;
     }
@@ -69,15 +54,7 @@ public class TouchMoveEvent extends EventTouch {
     @Override
     public void executeViewsHandlers(List<View> viewList, App app) {
 
-        //if(!isInWindowEvent(app)) return;
-
-        if (!isInWindowEvent(app)){
-            if(app.getServer().settings.isWindowMode() && isOnTitleBarEvent(app)){
-                //System.out.println("On title bar touch move");
-                app.move(x - x_last,y - y_last);
-                return;
-            }else return;
-        }
+        if(!isInWindowEvent(app)) return;
 
         // # # # # # # # # # # # # # # # # # # # SCROLLBARS EVENTS # # # # # # # # # # # # # # # # # # # # # # #
         if(app.getServer().settings.isDragScrollBarEnable()) {
@@ -96,23 +73,7 @@ public class TouchMoveEvent extends EventTouch {
         }
         // # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-
         checkViewsForEvent(viewList);
-
-        if(isPreventEvent()) return;
-        // # # # # # # # # # # # # # # # # # # # CONTENT SCROLLING # # # # # # # # # # # # # # # # # # # # # # #
-        if(app.getServer().settings.isScrollingByContentDrag()) {
-            //System.out.println("Checking content scrolling");
-            if(app.isHasXScroll()){
-                // TODO: need to write
-            }
-            if(app.isHasYScroll() && (y_last - y)!=0){
-                //System.out.println("Y-scrolling");
-                app.setScrollY( app.getScrollY() + (y_last - y));
-                app.setRepaintIsPending();
-            }
-        }
-        // # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     }
 
