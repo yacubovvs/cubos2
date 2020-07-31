@@ -34,7 +34,7 @@ public class Server {
     }
 
     public static void startServerEmulator() {
-        Emulator emulator = new Emulator(320, 480);
+        Emulator emulator = new Emulator(640, 480);
         Server server = new Server(emulator);
         emulator.setServer(server);
 

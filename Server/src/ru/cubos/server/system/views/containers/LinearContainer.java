@@ -3,9 +3,6 @@ package ru.cubos.server.system.views.containers;
 import ru.cubos.server.helpers.BinaryImage;
 import ru.cubos.server.system.views.View;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class LinearContainer extends ContainerView {
 
     public enum Type{
@@ -78,7 +75,7 @@ public class LinearContainer extends ContainerView {
         }
 
         if(getAppParent()!=null){
-            getAppParent().setRenderImage(renderImage);
+            getAppParent().setContentRenderImage(renderImage);
         }
 
         //if (isHorizontalScrollEnable()) getHorizontalScroll().draw(getServer(), renderImage);

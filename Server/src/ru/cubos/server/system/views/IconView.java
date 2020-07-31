@@ -80,4 +80,12 @@ public class IconView extends View {
     public BinaryImage getIcon(){
         return icon;
     }
+
+    @Override
+    public int getWidth() {
+        if (getWidth_source() == SizeSource.SIZE_SOURCE_CONTENT) {
+            if(icon!=null) return icon.getWidth() + getPaddingLeftRight() + getMarginLeftRight();
+            else return icon.getWidth() + getPaddingLeftRight() + getMarginLeftRight();
+        }else return super.getWidth();
+    }
 }

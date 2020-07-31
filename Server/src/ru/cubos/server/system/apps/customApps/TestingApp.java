@@ -16,9 +16,15 @@ public class TestingApp extends App {
         super(server);
 
         getBaseContainer().setBackgroundColor(new byte[]{-96, -96, -96});
+        getBaseContainer().setId("BaseContainer");
 
-        tabelContainer = new TabelContainer(TabelContainer.TableType.FIXED_ROWS,3);
-        tabelContainer.setMarginTop(15);
+        setLeftOffset(50);
+        setRightOffset(50);
+        setTopOffset(100);
+        setBottomOffset(50);
+
+        tabelContainer = new TabelContainer(TabelContainer.TableType.FIXED_ROWS,5);
+        tabelContainer.setMargin(15);
 
         addIcon("Settings" , "images//icons//apps//settings.png");
         addIcon("Network" , "images//icons//apps//network.png");

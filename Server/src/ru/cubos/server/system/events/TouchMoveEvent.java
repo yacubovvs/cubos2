@@ -83,10 +83,10 @@ public class TouchMoveEvent extends EventTouch {
         // # # # # # # # # # # # # # # # # # # # CONTENT SCROLLING # # # # # # # # # # # # # # # # # # # # # # #
         if(app.getServer().settings.isScrollingByContentDrag()) {
             //System.out.println("Checking content scrolling");
-            if(app.isHaveXScroll()){
+            if(app.isHasXScroll()){
                 // TODO: need to write
             }
-            if(app.isHaveYScroll() && (y_last - y)!=0){
+            if(app.isHasYScroll() && (y_last - y)!=0){
                 //System.out.println("Y-scrolling");
                 app.setScrollY( app.getScrollY() + (y_last - y));
                 app.setRepaintIsPending();

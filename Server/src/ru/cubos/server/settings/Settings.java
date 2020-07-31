@@ -52,6 +52,20 @@ public class Settings {
     private char        buttonBarButtonSize     = 12;
     private char        buttonBarButtonMargin   = 70;
 
+
+    /*
+     *
+     *  WINDOW MODE
+     *
+     * */
+
+    private boolean     windowMode              = true;
+    private int         windowBorderWidth       = 2;
+    private int         windowTitleHeight       = 30;
+    private byte[]      windowBorderColor       = Colors.COLOR_DARK_GRAY;
+    private byte[]      windowTitleColor        = Colors.COLOR_DARK_BLUE;
+
+
     /*
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -221,5 +235,48 @@ public class Settings {
 
     public void setScrollingByContentDrag(boolean scrollingByContentDrag) {
         this.scrollingByContentDrag = scrollingByContentDrag;
+    }
+
+    public boolean isWindowMode() {
+        return windowMode;
+    }
+
+    public void setWindowMode(boolean windowMode) {
+        this.windowMode = windowMode;
+    }
+
+    public int getWindowBorderWidth() {
+        if(isWindowMode()) return windowBorderWidth;
+        else return 0;
+    }
+
+    public void setWindowBorderWidth(int windowBorderWidth) {
+        this.windowBorderWidth = windowBorderWidth;
+    }
+
+    public int getWindowTitleHeight() {
+        if(isWindowMode()) return windowTitleHeight;
+        else return 0;
+
+    }
+
+    public void setWindowTitleHeight(int windowTitleHeight) {
+        this.windowTitleHeight = windowTitleHeight;
+    }
+
+    public byte[] getWindowBorderColor() {
+        return windowBorderColor;
+    }
+
+    public void setWindowBorderColor(byte[] windowBorderColor) {
+        this.windowBorderColor = windowBorderColor;
+    }
+
+    public byte[] getWindowTitleColor() {
+        return windowTitleColor;
+    }
+
+    public void setWindowTitleColor(byte[] windowTitleColor) {
+        this.windowTitleColor = windowTitleColor;
     }
 }

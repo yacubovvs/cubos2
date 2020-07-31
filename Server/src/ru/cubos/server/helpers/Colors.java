@@ -7,6 +7,7 @@ public class Colors {
     public static final byte COLOR_RED[]                =  {    127,   -128,   -128     };
     public static final byte COLOR_GREEN[]              =  {   -128,    127,   -128     };
     public static final byte COLOR_BLUE[]               =  {   -128,   -128,    127     };
+    public static final byte COLOR_DARK_BLUE[]          =  {   -128,   -128,    0       };
     public static final byte COLOR_BLACK[]              =  {   -128,   -128,   -128     };
     public static final byte COLOR_WHITE[]              =  {    127,    127,    127     };
     public static final byte COLOR_GRAY[]               =  {    0,      0,      0       };

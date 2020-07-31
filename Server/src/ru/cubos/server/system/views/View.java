@@ -17,6 +17,7 @@ public abstract class View {
 
     public void setAppParent(App appParent) {
         this.appParent = appParent;
+        setServer(appParent.getServer());
     }
 
     public Runnable getOnTouchTapListener() {
@@ -100,6 +101,38 @@ public abstract class View {
         app.addEventView(this, Event.Type.EVENT_TOUCH_LONG);
     }
 
+    public int getBorderLeft() {
+        return borderLeft;
+    }
+
+    public void setBorderLeft(int borderLeft) {
+        this.borderLeft = borderLeft;
+    }
+
+    public int getBorderRight() {
+        return borderRight;
+    }
+
+    public void setBorderRight(int borderRight) {
+        this.borderRight = borderRight;
+    }
+
+    public int getBorderTop() {
+        return borderTop;
+    }
+
+    public void setBorderTop(int borderTop) {
+        this.borderTop = borderTop;
+    }
+
+    public int getBorderBottom() {
+        return borderBottom;
+    }
+
+    public void setBorderBottom(int borderBottom) {
+        this.borderBottom = borderBottom;
+    }
+
     public enum SizeSource {
         SIZE_SOURCE_CONTENT,
         SIZE_SOURCE_FIXED,
@@ -181,6 +214,10 @@ public abstract class View {
     private int paddingRight = 0;
     private int paddingTop = 0;
     private int paddingBottom = 0;
+    private int borderLeft = 0;
+    private int borderRight = 0;
+    private int borderTop = 0;
+    private int borderBottom = 0;
 
     private boolean repaintPending = true;
     private int height;
@@ -188,6 +225,7 @@ public abstract class View {
     private float width_k;
     private float height_k;
     private Server server;
+
 
     private byte[] backgroundColor = null;
 
@@ -321,32 +359,35 @@ public abstract class View {
     }
 
     public int getWidth() {
-        // SIZE_SOURCE_CONTENT = 0;
-        // SIZE_SOURCE_FIXED = 1;
-        // SIZE_SOURCE_PERCENT = 2;
-        // SIZE_SOURCE_PARENT = 3;
-
         if (getWidth_source() == View.SizeSource.SIZE_SOURCE_FIXED) {
             return width;
         } else if (getWidth_source() == View.SizeSource.SIZE_SOURCE_K) {
-            if (getParent() != null) return (int) (getParent().getWidth() * width_k);
-            //else return (int) (server.display.getWidth() * width_k);
+            if (getParent() != null) return (int) (getParent().getContentEnableAreaWidth() * width_k);
             else return (int) (getApp().getWindowWidth() * width_k);
         } else if (getWidth_source() == View.SizeSource.SIZE_SOURCE_PARENT) {
             if (getParent() != null) {
                 if (getParent().isLinearContainer()) {
                     if (((LinearContainer) getParent()).getType() == LinearContainer.Type.HORIZONTAL) {
-                        return (getParent().getWidth()) / (((LinearContainer) getParent()).getChildren().size());
+                        return (getParent().getContentEnableAreaWidth()) / (((LinearContainer) getParent()).getChildren().size());
                     }
                 }
-                return (int) (getParent().getWidth());
-            //} else return (int) (server.display.getWidth());
-            } else return (int) (getApp().getWindowWidth());
+                return (int) (getParent().getContentEnableAreaWidth());
+            } else{
+                return (int) (getApp().getWindowWidth());
+            }
             //}else if (getWidth_source()==SIZE_SOURCE_CONTENT){ //TODO: Make it later, width by content size
         } else {
-            return getParent().getWidth();
+            return getParent().getContentEnableAreaWidth();
         }
 
+    }
+
+    public int getContentEnableAreaWidth(){
+        return getWidth() - getMarginLeft() - getPaddingLeft() - getBorderLeft() - getMarginRight() - getPaddingRight() - getBorderRight();
+    }
+
+    public int getContentEnableAreaHeight(){
+        return getHeight() - getMarginTop() - getPaddingTop() - getBorderTop() - getMarginBottom() - getPaddingBottom() - getBorderBottom();
     }
 
     public void setWidth(int width) {
@@ -359,6 +400,13 @@ public abstract class View {
         setMarginTop(marging);
         setMarginLeft(marging);
         setMarginRight(marging);
+    }
+
+    public void setBorder(int border){
+        setBorderBottom(border);
+        setBorderTop(border);
+        setBorderLeft(border);
+        setBorderRight(border);
     }
 
     public Server getServer() {
@@ -381,7 +429,7 @@ public abstract class View {
         return width_source;
     }
 
-    protected void setWidth_source(View.SizeSource width_source) {
+    public void setWidth_source(View.SizeSource width_source) {
         this.width_source = width_source;
     }
 
@@ -499,5 +547,13 @@ public abstract class View {
 
     protected int getMarginTopBottom() {
         return getMarginBottom() + getMarginTop();
+    }
+
+    protected int getPaddingLeftRight() {
+        return getPaddingLeft() + getPaddingRight();
+    }
+
+    protected int getMarginLeftRight() {
+        return getMarginLeft() + getMarginRight();
     }
 }

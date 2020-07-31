@@ -131,19 +131,19 @@ public class ScrollBar {
         this.bottomOffset   = bottomOffset;
 
         final int scrollSize = server.settings.getScrollbarWidth();
-        final Display display = server.display;
+        //final Display display = server.display;
         final byte[] scrollColor = server.settings.getScrollbarColor();
 
         if(type==Type.HORIZONTAL){
             // Horizontal
-            image.drawLine(scrollSize + leftOffset, display.getHeight()-scrollSize - topOffset, display.getWidth()-scrollSize - rightOffset, display.getHeight()-scrollSize/2 - bottomOffset, scrollColor);
+            image.drawLine(scrollSize + leftOffset, image.getHeight()-scrollSize - topOffset, image.getWidth()-scrollSize - rightOffset, image.getHeight()-scrollSize/2 - bottomOffset, scrollColor);
 
         }else{
             // Vertical
-            //final int x0 = display.getWidth()-scrollSize - leftOffset;
-            final int x0 = display.getWidth()-scrollSize - leftOffset;
+            //final int x0 = image.getWidth()-scrollSize - leftOffset;
+            final int x0 = image.getWidth()-scrollSize - leftOffset;
             final int y0 = scrollSize + topOffset;
-            final int x1 = display.getWidth()-scrollSize - rightOffset;
+            final int x1 = image.getWidth()-scrollSize - rightOffset;
             final int y1 = y0 + app.getWindowHeight()-scrollSize*2;
 
             scollBarLength = y1 - y0;

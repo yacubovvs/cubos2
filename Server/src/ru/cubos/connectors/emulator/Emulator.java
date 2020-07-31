@@ -29,7 +29,7 @@ public class Emulator extends JFrame implements Connector {
         setScreenHeight(height);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        setSize(new Dimension(getScreenWidth() + 40,getScreenHeight() + 45));
+        setSize(new Dimension(getScreenWidth() + 40,getScreenHeight() + 60));
         image = new BufferedImage(getScreenWidth(), getScreenHeight(), BufferedImage.TYPE_INT_RGB);
         updateImage();
         setVisible(true);

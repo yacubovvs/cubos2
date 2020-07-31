@@ -3,9 +3,13 @@ package ru.cubos.server.system.apps;
 import ru.cubos.server.Server;
 import ru.cubos.server.helpers.BinaryImage;
 import ru.cubos.server.system.events.Event;
+import ru.cubos.server.system.views.IconView;
+import ru.cubos.server.system.views.TextView;
+import ru.cubos.server.system.views.containers.HorizontalContainer;
 import ru.cubos.server.system.views.containers.LinearContainer;
 import ru.cubos.server.system.views.View;
 import ru.cubos.server.system.views.viewElements.ScrollBar;
+import ru.cubos.server.system.views.viewElements.WindowTitle;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +20,7 @@ public abstract class App {
     private String appName = "";
     private boolean repaintPending = true;
     private Server server;
+    protected BinaryImage contentRenderImage;
     protected BinaryImage renderImage;
 
     private int leftOffset;
@@ -23,8 +28,8 @@ public abstract class App {
     private int rightOffset;
     private int bottomOffset;
 
-    private boolean haveXScroll;
-    private boolean haveYScroll;
+    private boolean hasXScroll;
+    private boolean hasYScroll;
 
     private HashMap<Event.Type, List<View>> eventViewLists = new HashMap<>();
     public List<View> getEventList(Event.Type type){
@@ -40,6 +45,8 @@ public abstract class App {
 
         list.add(view);
     }
+
+    WindowTitle windowTitle;
 
     public App(Server server){
         this.server = server;
@@ -58,10 +65,48 @@ public abstract class App {
         setTopOffset(server.settings.getStatusBarHeight());
         setBottomOffset(server.settings.getButtonBarHeight());
 
+        if(server.settings.isWindowMode()){
+            windowTitle = new WindowTitle();
+            windowTitle.setHeight(server.settings.getWindowTitleHeight());
+            windowTitle.setHorizontalScrollDisable();
+            windowTitle.setVerticalScrollDisable();
+
+
+
+            IconView close_button       = new IconView("images//icons//close_button.png");
+            close_button.setMargin((server.settings.getWindowTitleHeight() - close_button.getIcon().getHeight())/2);
+            close_button.setWidth_source(View.SizeSource.SIZE_SOURCE_CONTENT);
+
+            IconView fullscreen_button  = new IconView("images//icons//fullscreen_button.png");
+            fullscreen_button.setMargin((server.settings.getWindowTitleHeight() - fullscreen_button.getIcon().getHeight())/2);
+            fullscreen_button.setWidth_source(View.SizeSource.SIZE_SOURCE_CONTENT);
+
+            IconView rollup_button      = new IconView("images//icons//rollup_button.png");
+            rollup_button.setMargin((server.settings.getWindowTitleHeight() - rollup_button.getIcon().getHeight())/2);
+            rollup_button.setWidth_source(View.SizeSource.SIZE_SOURCE_CONTENT);
+
+
+            windowTitle.add(close_button);
+            windowTitle.add(fullscreen_button);
+            windowTitle.add(rollup_button);
+            windowTitle.setBackgroundColor(server.settings.getWindowTitleColor());
+
+            TextView title = new TextView("Window title");
+            windowTitle.add(title);
+            windowTitle.setAppParent(this);
+        }
+
     }
 
     public Server getServer(){
         return this.server;
+    }
+
+    public void drawWindowBorders(BinaryImage image){
+        for(int i=0; i<server.settings.getWindowBorderWidth(); i++) {
+            image.drawRect(i,i, image.getWidth()-1-i, image.getHeight()-1-i, server.settings.getWindowBorderColor());
+        }
+        //image.drawRect(server.settings.getWindowBorderWidth(), server.settings.getWindowBorderWidth(), image.getWidth()-server.settings.getWindowBorderWidth(), server.settings.getWindowTitleHeight(), server.settings.getWindowTitleColor(), true);
     }
 
     public void repaint(){
@@ -70,32 +115,69 @@ public abstract class App {
             setRepaintPending(false);
             baseContainer.draw();
 
+            renderImage = new BinaryImage(getWindowWidth() + 2*server.settings.getWindowBorderWidth(), getWindowHeight() + server.settings.getWindowBorderWidth()*2 + server.settings.getWindowTitleHeight());
+
+            renderImage.drawImage(
+                    server.settings.getWindowBorderWidth()-baseContainer.getScrollX(),
+                    server.settings.getWindowBorderWidth() + server.settings.getWindowTitleHeight()-baseContainer.getScrollY(),
+                    getWindowWidth() + baseContainer.getScrollX(),
+                    getWindowHeight() + baseContainer.getScrollY(),
+                    baseContainer.getScrollX(),
+                    baseContainer.getScrollY(),
+                    contentRenderImage, null);
+            /*
             int renderSize[] = server.display.drawImage(
                     getLeftOffset()-baseContainer.getScrollX(),
-                    getTopOffset() - baseContainer.getScrollY(),
-                    renderImage.getWidth() + baseContainer.getScrollX(),
+                    getTopOffset()-baseContainer.getScrollY(),
+                    getWindowWidth() + baseContainer.getScrollX(),
                     getWindowHeight() + baseContainer.getScrollY(),
                     0 + baseContainer.getScrollX(),
                     0 + baseContainer.getScrollY(),
-                    renderImage, null);
+                    contentRenderImage, null);
+            // */
 
-            setHaveXScroll(renderImage.getWidth()>getWindowWidth());
-            setHaveYScroll(renderImage.getHeight()>getWindowHeight());
+            setHasXScroll(contentRenderImage.getWidth()>getWindowWidth());
+            setHasYScroll(contentRenderImage.getHeight()>getWindowHeight());
 
             //Drawing scrolls
-            if(baseContainer.isHorizontalScrollEnable() && renderImage.getWidth()>getWindowWidth()){
+            if(baseContainer.isHorizontalScrollEnable() && hasXScroll){
                 baseContainer.getHorizontalScroll().draw(server.display, 0, getTopOffset(), 0, server.settings.getStatusBarHeight());
             }
 
-            if(baseContainer.isVerticalScrollEnable() && renderImage.getHeight()>getWindowHeight()) {
+            if(baseContainer.isVerticalScrollEnable() && hasYScroll) {
                 ScrollBar scrollBar = baseContainer.getVerticalScroll();
                 scrollBar.setVisibleContentlength(getWindowHeight());
-                scrollBar.setTotalContentLength(renderImage.getHeight());
-                scrollBar.draw(server.display, getLeftOffset(), getTopOffset(), getRightOffset(), getBottomOffset());
+                scrollBar.setTotalContentLength(contentRenderImage.getHeight());
+                //scrollBar.draw(server.display, getLeftOffset(), getTopOffset(), getRightOffset(), getBottomOffset());
+                scrollBar.draw(renderImage, server.settings.getWindowBorderWidth(), server.settings.getWindowBorderWidth() + server.settings.getWindowTitleHeight(), server.settings.getWindowBorderWidth(), server.settings.getWindowBorderWidth());
+                //scrollBar.draw(renderImage, 0, 0, 0, 0);
+
 
                 //int leftOffset, int topOffset, int rightOffset, int bottomOffset
             }
 
+            //int
+            /*
+                        -baseContainer.getScrollX(),
+                     + server.settings.getWindowTitleHeight()-baseContainer.getScrollY(),
+                    getWindowWidth() + baseContainer.getScrollX(),
+                    getWindowHeight() + baseContainer.getScrollY(),
+                    baseContainer.getScrollX(),
+                    baseContainer.getScrollY(),
+                    contentRenderImage, null);
+             */
+            if(server.settings.isWindowMode()) {
+                drawWindowBorders(renderImage);
+                windowTitle.draw();
+                renderImage.drawImage(getServer().settings.getWindowBorderWidth(), getServer().settings.getWindowBorderWidth(), windowTitle.getRenderImage());
+            }
+
+
+            int renderSize[] = server.display.drawImage(
+                    getLeftOffset() - server.settings.getWindowBorderWidth(),
+                    getTopOffset() - server.settings.getWindowBorderWidth() - server.settings.getWindowTitleHeight(),
+
+                    renderImage, null);
 
             baseContainer.resetPositionsRenderImage();
             baseContainer.setPositionOnRenderImage(0, getTopOffset() - baseContainer.getScrollY());
@@ -105,7 +187,7 @@ public abstract class App {
             baseContainer.setRepaintPending(false);
         }else{
             //server.display.drawImage(0, app_image_y, renderImage.getWidth(), app_image_height, renderImage);
-            server.display.drawImage(0, getTopOffset(), renderImage);
+            server.display.drawImage(getLeftOffset() - server.settings.getWindowBorderWidth(), getTopOffset() - server.settings.getWindowTitleHeight() - server.settings.getWindowBorderWidth(), renderImage);
         }
         return;
     }
@@ -122,8 +204,8 @@ public abstract class App {
      * # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
      * */
 
-    public void setRenderImage(BinaryImage image){
-        renderImage = image;
+    public void setContentRenderImage(BinaryImage image){
+        contentRenderImage = image;
     }
 
     public void addView(View view){
@@ -214,20 +296,20 @@ public abstract class App {
         return getServer().display.getHeight() - getTopOffset() - getBottomOffset();
     }
 
-    public boolean isHaveXScroll() {
-        return haveXScroll;
+    public boolean isHasXScroll() {
+        return hasXScroll;
     }
 
-    public void setHaveXScroll(boolean haveXScroll) {
-        this.haveXScroll = haveXScroll;
+    public void setHasXScroll(boolean hasXScroll) {
+        this.hasXScroll = hasXScroll;
     }
 
-    public boolean isHaveYScroll() {
-        return haveYScroll;
+    public boolean isHasYScroll() {
+        return hasYScroll;
     }
 
-    public void setHaveYScroll(boolean haveYScroll) {
-        this.haveYScroll = haveYScroll;
+    public void setHasYScroll(boolean hasYScroll) {
+        this.hasYScroll = hasYScroll;
     }
 
     public int getScrollX(){
