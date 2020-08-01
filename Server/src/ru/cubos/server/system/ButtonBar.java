@@ -1,10 +1,6 @@
 package ru.cubos.server.system;
 
 import ru.cubos.server.Server;
-import ru.cubos.server.helpers.BinaryImage;
-import ru.cubos.server.helpers.Colors;
-
-import java.io.IOException;
 
 public class ButtonBar {
     Server server;
@@ -18,7 +14,7 @@ public class ButtonBar {
     public void paint(){
         if (server.settings.isButtonBarEnable()){
             server.display.drawRect(0,server.display.getHeight(), server.display.getWidth(), server.display.getHeight() - server.settings.getStatusBarHeight(), server.settings.getStatusBarColor(), true);
-            String timeString = server.time.getCurrentTime();
+            String timeString = server.timeWidgetView.getCurrentTime();
 
             // # # # # # # Time # # # # # #
 

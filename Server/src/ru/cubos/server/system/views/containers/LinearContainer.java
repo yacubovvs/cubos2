@@ -25,13 +25,10 @@ public class LinearContainer extends ContainerView {
     }
 
     @Override
-    public void recountPositionOnRenderImage(int x, int y){
-        super.recountPositionOnRenderImage(x,y);
-        recountRenderPositions();
-    }
-
-    @Override
     public void draw() {
+        if(!isRepaintPending()) return;
+
+        //System.out.println("Container drawing !!!!!!!");
         int size = 0;
 
         for(View view: children){
@@ -78,9 +75,8 @@ public class LinearContainer extends ContainerView {
             getAppParent().setContentRenderImage(renderImage);
         }
 
-        //if (isHorizontalScrollEnable()) getHorizontalScroll().draw(getServer(), renderImage);
-        //if (isVerticalScrollEnable()) getVerticalScroll().draw(getServer(), renderImage);
-
+        super.onRender();
+        setRepaintPending(false);
     }
 
     public LinearContainer.Type getType() {

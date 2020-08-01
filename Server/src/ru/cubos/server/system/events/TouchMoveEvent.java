@@ -20,21 +20,30 @@ public class TouchMoveEvent extends EventTouch {
     public boolean isOnTitleBarEvent(App app){
         if(
                 app.getServer().settings.isWindowMode()
-                        && y_last <= app.getTopOffset()
-                        && y_last > app.getTopOffset() - app.getServer().settings.getWindowTitleBarHeight()
-                        && x_last > app.getLeftOffset()
-                        && x_last < app.getRightOffset() + app.getWindowWidth()
+                && y_last <= app.getTopOffset()
+                && y_last > app.getTopOffset() - app.getServer().settings.getWindowTitleBarHeight()
+                && x_last > app.getLeftOffset()
+                && x_last < app.getDisplayWidth() - app.getRightOffset()
         ) return true;
         else return false;
+
+        /*
+        app.getServer().settings.isWindowMode()
+        && y_last <= app.getTopOffset()
+        && y_last > app.getDisplayHeight() - app.getBottomOffset()
+        && x_last > app.getLeftOffset()
+        && x_last < app.getDisplayWidth() - app.getRightOffset()
+        * */
+
     }
 
     @Override
     public boolean isInWindowEvent(App app){
         if(
-                y_start > app.getTopOffset()
-                && y_start < app.getBottomOffset() + app.getWindowHeight()
-                && x_start > app.getLeftOffset()
-                && x_start < app.getRightOffset() + app.getWindowWidth()
+            y_start > app.getTopOffset()
+            && y_start < app.getDisplayHeight() - app.getBottomOffset()
+            && x_start > app.getLeftOffset()
+            && x_start < app.getDisplayWidth() - app.getRightOffset()
         ) return true;
         else return false;
     }
@@ -69,14 +78,18 @@ public class TouchMoveEvent extends EventTouch {
     @Override
     public void executeViewsHandlers(List<View> viewList, App app) {
 
-        //if(!isInWindowEvent(app)) return;
+        if(app.isMoving() && app.getServer().settings.isWindowMode() && isOnTitleBarEvent(app)){
+            if(y>app.getServer().settings.getStatusBarHeight() && y<app.getDisplayHeight() - app.getServer().settings.getButtonBarHeight()){
+                app.move(x - x_last,y - y_last);
+            }
+
+            return;
+        }
+
+        if(app.isMoving()) return;
 
         if (!isInWindowEvent(app)){
-            if(app.getServer().settings.isWindowMode() && isOnTitleBarEvent(app)){
-                //System.out.println("On title bar touch move");
-                app.move(x - x_last,y - y_last);
-                return;
-            }else return;
+            return;
         }
 
         // # # # # # # # # # # # # # # # # # # # SCROLLBARS EVENTS # # # # # # # # # # # # # # # # # # # # # # #
@@ -109,7 +122,6 @@ public class TouchMoveEvent extends EventTouch {
             if(app.isHasYScroll() && (y_last - y)!=0){
                 //System.out.println("Y-scrolling");
                 app.setScrollY( app.getScrollY() + (y_last - y));
-                app.setRepaintIsPending();
             }
         }
         // # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #

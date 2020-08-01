@@ -55,8 +55,10 @@ public abstract class App {
         setTopOffset( getTopOffset() + y );
         setBottomOffset( getBottomOffset() - y );
 
-        setRepaintIsPending();
+        server.setRepaintPending();
     }
+
+    private boolean isMoving = false;
 
     public App(Server server){
         this.server = server;
@@ -72,8 +74,8 @@ public abstract class App {
 
         setLeftOffset(0);
         setRightOffset(0);
-        setTopOffset(server.settings.getStatusBarHeight());
-        setBottomOffset(server.settings.getButtonBarHeight());
+        setTopOffset(0);
+        setBottomOffset(0);
 
         if(server.settings.isWindowMode()){
             windowTitleBar = new WindowTitleBar();
@@ -119,17 +121,26 @@ public abstract class App {
         //image.drawRect(server.settings.getWindowBorderWidth(), server.settings.getWindowBorderWidth(), image.getWidth()-server.settings.getWindowBorderWidth(), server.settings.getWindowTitleHeight(), server.settings.getWindowTitleColor(), true);
     }
 
-    public void repaint(){
-
-        // TODO: remove in multi app server +
-        getServer().display.drawRect(0, getServer().settings.getStatusBarHeight(), getServer().display.getWidth(), getServer().display.getHeight() - getServer().settings.getButtonBarHeight(), Colors.COLOR_BLACK, true);
-        //-
+    public void draw(){
 
         if(this.repaintPending){
-            setRepaintPending(false);
+
             baseContainer.draw();
 
             renderImage = new BinaryImage(getWindowWidth() + 2*server.settings.getWindowBorderWidth(), getWindowHeight() + server.settings.getWindowBorderWidth()*2 + server.settings.getWindowTitleBarHeight());
+            contentRenderImage = baseContainer.getRenderImage();
+
+            /*
+            renderImage.drawImage(
+                    server.settings.getWindowBorderWidth()-baseContainer.getScrollX(),
+                    server.settings.getWindowBorderWidth() + server.settings.getWindowTitleBarHeight()-baseContainer.getScrollY(),
+                    getWindowWidth() + baseContainer.getScrollX(),
+                    getWindowHeight() + baseContainer.getScrollY(),
+                    baseContainer.getScrollX(),
+                    baseContainer.getScrollY(),
+                    baseContainer.getRenderImage(), null);
+
+             */
 
             renderImage.drawImage(
                     server.settings.getWindowBorderWidth()-baseContainer.getScrollX(),
@@ -139,16 +150,6 @@ public abstract class App {
                     baseContainer.getScrollX(),
                     baseContainer.getScrollY(),
                     contentRenderImage, null);
-            /*
-            int renderSize[] = server.display.drawImage(
-                    getLeftOffset()-baseContainer.getScrollX(),
-                    getTopOffset()-baseContainer.getScrollY(),
-                    getWindowWidth() + baseContainer.getScrollX(),
-                    getWindowHeight() + baseContainer.getScrollY(),
-                    0 + baseContainer.getScrollX(),
-                    0 + baseContainer.getScrollY(),
-                    contentRenderImage, null);
-            // */
 
             setHasXScroll(contentRenderImage.getWidth()>getWindowWidth());
             setHasYScroll(contentRenderImage.getHeight()>getWindowHeight());
@@ -162,24 +163,9 @@ public abstract class App {
                 ScrollBar scrollBar = baseContainer.getVerticalScroll();
                 scrollBar.setVisibleContentlength(getWindowHeight());
                 scrollBar.setTotalContentLength(contentRenderImage.getHeight());
-                //scrollBar.draw(server.display, getLeftOffset(), getTopOffset(), getRightOffset(), getBottomOffset());
                 scrollBar.draw(renderImage, server.settings.getWindowBorderWidth(), server.settings.getWindowBorderWidth() + server.settings.getWindowTitleBarHeight(), server.settings.getWindowBorderWidth(), server.settings.getWindowBorderWidth());
-                //scrollBar.draw(renderImage, 0, 0, 0, 0);
-
-
-                //int leftOffset, int topOffset, int rightOffset, int bottomOffset
             }
 
-            //int
-            /*
-                        -baseContainer.getScrollX(),
-                     + server.settings.getWindowTitleHeight()-baseContainer.getScrollY(),
-                    getWindowWidth() + baseContainer.getScrollX(),
-                    getWindowHeight() + baseContainer.getScrollY(),
-                    baseContainer.getScrollX(),
-                    baseContainer.getScrollY(),
-                    contentRenderImage, null);
-             */
             if(server.settings.isWindowMode()) {
                 drawWindowBorders(renderImage);
                 windowTitleBar.draw();
@@ -190,20 +176,39 @@ public abstract class App {
             int renderSize[] = server.display.drawImage(
                     getLeftOffset() - server.settings.getWindowBorderWidth(),
                     getTopOffset() - server.settings.getWindowBorderWidth() - server.settings.getWindowTitleBarHeight(),
-
+                    getDisplayWidth(),
+                    getDisplayHeight() + 1 - getTopOffset() + server.settings.getWindowTitleBarHeight() + server.settings.getWindowBorderWidth() - server.settings.getButtonBarHeight(),
+                    0,
+                    - getTopOffset() + server.settings.getWindowTitleBarHeight() + server.settings.getWindowBorderWidth() + server.settings.getStatusBarHeight(),
                     renderImage, null);
 
-            baseContainer.resetPositionsRenderImage();
-            baseContainer.setPositionOnRenderImage(0, getTopOffset() - baseContainer.getScrollY());
-            baseContainer.setSizeOnRenderImage(renderSize[0], renderSize[1] - getTopOffset());
-            baseContainer.recountRenderPositions();
+            resetingRenderSizes(renderSize);
+            cancelRepaintPending();
 
-            baseContainer.setRepaintPending(false);
+            //System.out.println("Rerendering painting");
         }else{
             //server.display.drawImage(0, app_image_y, renderImage.getWidth(), app_image_height, renderImage);
-            server.display.drawImage(getLeftOffset() - server.settings.getWindowBorderWidth(), getTopOffset() - server.settings.getWindowTitleBarHeight() - server.settings.getWindowBorderWidth(), renderImage);
+            //System.out.println("No rerendering painting");
+            int renderSize[] = server.display.drawImage(
+                    getLeftOffset() - server.settings.getWindowBorderWidth(),
+                    getTopOffset() - server.settings.getWindowTitleBarHeight() - server.settings.getWindowBorderWidth(),
+                    getDisplayWidth(),
+                    getDisplayHeight() + 1 - getTopOffset() + server.settings.getWindowTitleBarHeight() + server.settings.getWindowBorderWidth() - server.settings.getButtonBarHeight(),
+                    0,
+                    - getTopOffset() + server.settings.getWindowTitleBarHeight() + server.settings.getWindowBorderWidth() + server.settings.getStatusBarHeight(),
+                    renderImage, null);
+            resetingRenderSizes(renderSize);
         }
         return;
+    }
+
+    public void resetingRenderSizes(int renderSize[]){
+        baseContainer.resetPositionsRenderImage();
+        baseContainer.setPositionOnRenderImage(getLeftOffset() - baseContainer.getScrollX(), getTopOffset() - baseContainer.getScrollY());
+        baseContainer.setSizeOnRenderImage(renderSize[0] - getLeftOffset(), renderSize[1] - getTopOffset());
+        baseContainer.recountRenderPositions();
+
+        baseContainer.setRepaintPending(false);
     }
 
 
@@ -246,16 +251,13 @@ public abstract class App {
         return repaintPending;
     }
 
-    protected void setRepaintPending(boolean repaintPending) {
-        this.repaintPending = repaintPending;
+    protected void cancelRepaintPending() {
+        repaintPending = false;
     }
 
-    public void setRepaintIsPending() {
+    public void setRepaintPending() {
         this.repaintPending = true;
-        this.baseContainer.setRepaintPending(true);
-        // TODO: Remove this in future
-        this.repaint();
-        getServer().sendFrameBufferCommands();
+        getServer().setRepaintPending();
     }
 
     public void onScrollXListener(int coord_new, int coord_old){
@@ -336,9 +338,27 @@ public abstract class App {
 
     public void setScrollX(int scroll){
         getBaseContainer().setScrollX(scroll);
+        setRepaintPending();
     }
 
     public void setScrollY(int scroll){
         getBaseContainer().setScrollY(scroll);
+        setRepaintPending();
+    }
+
+    public int getDisplayHeight(){
+        return server.display.getHeight();
+    }
+
+    public int getDisplayWidth(){
+        return server.display.getWidth();
+    }
+
+    public boolean isMoving() {
+        return isMoving;
+    }
+
+    public void setMoving(boolean moving) {
+        isMoving = moving;
     }
 }

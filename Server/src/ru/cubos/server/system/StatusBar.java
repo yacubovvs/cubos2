@@ -24,7 +24,7 @@ public class StatusBar {
     public void paint(){
         if (server.settings.isStatusBarEnable()){
             server.display.drawRect(0,0, server.display.getWidth(), server.settings.getStatusBarHeight(), server.settings.getStatusBarColor(), true);
-            String timeString = server.time.getCurrentTime();
+            String timeString = server.timeWidgetView.getCurrentTime();
 
             // # # # # # # Time # # # # # #
             //int time_x = server.display.getWidth() - server.settings.getStatusTextSize()*server.settings.getSystemCharWidth()*timeString.trim().length() - server.settings.getStatusLeftRightMargin();

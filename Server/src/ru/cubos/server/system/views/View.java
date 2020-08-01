@@ -178,8 +178,6 @@ public abstract class View {
     public void recountPositionOnRenderImage(int x, int y) {
         this.render_x += x;
         this.render_y += y;
-
-        //if(getId()!=null) System.out.println("Recount " + getId() + ": " + this.content_x + ", " + this.content_y + "    -    " + content_width + ", " + content_height);
     }
 
     public void resetPositionsRenderImage(){

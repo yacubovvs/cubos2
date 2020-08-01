@@ -20,8 +20,9 @@ public class TouchDownEvent extends EventTouch {
     @Override
     public void executeViewsHandlers(List<View> viewList, App app) {
 
-        if(!isInWindowEvent(app)) return;
+        if (isOnTitleBarEvent(app)) app.setMoving(true);
 
+        if(!isInWindowEvent(app)) return;
 
         // # # # # # # # # # # # # # # # # # # # SCROLLBARS EVENTS # # # # # # # # # # # # # # # # # # # # # # #
 

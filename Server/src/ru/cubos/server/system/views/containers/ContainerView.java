@@ -15,6 +15,12 @@ public abstract class ContainerView extends View {
 
     protected List<View> children = new ArrayList<>();
 
+    @Override
+    public void recountPositionOnRenderImage(int x, int y){
+        super.recountPositionOnRenderImage(x,y);
+        recountRenderPositions();
+    }
+
     public ContainerView(){
         super();
     }

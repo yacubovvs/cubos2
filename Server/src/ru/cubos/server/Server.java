@@ -3,15 +3,17 @@ package ru.cubos.server;
 import ru.cubos.connectors.Connector;
 import ru.cubos.connectors.emulator.Emulator;
 import ru.cubos.server.helpers.ByteConverter;
+import ru.cubos.server.helpers.Colors;
 import ru.cubos.server.helpers.framebuffer.Display;
 import ru.cubos.server.settings.Settings;
 import ru.cubos.server.system.ButtonBar;
 import ru.cubos.server.system.StatusBar;
-import ru.cubos.server.system.Time;
+import ru.cubos.server.system.TimeWidgetView;
 import ru.cubos.server.system.apps.App;
 import ru.cubos.server.system.apps.customApps.TestingApp;
 import ru.cubos.server.system.events.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static ru.cubos.server.helpers.ByteConverter.uByte;
@@ -24,8 +26,10 @@ public class Server {
     public Settings settings;
     public StatusBar statusBar;
     public ButtonBar buttonBar;
-    public Time time;
-    public App currentApp;
+    public TimeWidgetView timeWidgetView;
+    public List<App> OpenedApps;
+
+    private boolean repaintPending;
 
     public static void main(String[] args) {
         startServerEmulator();
@@ -39,14 +43,19 @@ public class Server {
         server.start();
     }
 
+    public App getActiveApp(){
+        return OpenedApps.get(0);
+    }
+
     public Server(Connector connector) {
         this.connector = connector;
         display = new Display(connector.getScreenWidth(), connector.getScreenHeight());
         settings = new Settings();
         statusBar = new StatusBar(this);
         buttonBar = new ButtonBar(this);
-        currentApp = new TestingApp(this);
-        time = new Time();
+        OpenedApps = new ArrayList<>();
+        OpenedApps.add(new TestingApp(this));
+        timeWidgetView = new TimeWidgetView();
 
         //display.drawLine(0,0,100,100, Colors.COLOR_RED);
     }
@@ -55,8 +64,8 @@ public class Server {
         System.out.println("Server: Server started");
         Thread serverThread = new Thread(() -> {
             //while(true) {
-            paint();
-            currentApp.repaint();
+            drawApps();
+            drawBars();
             sendFrameBufferCommands();
             try {
                 Thread.sleep(1000);
@@ -68,7 +77,12 @@ public class Server {
         serverThread.start();
     }
 
-    void paint() {
+    void drawApps(){
+        display.drawRect(0, settings.getStatusBarHeight(), display.getWidth(), display.getHeight() - settings.getButtonBarHeight(), Colors.COLOR_BLACK, true);
+        getActiveApp().draw();
+    }
+
+    void drawBars() {
         if (statusBar.isRepaintPending()) statusBar.paint();
         if (buttonBar.isRepaintPending()) buttonBar.paint();
 
@@ -97,6 +111,7 @@ public class Server {
                 }
             }
 
+            //System.out.println("Server: sending " + message.length + " bytes");
             connector.transmitData(message);
         } else {
             //System.out.println("Server: no frame change");
@@ -125,7 +140,7 @@ public class Server {
                     y0 = ByteConverter.bytesToChar(uByte(data[current_position + 3]), uByte(data[current_position + 4]));
 
                     //System.out.println("Server: on screen click " + (int)x0 + ", " + (int)y0);
-                    currentApp.execEvent(new TouchTapEvent(x0, y0));
+                    getActiveApp().execEvent(new TouchTapEvent(x0, y0));
 
                     current_position += 5;
 
@@ -136,7 +151,7 @@ public class Server {
                     current_position += 5;
 
                     //System.out.println("Server: on screen mouse up");
-                    currentApp.execEvent(new TouchUpEvent(x0, y0));
+                    getActiveApp().execEvent(new TouchUpEvent(x0, y0));
                     break;
                 case EVENT_TOUCH_DOWN:
                     x0      = ByteConverter.bytesToChar(uByte(data[current_position + 1]),  uByte(data[current_position + 2]));
@@ -144,7 +159,7 @@ public class Server {
                     current_position += 5;
 
                     //System.out.println("Server: on screen mouse down");
-                    currentApp.execEvent(new TouchDownEvent(x0, y0));
+                    getActiveApp().execEvent(new TouchDownEvent(x0, y0));
                     break;
                 case EVENT_TOUCH_MOVE:
                     x0      = ByteConverter.bytesToChar(uByte(data[current_position + 1]),  uByte(data[current_position + 2]));
@@ -156,7 +171,7 @@ public class Server {
                     current_position += 13;
 
                     //System.out.println("Server: on screen move");
-                    currentApp.execEvent(new TouchMoveEvent(x0, y0, x1, y1, x_start, y_start));
+                    getActiveApp().execEvent(new TouchMoveEvent(x0, y0, x1, y1, x_start, y_start));
                     break;
                 case EVENT_TOUCH_MOVE_FINISHED:
                     x0      = ByteConverter.bytesToChar(uByte(data[current_position + 1]),  uByte(data[current_position + 2]));
@@ -165,8 +180,9 @@ public class Server {
                     y_start = ByteConverter.bytesToChar(uByte(data[current_position + 7]),  uByte(data[current_position + 8]));
                     current_position += 9;
 
-                    //System.out.println("Server: on screen move");
-                    currentApp.execEvent(new TouchMoveFinishedEvent(x0, y0, x_start, y_start));
+                    //System.out.println("Server: on move finished");
+                    for (App app: OpenedApps) app.setMoving(false);
+                    getActiveApp().execEvent(new TouchMoveFinishedEvent(x0, y0, x_start, y_start));
                     break;
                 default:
                     System.out.println("Server: unknown protocol command recieved");
@@ -176,5 +192,26 @@ public class Server {
         }
 
         return true;
+    }
+
+    public boolean isRepaintPending() {
+        return repaintPending;
+    }
+
+    public void setRepaintPending() {
+        this.repaintPending = true;
+
+        // TODO: Remove this in future
+        long start = System.currentTimeMillis();
+        drawApps();
+        long finish = System.currentTimeMillis();
+        long timeConsumedMillis = finish - start;
+        //System.out.println("Repaint time: " + timeConsumedMillis);
+
+        sendFrameBufferCommands();
+    }
+
+    public void cancelRepaintPending() {
+        this.repaintPending = false;
     }
 }

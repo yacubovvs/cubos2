@@ -18,10 +18,10 @@ public class TouchMoveFinishedEvent extends EventTouch {
     @Override
     public boolean isInWindowEvent(App app){
         if(
-                y_start > app.getTopOffset()
-                && y_start < app.getBottomOffset() + app.getWindowHeight()
-                && x_start > app.getLeftOffset()
-                && x_start < app.getRightOffset() + app.getWindowWidth()
+            y_start > app.getTopOffset()
+            && y_start < app.getDisplayHeight() - app.getBottomOffset()
+            && x_start > app.getLeftOffset()
+            && x_start < app.getDisplayWidth() - app.getRightOffset()
         ) return true;
         else return false;
     }

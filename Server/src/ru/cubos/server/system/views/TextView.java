@@ -28,6 +28,8 @@ public class TextView extends View {
 
     @Override
     public void draw() {
+        if(!isRepaintPending()) return;
+
         List<String> stringList = null;
         if(isMultiString()) {
             // Multi string
@@ -96,6 +98,7 @@ public class TextView extends View {
 
 
         super.onRender();
+        setRepaintPending(false);
     }
 
     /*

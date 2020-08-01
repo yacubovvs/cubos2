@@ -44,6 +44,8 @@ public class IconView extends View {
 
     @Override
     public void draw() {
+        if(!isRepaintPending()) return;
+
         renderImage = new BinaryImage(getWidth(), icon.getHeight() + getPaddingTop() + getMarginTop() + getMarginBottom() + getPaddingBottom());
 
         drawBackGround();
@@ -57,6 +59,7 @@ public class IconView extends View {
         }
 
         super.onRender();
+        setRepaintPending(false);
     }
 
     /*

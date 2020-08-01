@@ -15,7 +15,7 @@ public abstract class EventTouch extends Event {
             && y <= app.getTopOffset()
             && y > app.getTopOffset() - app.getServer().settings.getWindowTitleBarHeight()
             && x > app.getLeftOffset()
-            && x < app.getRightOffset() + app.getWindowWidth()
+            && x < app.getDisplayWidth() - app.getRightOffset()
         ) return true;
         else return false;
     }
@@ -23,11 +23,14 @@ public abstract class EventTouch extends Event {
     public boolean isInWindowEvent(App app){
         if(
             y > app.getTopOffset()
-            && y < app.getBottomOffset() + app.getWindowHeight()
+            && y < app.getDisplayHeight() - app.getBottomOffset()
             && x > app.getLeftOffset()
-            && x < app.getRightOffset() + app.getWindowWidth()
-        ) return true;
-        else return false;
+            && x < app.getDisplayWidth() - app.getRightOffset()
+        ){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void checkViewsForEvent(List<View> viewList){

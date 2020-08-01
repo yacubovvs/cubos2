@@ -23,9 +23,14 @@ public class TouchTapEvent extends EventTouch {
 
         if (!isInWindowEvent(app)){
             if(app.getServer().settings.isWindowMode() && isOnTitleBarEvent(app)){
-                //System.out.println("On title bar touch");
-            }else return;
+                System.out.println("On title bar touch");
+            }else{
+                System.out.println("Out of form click");
+                return;
+            }
         }
+
+        System.out.println("On form click");
 
         if(app.getServer().settings.isDragScrollBarEnable()) {
             if (app.getBaseContainer().isVerticalScrollEnable() || app.getBaseContainer().isHorizontalScrollEnable()) {

@@ -117,7 +117,7 @@ public class ScrollBar {
             int scroll = (int)((float)scollBarPosition/(float)(scollBarLength - pointHeight)*(float)(getTotalContentLength() - visibleContentlength));
 
             app.getBaseContainer().setScrollY(scroll);
-            app.setRepaintIsPending();
+            app.setRepaintPending();
             return;
         }
     }
