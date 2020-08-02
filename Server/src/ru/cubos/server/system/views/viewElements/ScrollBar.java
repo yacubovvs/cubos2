@@ -111,10 +111,10 @@ public class ScrollBar {
             // Vertical
             int scollBarPosition = tapPosition - app.getServer().settings.getScrollbarWidth() - topOffset - pointHeight/2;
             if(scollBarPosition<0) scollBarPosition = 0;
-            if(scollBarPosition>scollBarLength - pointHeight) scollBarPosition = scollBarLength - pointHeight;
+            if(scollBarPosition>scollBarLength ) scollBarPosition = scollBarLength;
             //System.out.println("Click on scrollbar " + scollBarPosition + " of " + scollBarLength);
 
-            int scroll = (int)((float)scollBarPosition/(float)(scollBarLength - pointHeight)*(float)(getTotalContentLength() - visibleContentlength));
+            int scroll = (int)((float)(scollBarPosition - pointHeight/2)/(float)(scollBarLength - pointHeight)*(float)(getTotalContentLength() - visibleContentlength));
 
             app.getBaseContainer().setScrollY(scroll);
             app.setRepaintPending();

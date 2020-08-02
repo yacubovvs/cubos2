@@ -45,7 +45,7 @@ public class Settings {
      *
      * */
 
-    private boolean     buttonBarEnable         = true;
+    private boolean     buttonBarEnable         = false;
     private char        buttonBarHeight         = 32;
     private byte[]      buttonBarColor          = Colors.COLOR_LIGHT_GRAY;
     private byte[]      buttonBarButtonsColor   = Colors.COLOR_DARK_GRAY;
