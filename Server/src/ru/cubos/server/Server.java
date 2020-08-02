@@ -11,6 +11,7 @@ import ru.cubos.server.system.StatusBar;
 import ru.cubos.server.system.TimeWidgetView;
 import ru.cubos.server.system.apps.App;
 import ru.cubos.server.system.apps.customApps.TestingApp;
+import ru.cubos.server.system.apps.systemApps.MainMenu;
 import ru.cubos.server.system.events.*;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class Server {
     public StatusBar statusBar;
     public ButtonBar buttonBar;
     public TimeWidgetView timeWidgetView;
-    public List<App> OpenedApps;
+    public List<App> openedApps;
 
     private boolean repaintPending;
 
@@ -44,7 +45,7 @@ public class Server {
     }
 
     public App getActiveApp(){
-        return OpenedApps.get(0);
+        return openedApps.get(openedApps.size()-1);
     }
 
     public Server(Connector connector) {
@@ -53,8 +54,9 @@ public class Server {
         settings = new Settings();
         statusBar = new StatusBar(this);
         buttonBar = new ButtonBar(this);
-        OpenedApps = new ArrayList<>();
-        OpenedApps.add(new TestingApp(this));
+        openedApps = new ArrayList<>();
+        openedApps.add(new TestingApp(this));
+        openedApps.add(new MainMenu(this));
         timeWidgetView = new TimeWidgetView();
 
         //display.drawLine(0,0,100,100, Colors.COLOR_RED);
@@ -72,14 +74,16 @@ public class Server {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            //}
         });
         serverThread.start();
     }
 
     void drawApps(){
         display.drawRect(0, settings.getStatusBarHeight(), display.getWidth(), display.getHeight() - settings.getButtonBarHeight(), Colors.COLOR_BLACK, true);
-        getActiveApp().draw();
+        for( App app: openedApps){
+            app.draw();
+        }
+
     }
 
     void drawBars() {
@@ -159,6 +163,7 @@ public class Server {
                     current_position += 5;
 
                     //System.out.println("Server: on screen mouse down");
+                    activateAppByCoordinates(x0, y0);
                     getActiveApp().execEvent(new TouchDownEvent(x0, y0));
                     break;
                 case EVENT_TOUCH_MOVE:
@@ -181,7 +186,7 @@ public class Server {
                     current_position += 9;
 
                     //System.out.println("Server: on move finished");
-                    for (App app: OpenedApps) app.setMoving(false);
+                    for (App app: openedApps) app.setMoving(false);
                     getActiveApp().execEvent(new TouchMoveFinishedEvent(x0, y0, x_start, y_start));
                     break;
                 default:
@@ -196,6 +201,32 @@ public class Server {
 
     public boolean isRepaintPending() {
         return repaintPending;
+    }
+
+    public void activateAppByCoordinates(int x, int y){
+        //for (App app: openedApps){
+        for (int i=openedApps.size()-1; i>=0; i--){
+            App app = openedApps.get(i);
+            int appCoordinates[] = app.getActiveCoordinates();
+            int x_min = appCoordinates[0];
+            int y_min = appCoordinates[1];
+            int x_max = appCoordinates[2];
+            int y_max = appCoordinates[3];
+
+            if(x_min<=x && x_max>=x && y_min<=y && y_max>=y){
+                if(getActiveApp()!=app){
+                    activateApp(app);
+                }
+                return;
+            }
+        }
+    }
+
+    public void activateApp(App app){
+        openedApps.remove(app);
+        openedApps.add(app);
+        // TODO: call redrawing app after order change
+        setRepaintPending();
     }
 
     public void setRepaintPending() {

@@ -15,15 +15,25 @@ public class MainMenu extends App {
     public MainMenu(Server server) {
         super(server);
 
-        tabelContainer = new TabelContainer(TabelContainer.TableType.FIXED_ROWS,3);
-        tabelContainer.setMarginTop(15);
+        getBaseContainer().setBackgroundColor(new byte[]{-96, -96, -96});
+
+        setLeftOffset(50);
+        setRightOffset(50);
+        setTopOffset(100);
+        setBottomOffset(50);
+
+        tabelContainer = new TabelContainer(TabelContainer.TableType.FIXED_ROWS,5);
+        tabelContainer.setMargin(15);
 
         addIcon("Settings" , "images//icons//apps//settings.png");
         addIcon("Network" , "images//icons//apps//network.png");
         addIcon("File browser" , "images//icons//apps//filebrowser.png");
         addIcon("Text editor" , "images//icons//apps//texteditor.png");
         addIcon("Paint" , "images//icons//apps//paint.png");
-        for(int i=0; i<6; i++){
+        addIcon("Server terminal" , "images//icons//apps//terminal.png");
+        addIcon("Screen calibration" , "images//icons//apps//calibration.png");
+
+        for(int i=0; i<30; i++){
             addIcon("Application " + i, "images//icons//testicon.png");
         }
 

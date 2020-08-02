@@ -56,6 +56,8 @@ public class TouchMoveFinishedEvent extends EventTouch {
 
         if(!isInWindowEvent(app)) return;
 
+        //ToDO: first drag content not working sometimes
+
         // # # # # # # # # # # # # # # # # # # # SCROLLBARS EVENTS # # # # # # # # # # # # # # # # # # # # # # #
         if(app.getServer().settings.isDragScrollBarEnable()) {
             if (app.getBaseContainer().isVerticalScrollEnable()) {

@@ -2,7 +2,6 @@ package ru.cubos.server.system.apps;
 
 import ru.cubos.server.Server;
 import ru.cubos.server.helpers.BinaryImage;
-import ru.cubos.server.helpers.Colors;
 import ru.cubos.server.system.events.Event;
 import ru.cubos.server.system.views.IconView;
 import ru.cubos.server.system.views.TextView;
@@ -60,6 +59,20 @@ public abstract class App {
 
     private boolean isMoving = false;
 
+    public int[] getActiveCoordinates(){
+        // get enable to click area on screen
+        int[] result = new int[]{
+            getLeftOffset() - server.settings.getWindowBorderActiveOffsetWidth(),
+            getTopOffset() - server.settings.getWindowBorderActiveOffsetWidth() - server.settings.getWindowTitleBarHeight(),
+            getDisplayWidth() - getRightOffset() + server.settings.getWindowBorderActiveOffsetWidth(),
+            getDisplayHeight() - getBottomOffset()  + server.settings.getWindowBorderActiveOffsetWidth()
+        };
+
+        return result;
+    }
+
+    private String windowTitle = "New window";
+
     public App(Server server){
         this.server = server;
         baseContainer = new LinearContainer();
@@ -72,6 +85,7 @@ public abstract class App {
         baseContainer.setScrollY(0);
         //baseContainer.setScrollX(0);
 
+        // TODO: on Zero in offsets, window is not showing
         setLeftOffset(0);
         setRightOffset(0);
         setTopOffset(0);
@@ -103,7 +117,7 @@ public abstract class App {
             windowTitleBar.add(rollup_button);
             windowTitleBar.setBackgroundColor(server.settings.getWindowTitleColor());
 
-            TextView title = new TextView("Window title");
+            TextView title = new TextView(getWindowTitle());
             windowTitleBar.add(title);
             windowTitleBar.setAppParent(this);
         }
@@ -360,5 +374,13 @@ public abstract class App {
 
     public void setMoving(boolean moving) {
         isMoving = moving;
+    }
+
+    public String getWindowTitle() {
+        return windowTitle;
+    }
+
+    public void setWindowTitle(String windowTitle) {
+        this.windowTitle = windowTitle;
     }
 }
