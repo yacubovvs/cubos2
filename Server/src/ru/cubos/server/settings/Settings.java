@@ -60,8 +60,9 @@ public class Settings {
      * */
 
     private boolean     windowMode                      = true;
+    private int         cornerWindowResizeSize          = 12;
     private int         windowBorderWidth               = 2;
-    private int         windowBorderActiveOffsetWidth   = 2; // Active area out of window's borders to get click on border
+    private int         windowBorderActiveOffsetWidth   = 8; // Active area out of window's borders to get click on border
     private int         windowTitleBarHeight            = 30;
     private byte[]      windowBorderColor               = Colors.COLOR_DARK_GRAY;
     private byte[]      windowTitleColor                = Colors.COLOR_DARK_BLUE;
@@ -288,5 +289,13 @@ public class Settings {
 
     public void setWindowBorderActiveOffsetWidth(int windowBorderActiveOffsetWidth) {
         this.windowBorderActiveOffsetWidth = windowBorderActiveOffsetWidth;
+    }
+
+    public int getCornerWindowResizeSize() {
+        return cornerWindowResizeSize;
+    }
+
+    public void setCornerWindowResizeSize(int cornerWindowResizeSize) {
+        this.cornerWindowResizeSize = cornerWindowResizeSize;
     }
 }

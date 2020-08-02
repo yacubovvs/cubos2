@@ -2,6 +2,7 @@ package ru.cubos.server.system.apps;
 
 import ru.cubos.server.Server;
 import ru.cubos.server.helpers.BinaryImage;
+import ru.cubos.server.settings.Settings;
 import ru.cubos.server.system.events.Event;
 import ru.cubos.server.system.views.IconView;
 import ru.cubos.server.system.views.TextView;
@@ -35,6 +36,10 @@ public abstract class App {
         return eventViewLists.get(type);
     }
 
+    public Settings getSettings(){
+        return getServer().settings;
+    }
+
     public void addEventView(View view, Event.Type type){
         List<View> list = getEventList(type);
         if(list==null){
@@ -58,6 +63,7 @@ public abstract class App {
     }
 
     private boolean isMoving = false;
+    private boolean isResizing = false;
 
     public int[] getActiveCoordinates(){
         // get enable to click area on screen
@@ -69,6 +75,17 @@ public abstract class App {
         };
 
         return result;
+    }
+
+    public boolean coordinatesInActiveArea(int x, int y){
+        int appCoordinates[] = getActiveCoordinates();
+        int x_min = appCoordinates[0];
+        int y_min = appCoordinates[1];
+        int x_max = appCoordinates[2];
+        int y_max = appCoordinates[3];
+
+        if(x_min<=x && x_max>=x && y_min<=y && y_max>=y) return true;
+        else return false;
     }
 
     private String windowTitle = "New window";
@@ -92,34 +109,7 @@ public abstract class App {
         setBottomOffset(0);
 
         if(server.settings.isWindowMode()){
-            windowTitleBar = new WindowTitleBar();
-            windowTitleBar.setHeight(server.settings.getWindowTitleBarHeight());
-            windowTitleBar.setHorizontalScrollDisable();
-            windowTitleBar.setVerticalScrollDisable();
-
-
-
-            IconView close_button       = new IconView("images//icons//close_button.png");
-            close_button.setMargin((server.settings.getWindowTitleBarHeight() - close_button.getIcon().getHeight())/2);
-            close_button.setWidth_source(View.SizeSource.SIZE_SOURCE_CONTENT);
-
-            IconView fullscreen_button  = new IconView("images//icons//fullscreen_button.png");
-            fullscreen_button.setMargin((server.settings.getWindowTitleBarHeight() - fullscreen_button.getIcon().getHeight())/2);
-            fullscreen_button.setWidth_source(View.SizeSource.SIZE_SOURCE_CONTENT);
-
-            IconView rollup_button      = new IconView("images//icons//rollup_button.png");
-            rollup_button.setMargin((server.settings.getWindowTitleBarHeight() - rollup_button.getIcon().getHeight())/2);
-            rollup_button.setWidth_source(View.SizeSource.SIZE_SOURCE_CONTENT);
-
-
-            windowTitleBar.add(close_button);
-            windowTitleBar.add(fullscreen_button);
-            windowTitleBar.add(rollup_button);
-            windowTitleBar.setBackgroundColor(server.settings.getWindowTitleColor());
-
-            TextView title = new TextView(getWindowTitle());
-            windowTitleBar.add(title);
-            windowTitleBar.setAppParent(this);
+            windowTitleBar = new WindowTitleBar(this);
         }
 
     }
@@ -382,5 +372,13 @@ public abstract class App {
 
     public void setWindowTitle(String windowTitle) {
         this.windowTitle = windowTitle;
+    }
+
+    public boolean isResizing() {
+        return isResizing;
+    }
+
+    public void setResizing(boolean resizing) {
+        isResizing = resizing;
     }
 }

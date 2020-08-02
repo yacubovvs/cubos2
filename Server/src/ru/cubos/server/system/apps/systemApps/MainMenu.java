@@ -15,12 +15,14 @@ public class MainMenu extends App {
     public MainMenu(Server server) {
         super(server);
 
+        setWindowTitle("Main menu");
+
         getBaseContainer().setBackgroundColor(new byte[]{-96, -96, -96});
 
-        setLeftOffset(50);
-        setRightOffset(50);
-        setTopOffset(100);
-        setBottomOffset(50);
+        setLeftOffset(30);
+        setRightOffset(80);
+        setTopOffset(120);
+        setBottomOffset(30);
 
         tabelContainer = new TabelContainer(TabelContainer.TableType.FIXED_ROWS,5);
         tabelContainer.setMargin(15);

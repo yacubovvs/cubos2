@@ -22,7 +22,15 @@ public class TouchDownEvent extends EventTouch {
 
         if (isOnTitleBarEvent(app)) app.setMoving(true);
 
-        if(!isInWindowEvent(app)) return;
+        if(!isInWindowEvent(app)){
+            if(app.getServer().settings.isWindowMode() && app.coordinatesInActiveArea(x, y)){
+                app.setResizing(true);
+                return;
+            }
+            return;
+        }else{
+            //System.out.println("On form touch down");
+        }
 
         // # # # # # # # # # # # # # # # # # # # SCROLLBARS EVENTS # # # # # # # # # # # # # # # # # # # # # # #
 

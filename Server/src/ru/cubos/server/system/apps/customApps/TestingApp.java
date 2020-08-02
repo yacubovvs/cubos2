@@ -15,6 +15,8 @@ public class TestingApp extends App {
     public TestingApp(Server server){
         super(server);
 
+        setWindowTitle("Testing app");
+
         setLeftOffset(50);
         setRightOffset(50);
         setTopOffset(100);

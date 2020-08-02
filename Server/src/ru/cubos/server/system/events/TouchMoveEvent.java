@@ -44,8 +44,20 @@ public class TouchMoveEvent extends EventTouch {
             && y_start < app.getDisplayHeight() - app.getBottomOffset()
             && x_start > app.getLeftOffset()
             && x_start < app.getDisplayWidth() - app.getRightOffset()
-        ) return true;
-        else return false;
+        ){
+            return true;
+        } else return false;
+    }
+
+    public boolean isInWindowEvent_last(App app){
+        if(
+                y_last > app.getTopOffset()
+                && y_last < app.getDisplayHeight() - app.getBottomOffset()
+                && x_last > app.getLeftOffset()
+                && x_last < app.getDisplayWidth() - app.getRightOffset()
+        ){
+            return true;
+        } else return false;
     }
 
     public void checkViewsForEvent(List<View> viewList){
@@ -88,9 +100,55 @@ public class TouchMoveEvent extends EventTouch {
 
         if(app.isMoving()) return;
 
+
+        if (app.isResizing() && !isInWindowEvent_last(app)){
+            if(app.getServer().settings.isWindowMode() && app.coordinatesInActiveArea(x_last, y_last)){
+                //System.out.println("On active border click");
+                if(x_last>=app.getDisplayWidth()-app.getRightOffset()-app.getSettings().getCornerWindowResizeSize() && y_last>=app.getDisplayHeight()-app.getBottomOffset()-app.getSettings().getCornerWindowResizeSize()){
+                    app.setBottomOffset(app.getDisplayHeight()-y);
+                    app.setRightOffset(app.getDisplayWidth()-x);
+                    app.setRepaintPending();
+                    //System.out.println("Right-bottom active coner");
+                }else if(x_last<=app.getLeftOffset()+app.getSettings().getCornerWindowResizeSize() && y_last<=app.getTopOffset()-app.getServer().settings.getWindowTitleBarHeight()+app.getSettings().getCornerWindowResizeSize()){
+                    app.setTopOffset(y + app.getServer().settings.getWindowTitleBarHeight());
+                    app.setLeftOffset(x);
+                    app.setRepaintPending();
+                    //System.out.println("Left-top active coner");
+                }else if(x_last>=app.getDisplayWidth()-app.getRightOffset()-app.getSettings().getCornerWindowResizeSize() && y_last<=app.getTopOffset()-app.getServer().settings.getWindowTitleBarHeight()+app.getSettings().getCornerWindowResizeSize()){
+                    app.setTopOffset(y + app.getServer().settings.getWindowTitleBarHeight());
+                    app.setRightOffset(app.getDisplayWidth()-x);
+                    app.setRepaintPending();
+                    //System.out.println("Right-top active coner");
+                }else if(x_last<=app.getLeftOffset()+app.getSettings().getCornerWindowResizeSize() && y_last>=app.getDisplayHeight()-app.getBottomOffset()-app.getSettings().getCornerWindowResizeSize()){
+                    app.setBottomOffset(app.getDisplayHeight()-y);
+                    app.setLeftOffset(x);
+                    app.setRepaintPending();
+                    //System.out.println("Left-bottom active coner");
+                }else if(x_last>=app.getDisplayWidth()-app.getRightOffset()){
+                    app.setRightOffset(app.getDisplayWidth()-x);
+                    app.setRepaintPending();
+                }else if(x_last<=app.getLeftOffset()){
+                    app.setLeftOffset(x);
+                    app.setRepaintPending();
+                }else if(y_last>=app.getDisplayHeight()-app.getBottomOffset()){
+                    app.setBottomOffset(app.getDisplayHeight()-y);
+                    app.setRepaintPending();
+                }else if(y_last<=app.getTopOffset() - app.getServer().settings.getWindowTitleBarHeight()){
+                    app.setTopOffset(y + app.getServer().settings.getWindowTitleBarHeight());
+                    app.setRepaintPending();
+                }
+            }else{
+                System.out.println("No reason out");
+            }
+        }
+
+        if(app.isResizing()) return;
+
         if (!isInWindowEvent(app)){
             return;
         }
+
+
 
         // # # # # # # # # # # # # # # # # # # # SCROLLBARS EVENTS # # # # # # # # # # # # # # # # # # # # # # #
         if(app.getServer().settings.isDragScrollBarEnable()) {

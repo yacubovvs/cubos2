@@ -77,7 +77,7 @@ public class ScrollBar {
         if(isVisible){
             return true;
         }else{
-            return false;
+            return getTotalContentLength() < visibleContentlength;
         }
     }
 
@@ -105,9 +105,11 @@ public class ScrollBar {
     private int pointOffsetHeight; //max height of drawind scrollbar
 
     public void onClick(int tapPosition) {
+
         if(type==Type.HORIZONTAL){
             // Horizontal - later
         }else{
+            if(!(getApp().getBaseContainer().isVerticalScrollEnable() && getApp().isHasYScroll())) return;
             // Vertical
             int scollBarPosition = tapPosition - app.getServer().settings.getScrollbarWidth() - topOffset - pointHeight/2;
             if(scollBarPosition<0) scollBarPosition = 0;

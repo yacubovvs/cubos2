@@ -2,6 +2,7 @@ package ru.cubos.server;
 
 import ru.cubos.connectors.Connector;
 import ru.cubos.connectors.emulator.Emulator;
+import ru.cubos.server.helpers.BinaryImage;
 import ru.cubos.server.helpers.ByteConverter;
 import ru.cubos.server.helpers.Colors;
 import ru.cubos.server.helpers.framebuffer.Display;
@@ -14,6 +15,7 @@ import ru.cubos.server.system.apps.customApps.TestingApp;
 import ru.cubos.server.system.apps.systemApps.MainMenu;
 import ru.cubos.server.system.events.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +50,8 @@ public class Server {
         return openedApps.get(openedApps.size()-1);
     }
 
+    private BinaryImage backGroundImage;
+
     public Server(Connector connector) {
         this.connector = connector;
         display = new Display(connector.getScreenWidth(), connector.getScreenHeight());
@@ -58,6 +62,12 @@ public class Server {
         openedApps.add(new TestingApp(this));
         openedApps.add(new MainMenu(this));
         timeWidgetView = new TimeWidgetView();
+
+        try {
+            backGroundImage = new BinaryImage("images//bg_640x480.png");
+        } catch (IOException e) {
+            backGroundImage = null;
+        }
 
         //display.drawLine(0,0,100,100, Colors.COLOR_RED);
     }
@@ -78,8 +88,15 @@ public class Server {
         serverThread.start();
     }
 
+
     void drawApps(){
-        display.drawRect(0, settings.getStatusBarHeight(), display.getWidth(), display.getHeight() - settings.getButtonBarHeight(), Colors.COLOR_BLACK, true);
+        if(backGroundImage==null) display.drawRect(0, settings.getStatusBarHeight(), display.getWidth(), display.getHeight() - settings.getButtonBarHeight(), Colors.COLOR_BLACK, true);
+        else display.drawImage(
+                0, 0,
+                display.getWidth(), display.getHeight() - settings.getButtonBarHeight(),
+                0, settings.getStatusBarHeight(),
+                backGroundImage, null);
+
         for( App app: openedApps){
             app.draw();
         }
@@ -187,6 +204,7 @@ public class Server {
 
                     //System.out.println("Server: on move finished");
                     for (App app: openedApps) app.setMoving(false);
+                    for (App app: openedApps) app.setResizing(false);
                     getActiveApp().execEvent(new TouchMoveFinishedEvent(x0, y0, x_start, y_start));
                     break;
                 default:
@@ -207,13 +225,8 @@ public class Server {
         //for (App app: openedApps){
         for (int i=openedApps.size()-1; i>=0; i--){
             App app = openedApps.get(i);
-            int appCoordinates[] = app.getActiveCoordinates();
-            int x_min = appCoordinates[0];
-            int y_min = appCoordinates[1];
-            int x_max = appCoordinates[2];
-            int y_max = appCoordinates[3];
 
-            if(x_min<=x && x_max>=x && y_min<=y && y_max>=y){
+            if(app.coordinatesInActiveArea(x, y)){
                 if(getActiveApp()!=app){
                     activateApp(app);
                 }
