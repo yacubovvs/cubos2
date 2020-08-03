@@ -3,6 +3,9 @@ package ru.cubos.server.system.apps.systemApps.desktopWidgets;
 import ru.cubos.server.Server;
 import ru.cubos.server.helpers.Colors;
 import ru.cubos.server.system.views.IconView;
+import ru.cubos.server.system.views.TextView;
+import ru.cubos.server.system.views.View;
+import ru.cubos.server.system.views.containers.HorizontalContainer;
 import ru.cubos.server.system.views.containers.LinearContainer;
 
 public class MainMenuDesktopWidget extends DesktopWidget {
@@ -10,11 +13,29 @@ public class MainMenuDesktopWidget extends DesktopWidget {
         super(server);
         setWindowMode(false);
 
-        getBaseContainer().setBackgroundColor(Colors.COLOR_LIGHT_GRAY);
-        getBaseContainer().setType(LinearContainer.Type.HORIZONTAL);
-        getBaseContainer().setHeight(getSettings().getStatusBarHeight());
-        IconView iconView = new IconView("images//icons//startButton.png", Colors.COLOR_ALFA);
-        iconView.setMargin((getSettings().getStatusBarHeight() - iconView.getIcon().getHeight())/2);
+        getBaseContainer().setBackgroundColor(Colors.COLOR_DARK_GRAY);
+
+        IconView iconView = new IconView("images//icons//apps_24//calibration.png", Colors.COLOR_ALFA);
+        iconView.setPadding(6);
+        iconView.setWidth(iconView.getPaddingLeft() + iconView.getIcon().getWidth());
+        TextView textView = new TextView("Calibration");
+        textView.setHorizontalAlign(View.HorizontalAlign.ALIGN_HORIZONTAL_LEFT);
+
+        HorizontalContainer appContainer = new HorizontalContainer();
+        appContainer.add(iconView);
+        appContainer.add(textView);
+
+        addView(appContainer);
+        /*
+        IconView iconView2 = new IconView("images//icons//filebrowser.png", Colors.COLOR_ALFA);
+
+        IconView iconView3 = new IconView("images//icons//network.png", Colors.COLOR_ALFA);
+        IconView iconView4 = new IconView("images//icons//paint.png", Colors.COLOR_ALFA);
+        IconView iconView5 = new IconView("images//icons//settings.png", Colors.COLOR_ALFA);
+
+        IconView iconView6 = new IconView("images//icons//terminal.png", Colors.COLOR_ALFA);
+        IconView iconView7 = new IconView("images//icons//texteditor.png", Colors.COLOR_ALFA);
+        */
 
         iconView.setOnTouchDownListener(new Runnable() {
             @Override
@@ -23,14 +44,14 @@ public class MainMenuDesktopWidget extends DesktopWidget {
             }
         }, this);
 
-        setTopOffset(0);
-        setBottomOffset(getDisplayHeight() - getSettings().getStatusBarHeight());
+        setTopOffset(getSettings().getStatusBarHeight());
+        setBottomOffset(100);
         setLeftOffset(0);
-        setRightOffset(0);
+        setRightOffset(getDisplayWidth() - 200);
 
-        addView(iconView);
     }
 
+    /*
     public int[] drawRenderedImage(){
         int renderSize[] = getServer().display.drawImage(
                 getLeftOffset() - getWindowBorderWidth(),
@@ -42,54 +63,7 @@ public class MainMenuDesktopWidget extends DesktopWidget {
                 renderImage, null);
 
         return renderSize;
-    }
-
-    /*
-        Server server;
-    private BinaryImage batteryIndicator;
-
-    private boolean repaintPending = true;
-
-    public StatusBar(Server server){
-        this.server = server;
-        try {
-            this.batteryIndicator = new BinaryImage("images//icons//battery_x2_100.png");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void paint(){
-        if (server.settings.isStatusBarEnable()){
-            server.display.drawRect(0,0, server.display.getWidth(), server.settings.getStatusBarHeight(), server.settings.getStatusBarColor(), true);
-            String timeString = server.timeWidgetView.getCurrentTime();
-
-            // # # # # # # Time # # # # # #
-            //int time_x = server.display.getWidth() - server.settings.getStatusTextSize()*server.settings.getSystemCharWidth()*timeString.trim().length() - server.settings.getStatusLeftRightMargin();
-            int time_x = server.settings.getStatusBarLeftRightMargin();
-            int time_y = server.settings.getStatusBarHeight()/2 - server.settings.getStatusBarTextSize()*server.settings.getSystemCharHeight()/2;
-            server.display.drawString(time_x, time_y, timeString, server.settings.getStatusBarTextColor(), server.settings.getStatusBarTextSize());
-
-            // # # # # # # Battery # # # # # #
-            int battery_x = server.display.getWidth() - server.settings.getStatusBarLeftRightMargin() - batteryIndicator.getWidth();
-            int battery_y = server.settings.getStatusBarHeight()/2 - batteryIndicator.getHeight()/2;
-
-            server.display.drawImage(battery_x, battery_y, batteryIndicator, Colors.COLOR_WHITE);
+    }*/
 
 
-        }
-
-        setRepaintPending(false);
-    }
-
-    /////////////////////////////////////////////////////////////////
-
-    public boolean isRepaintPending() {
-        return repaintPending;
-    }
-
-    public void setRepaintPending(boolean repaintPending) {
-        this.repaintPending = repaintPending;
-    }
-    * */
 }

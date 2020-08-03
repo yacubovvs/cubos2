@@ -12,6 +12,7 @@ import ru.cubos.server.system.TimeWidgetView;
 import ru.cubos.server.system.apps.App;
 import ru.cubos.server.system.apps.customApps.TestingApp;
 import ru.cubos.server.system.apps.systemApps.MainMenu;
+import ru.cubos.server.system.apps.systemApps.desktopWidgets.MainMenuDesktopWidget;
 import ru.cubos.server.system.apps.systemApps.desktopWidgets.StatusBarDesktopWidget;
 import ru.cubos.server.system.events.*;
 
@@ -63,6 +64,7 @@ public class Server {
         openedApps.add(statusBar);
         openedApps.add(new TestingApp(this));
         openedApps.add(new MainMenu(this));
+        openedApps.add(new MainMenuDesktopWidget(this));
 
         timeWidgetView = new TimeWidgetView();
 
