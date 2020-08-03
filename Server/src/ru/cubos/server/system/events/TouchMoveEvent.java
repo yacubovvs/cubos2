@@ -97,7 +97,10 @@ public class TouchMoveEvent extends EventTouch {
             return;
         }
 
-        if(app.isMoving()) return;
+        if(app.isMoving()){
+            //System.out.println("Form move moving");
+            return;
+        }
 
 
         if (app.isResizing() && !isInWindowEvent_last(app)){
@@ -145,14 +148,20 @@ public class TouchMoveEvent extends EventTouch {
                     app.setRepaintPending(true, true);
                 }
             }else{
-                System.out.println("No reason out");
+                //System.out.println("Resizing error");
             }
         }
 
-        if(app.isResizing()) return;
+        if(app.isResizing()){
+            //System.out.println("Form move resizing");
+            return;
+        }
 
         if (!isInWindowEvent(app)){
+            //System.out.println("In form move");
             return;
+        }else{
+            //System.out.println("Out of form move");
         }
 
 

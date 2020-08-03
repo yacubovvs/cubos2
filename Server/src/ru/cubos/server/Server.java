@@ -11,8 +11,7 @@ import ru.cubos.server.system.ButtonBar;
 import ru.cubos.server.system.TimeWidgetView;
 import ru.cubos.server.system.apps.App;
 import ru.cubos.server.system.apps.customApps.TestingApp;
-import ru.cubos.server.system.apps.systemApps.MainMenu;
-import ru.cubos.server.system.apps.systemApps.desktopWidgets.MainMenuDesktopWidget;
+import ru.cubos.server.system.apps.systemApps.ApplicationsList;
 import ru.cubos.server.system.apps.systemApps.desktopWidgets.StatusBarDesktopWidget;
 import ru.cubos.server.system.events.*;
 
@@ -53,6 +52,8 @@ public class Server {
 
     private BinaryImage backGroundImage;
 
+
+
     public Server(Connector connector) {
         this.connector = connector;
         display = new Display(connector.getScreenWidth(), connector.getScreenHeight());
@@ -63,8 +64,7 @@ public class Server {
 
         openedApps.add(statusBar);
         openedApps.add(new TestingApp(this));
-        openedApps.add(new MainMenu(this));
-        openedApps.add(new MainMenuDesktopWidget(this));
+        openedApps.add(new ApplicationsList(this));
 
         timeWidgetView = new TimeWidgetView();
 
@@ -185,6 +185,8 @@ public class Server {
                     current_position += 5;
 
                     //System.out.println("Server: on screen mouse down");
+                    for (App app: openedApps) app.setMoving(false);
+                    for (App app: openedApps) app.setResizing(false);
                     activateAppByCoordinates(x0, y0);
                     getActiveApp().execEvent(new TouchDownEvent(x0, y0));
                     break;
@@ -208,8 +210,6 @@ public class Server {
                     current_position += 9;
 
                     //System.out.println("Server: on move finished");
-                    for (App app: openedApps) app.setMoving(false);
-                    for (App app: openedApps) app.setResizing(false);
                     getActiveApp().execEvent(new TouchMoveFinishedEvent(x0, y0, x_start, y_start));
                     break;
                 default:
@@ -228,14 +228,19 @@ public class Server {
 
     public void activateAppByCoordinates(int x, int y){
         //for (App app: openedApps){
-        for (int i=openedApps.size()-1; i>=0; i--){
-            App app = openedApps.get(i);
+        if(!getActiveApp().coordinatesInActiveArea(x,y)) {
+            if(getActiveApp().onFocusLose()) {
+                for (int i = openedApps.size() - 1; i >= 0; i--) {
+                    App app = openedApps.get(i);
 
-            if(app.coordinatesInActiveArea(x, y)){
-                if(getActiveApp()!=app){
-                    activateApp(app);
+                    if (app.coordinatesInActiveArea(x, y)) {
+                        if (getActiveApp() != app) {
+                            activateApp(app);
+                        }
+                        return;
+                    }
                 }
-                return;
+                activateApp(statusBar);
             }
         }
     }
@@ -243,7 +248,19 @@ public class Server {
     public void activateApp(App app){
         openedApps.remove(app);
         openedApps.add(app);
+        app.onFocusGot();
         // TODO: call redrawing app after order change
+        setRepaintPending();
+    }
+
+    public void closeApp(App app){
+        openedApps.remove(app);
+        app = null;
+    }
+
+    public void openApp(App app){
+        openedApps.add(app);
+        app.onFocusGot();
         setRepaintPending();
     }
 

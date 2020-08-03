@@ -9,10 +9,10 @@ import ru.cubos.server.system.views.View;
 import ru.cubos.server.system.views.containers.TabelContainer;
 import ru.cubos.server.system.views.containers.VerticalContainer;
 
-public class MainMenu extends App {
+public class ApplicationsList extends App {
     TabelContainer tabelContainer;
 
-    public MainMenu(Server server) {
+    public ApplicationsList(Server server) {
         super(server);
 
         setWindowTitle("Main menu");

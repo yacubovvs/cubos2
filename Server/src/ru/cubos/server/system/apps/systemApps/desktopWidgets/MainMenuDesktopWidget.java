@@ -40,7 +40,7 @@ public class MainMenuDesktopWidget extends DesktopWidget {
         iconView.setOnTouchDownListener(new Runnable() {
             @Override
             public void run() {
-                System.out.println("On menu click");
+                System.out.println("On widget menu click");
             }
         }, this);
 
@@ -49,6 +49,13 @@ public class MainMenuDesktopWidget extends DesktopWidget {
         setLeftOffset(0);
         setRightOffset(getDisplayWidth() - 200);
 
+    }
+
+    @Override
+    public boolean onFocusLose(){
+        //System.out.println("Close on focus lose");
+        getServer().closeApp(this);
+        return true;
     }
 
     /*

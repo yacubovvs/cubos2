@@ -20,7 +20,8 @@ public class StatusBarDesktopWidget extends DesktopWidget {
         iconView.setOnTouchDownListener(new Runnable() {
             @Override
             public void run() {
-                System.out.println("On menu click");
+                //System.out.println("On menu click");
+                getServer().openApp(new MainMenuDesktopWidget(getServer()));
             }
         }, this);
 

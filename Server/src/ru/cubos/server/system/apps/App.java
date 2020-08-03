@@ -221,6 +221,13 @@ public abstract class App {
         baseContainer.setRepaintPending(false);
     }
 
+    public boolean onFocusLose(){
+        //return  false; // for prevent focus losing
+        return true;
+    }
+
+    public void onFocusGot(){
+    }
 
 
     /*
@@ -424,4 +431,5 @@ public abstract class App {
     public void setWindowMode(boolean windowMode) {
         this.windowMode = windowMode;
     }
+
 }
