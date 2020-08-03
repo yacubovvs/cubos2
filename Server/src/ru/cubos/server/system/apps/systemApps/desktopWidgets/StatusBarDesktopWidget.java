@@ -1,13 +1,52 @@
-package ru.cubos.server.system;
+package ru.cubos.server.system.apps.systemApps.desktopWidgets;
 
 import ru.cubos.server.Server;
-import ru.cubos.server.helpers.BinaryImage;
 import ru.cubos.server.helpers.Colors;
+import ru.cubos.server.system.views.IconView;
+import ru.cubos.server.system.views.TextView;
+import ru.cubos.server.system.views.containers.LinearContainer;
 
-import java.io.IOException;
+public class StatusBarDesktopWidget extends DesktopWidget {
+    public StatusBarDesktopWidget(Server server) {
+        super(server);
+        setWindowMode(false);
 
-public class StatusBar {
-    Server server;
+        getBaseContainer().setBackgroundColor(Colors.COLOR_LIGHT_GRAY);
+        getBaseContainer().setType(LinearContainer.Type.HORIZONTAL);
+        getBaseContainer().setHeight(getSettings().getStatusBarHeight());
+        IconView iconView = new IconView("images//icons//startButton.png", Colors.COLOR_ALFA);
+        iconView.setMargin((getSettings().getStatusBarHeight() - iconView.getIcon().getHeight())/2);
+
+        iconView.setOnTouchDownListener(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("On menu click");
+            }
+        }, this);
+
+        setTopOffset(0);
+        setBottomOffset(getDisplayHeight() - getSettings().getStatusBarHeight());
+        setLeftOffset(0);
+        setRightOffset(0);
+
+        addView(iconView);
+    }
+
+    public int[] drawRenderedImage(){
+        int renderSize[] = getServer().display.drawImage(
+                getLeftOffset() - getWindowBorderWidth(),
+                getTopOffset() - getWindowTitleBarHeight() - getWindowBorderWidth(),
+                getDisplayWidth(),
+                getServer().settings.getStatusBarHeight(),//getDisplayHeight() + 1 - getTopOffset() + getWindowTitleBarHeight() + getWindowBorderWidth() - getSettings().getButtonBarHeight(),
+                0,
+                0,
+                renderImage, null);
+
+        return renderSize;
+    }
+
+    /*
+        Server server;
     private BinaryImage batteryIndicator;
 
     private boolean repaintPending = true;
@@ -53,4 +92,5 @@ public class StatusBar {
     public void setRepaintPending(boolean repaintPending) {
         this.repaintPending = repaintPending;
     }
+    * */
 }

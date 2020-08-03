@@ -283,6 +283,10 @@ public abstract class View {
         this.repaintPending = repaintPending;
     }
 
+    public void setRepaintPending(boolean repaintPending, boolean anything) {
+        setRepaintPending(repaintPending);
+    }
+
     public String getId() {
         return id;
     }

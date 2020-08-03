@@ -117,4 +117,14 @@ public abstract class ContainerView extends View {
         }
     }
 
+    @Override
+    public void setRepaintPending(boolean repaintPending, boolean anything) {
+        super.setRepaintPending(repaintPending, anything);
+        if(anything) {
+            for (View child : children) {
+                child.setRepaintPending(repaintPending, true);
+            }
+        }
+    }
+
 }

@@ -37,12 +37,11 @@ public abstract class EventTouch extends Event {
         if(viewList==null) return;
         for(View view: viewList){
             if(
-                    view.getOnTouchTapListener()!=null &&
-                            view.isVisible() &&
-                            view.getRenderX() <= x &&
-                            view.getRenderY() <= y &&
-                            view.getRenderX() + view.getWidth() > x &&
-                            view.getRenderY() + view.getHeight() > y
+                view.isVisible() &&
+                view.getRenderX() <= x &&
+                view.getRenderY() <= y &&
+                view.getRenderX() + view.getWidth() > x &&
+                view.getRenderY() + view.getHeight() > y
             ){
                 if(isPreventEvent()) break;
                 runViewEvent(view);

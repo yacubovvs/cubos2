@@ -14,7 +14,7 @@ public class TouchMoveEvent extends EventTouch {
 
     @Override
     public void runViewEvent(View view) {
-        view.getOnTouchDownListener();
+        view.getOnTouchMoveListener().run();
     }
 
     public boolean isOnTitleBarEvent(App app){
@@ -64,12 +64,11 @@ public class TouchMoveEvent extends EventTouch {
         if(viewList==null) return;
         for(View view: viewList){
             if(
-                    view.getOnTouchTapListener()!=null &&
-                            view.isVisible() &&
-                            view.getRenderX() <= x_start &&
-                            view.getRenderY() <= y_start &&
-                            view.getRenderX() + view.getWidth() > x_start &&
-                            view.getRenderY() + view.getHeight() > y_start
+                view.isVisible() &&
+                view.getRenderX() <= x_start &&
+                view.getRenderY() <= y_start &&
+                view.getRenderX() + view.getWidth() > x_start &&
+                view.getRenderY() + view.getHeight() > y_start
             ){
                 if(isPreventEvent()) break;
                 runViewEvent(view);
@@ -107,35 +106,43 @@ public class TouchMoveEvent extends EventTouch {
                 if(x_last>=app.getDisplayWidth()-app.getRightOffset()-app.getSettings().getCornerWindowResizeSize() && y_last>=app.getDisplayHeight()-app.getBottomOffset()-app.getSettings().getCornerWindowResizeSize()){
                     app.setBottomOffset(app.getDisplayHeight()-y);
                     app.setRightOffset(app.getDisplayWidth()-x);
-                    app.setRepaintPending();
+                    //app.setRepaintPending();
+                    app.setRepaintPending(true, true);
                     //System.out.println("Right-bottom active coner");
                 }else if(x_last<=app.getLeftOffset()+app.getSettings().getCornerWindowResizeSize() && y_last<=app.getTopOffset()-app.getServer().settings.getWindowTitleBarHeight()+app.getSettings().getCornerWindowResizeSize()){
                     app.setTopOffset(y + app.getServer().settings.getWindowTitleBarHeight());
                     app.setLeftOffset(x);
-                    app.setRepaintPending();
+                    //app.setRepaintPending();
                     //System.out.println("Left-top active coner");
+                    app.setRepaintPending(true, true);
                 }else if(x_last>=app.getDisplayWidth()-app.getRightOffset()-app.getSettings().getCornerWindowResizeSize() && y_last<=app.getTopOffset()-app.getServer().settings.getWindowTitleBarHeight()+app.getSettings().getCornerWindowResizeSize()){
                     app.setTopOffset(y + app.getServer().settings.getWindowTitleBarHeight());
                     app.setRightOffset(app.getDisplayWidth()-x);
-                    app.setRepaintPending();
+                    //app.setRepaintPending();
+                    app.setRepaintPending(true, true);
                     //System.out.println("Right-top active coner");
                 }else if(x_last<=app.getLeftOffset()+app.getSettings().getCornerWindowResizeSize() && y_last>=app.getDisplayHeight()-app.getBottomOffset()-app.getSettings().getCornerWindowResizeSize()){
                     app.setBottomOffset(app.getDisplayHeight()-y);
                     app.setLeftOffset(x);
-                    app.setRepaintPending();
+                    //app.setRepaintPending();
+                    app.setRepaintPending(true, true);
                     //System.out.println("Left-bottom active coner");
                 }else if(x_last>=app.getDisplayWidth()-app.getRightOffset()){
                     app.setRightOffset(app.getDisplayWidth()-x);
-                    app.setRepaintPending();
+                    //app.setRepaintPending();
+                    app.setRepaintPending(true, true);
                 }else if(x_last<=app.getLeftOffset()){
                     app.setLeftOffset(x);
-                    app.setRepaintPending();
+                    //app.setRepaintPending();
+                    app.setRepaintPending(true, true);
                 }else if(y_last>=app.getDisplayHeight()-app.getBottomOffset()){
                     app.setBottomOffset(app.getDisplayHeight()-y);
-                    app.setRepaintPending();
+                    //app.setRepaintPending();
+                    app.setRepaintPending(true, true);
                 }else if(y_last<=app.getTopOffset() - app.getServer().settings.getWindowTitleBarHeight()){
                     app.setTopOffset(y + app.getServer().settings.getWindowTitleBarHeight());
-                    app.setRepaintPending();
+                    //app.setRepaintPending();
+                    app.setRepaintPending(true, true);
                 }
             }else{
                 System.out.println("No reason out");

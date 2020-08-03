@@ -23,6 +23,7 @@ public abstract class App {
     protected BinaryImage contentRenderImage;
     protected BinaryImage renderImage;
 
+    private boolean windowMode;
     private int leftOffset;
     private int topOffset;
     private int rightOffset;
@@ -30,6 +31,9 @@ public abstract class App {
 
     private boolean hasXScroll;
     private boolean hasYScroll;
+
+    private boolean movingEnable = true;
+    private boolean resizingEnable = true;
 
     private HashMap<Event.Type, List<View>> eventViewLists = new HashMap<>();
     public List<View> getEventList(Event.Type type){
@@ -68,13 +72,28 @@ public abstract class App {
     public int[] getActiveCoordinates(){
         // get enable to click area on screen
         int[] result = new int[]{
-            getLeftOffset() - server.settings.getWindowBorderActiveOffsetWidth(),
-            getTopOffset() - server.settings.getWindowBorderActiveOffsetWidth() - server.settings.getWindowTitleBarHeight(),
-            getDisplayWidth() - getRightOffset() + server.settings.getWindowBorderActiveOffsetWidth(),
-            getDisplayHeight() - getBottomOffset()  + server.settings.getWindowBorderActiveOffsetWidth()
+            getLeftOffset() - getWindowBorderActiveOffsetWidth(),
+            getTopOffset() - getWindowBorderActiveOffsetWidth() - getWindowTitleBarHeight(),
+            getDisplayWidth() - getRightOffset() + getWindowBorderActiveOffsetWidth(),
+            getDisplayHeight() - getBottomOffset()  + getWindowBorderActiveOffsetWidth()
         };
 
         return result;
+    }
+
+    public int getWindowBorderWidth(){
+        if(windowMode) return server.settings.getWindowBorderWidth();
+        else return 0;
+    }
+
+    public int getWindowBorderActiveOffsetWidth(){
+        if(windowMode) return server.settings.getWindowBorderActiveOffsetWidth();
+        else return 0;
+    }
+
+    public int getWindowTitleBarHeight(){
+        if(windowMode) return server.settings.getWindowTitleBarHeight();
+        else return 0;
     }
 
     public boolean coordinatesInActiveArea(int x, int y){
@@ -92,6 +111,7 @@ public abstract class App {
 
     public App(Server server){
         this.server = server;
+        setWindowMode(getSettings().isWindowMode());
         baseContainer = new LinearContainer();
         baseContainer.setServer(server);
         baseContainer.setAppParent(this);
@@ -108,7 +128,7 @@ public abstract class App {
         setTopOffset(0);
         setBottomOffset(0);
 
-        if(server.settings.isWindowMode()){
+        if(isWindowMode()){
             windowTitleBar = new WindowTitleBar(this);
         }
 
@@ -119,10 +139,9 @@ public abstract class App {
     }
 
     public void drawWindowBorders(BinaryImage image){
-        for(int i=0; i<server.settings.getWindowBorderWidth(); i++) {
-            image.drawRect(i,i, image.getWidth()-1-i, image.getHeight()-1-i, server.settings.getWindowBorderColor());
+        for(int i=0; i<getWindowBorderWidth(); i++) {
+            image.drawRect(i,i, image.getWidth()-1-i, image.getHeight()-1-i, getSettings().getWindowBorderColor());
         }
-        //image.drawRect(server.settings.getWindowBorderWidth(), server.settings.getWindowBorderWidth(), image.getWidth()-server.settings.getWindowBorderWidth(), server.settings.getWindowTitleHeight(), server.settings.getWindowTitleColor(), true);
     }
 
     public void draw(){
@@ -131,24 +150,12 @@ public abstract class App {
 
             baseContainer.draw();
 
-            renderImage = new BinaryImage(getWindowWidth() + 2*server.settings.getWindowBorderWidth(), getWindowHeight() + server.settings.getWindowBorderWidth()*2 + server.settings.getWindowTitleBarHeight());
+            renderImage = new BinaryImage(getWindowWidth() + 2*getWindowBorderWidth(), getWindowHeight() + getWindowBorderWidth()*2 + getWindowTitleBarHeight());
             contentRenderImage = baseContainer.getRenderImage();
 
-            /*
             renderImage.drawImage(
-                    server.settings.getWindowBorderWidth()-baseContainer.getScrollX(),
-                    server.settings.getWindowBorderWidth() + server.settings.getWindowTitleBarHeight()-baseContainer.getScrollY(),
-                    getWindowWidth() + baseContainer.getScrollX(),
-                    getWindowHeight() + baseContainer.getScrollY(),
-                    baseContainer.getScrollX(),
-                    baseContainer.getScrollY(),
-                    baseContainer.getRenderImage(), null);
-
-             */
-
-            renderImage.drawImage(
-                    server.settings.getWindowBorderWidth()-baseContainer.getScrollX(),
-                    server.settings.getWindowBorderWidth() + server.settings.getWindowTitleBarHeight()-baseContainer.getScrollY(),
+                    getWindowBorderWidth()-baseContainer.getScrollX(),
+                    getWindowBorderWidth() + getWindowTitleBarHeight()-baseContainer.getScrollY(),
                     getWindowWidth() + baseContainer.getScrollX(),
                     getWindowHeight() + baseContainer.getScrollY(),
                     baseContainer.getScrollX(),
@@ -160,31 +167,24 @@ public abstract class App {
 
             //Drawing scrolls
             if(baseContainer.isHorizontalScrollEnable() && hasXScroll){
-                baseContainer.getHorizontalScroll().draw(server.display, 0, getTopOffset(), 0, server.settings.getStatusBarHeight());
+                baseContainer.getHorizontalScroll().draw(server.display, 0, getTopOffset(), 0, getSettings().getStatusBarHeight());
             }
 
             if(baseContainer.isVerticalScrollEnable() && hasYScroll) {
                 ScrollBar scrollBar = baseContainer.getVerticalScroll();
                 scrollBar.setVisibleContentlength(getWindowHeight());
                 scrollBar.setTotalContentLength(contentRenderImage.getHeight());
-                scrollBar.draw(renderImage, server.settings.getWindowBorderWidth(), server.settings.getWindowBorderWidth() + server.settings.getWindowTitleBarHeight(), server.settings.getWindowBorderWidth(), server.settings.getWindowBorderWidth());
+                scrollBar.draw(renderImage, getWindowBorderWidth(), getWindowBorderWidth() + getWindowTitleBarHeight(), getWindowBorderWidth(), getWindowBorderWidth());
             }
 
-            if(server.settings.isWindowMode()) {
+            if(isWindowMode()) {
                 drawWindowBorders(renderImage);
                 windowTitleBar.draw();
-                renderImage.drawImage(getServer().settings.getWindowBorderWidth(), getServer().settings.getWindowBorderWidth(), windowTitleBar.getRenderImage());
+                renderImage.drawImage(getWindowBorderWidth(), getWindowBorderWidth(), windowTitleBar.getRenderImage());
             }
 
 
-            int renderSize[] = server.display.drawImage(
-                    getLeftOffset() - server.settings.getWindowBorderWidth(),
-                    getTopOffset() - server.settings.getWindowBorderWidth() - server.settings.getWindowTitleBarHeight(),
-                    getDisplayWidth(),
-                    getDisplayHeight() + 1 - getTopOffset() + server.settings.getWindowTitleBarHeight() + server.settings.getWindowBorderWidth() - server.settings.getButtonBarHeight(),
-                    0,
-                    - getTopOffset() + server.settings.getWindowTitleBarHeight() + server.settings.getWindowBorderWidth() + server.settings.getStatusBarHeight(),
-                    renderImage, null);
+            int renderSize[] = drawRenderedImage();
 
             resetingRenderSizes(renderSize);
             cancelRepaintPending();
@@ -193,17 +193,23 @@ public abstract class App {
         }else{
             //server.display.drawImage(0, app_image_y, renderImage.getWidth(), app_image_height, renderImage);
             //System.out.println("No rerendering painting");
-            int renderSize[] = server.display.drawImage(
-                    getLeftOffset() - server.settings.getWindowBorderWidth(),
-                    getTopOffset() - server.settings.getWindowTitleBarHeight() - server.settings.getWindowBorderWidth(),
-                    getDisplayWidth(),
-                    getDisplayHeight() + 1 - getTopOffset() + server.settings.getWindowTitleBarHeight() + server.settings.getWindowBorderWidth() - server.settings.getButtonBarHeight(),
-                    0,
-                    - getTopOffset() + server.settings.getWindowTitleBarHeight() + server.settings.getWindowBorderWidth() + server.settings.getStatusBarHeight(),
-                    renderImage, null);
+            int renderSize[] = drawRenderedImage();
             resetingRenderSizes(renderSize);
         }
         return;
+    }
+
+    public int[] drawRenderedImage(){
+        int renderSize[] = getServer().display.drawImage(
+                getLeftOffset() - getWindowBorderWidth(),
+                getTopOffset() - getWindowTitleBarHeight() - getWindowBorderWidth(),
+                getDisplayWidth(),
+                getDisplayHeight() + 1 - getTopOffset() + getWindowTitleBarHeight() + getWindowBorderWidth() - getSettings().getButtonBarHeight(),
+                0,
+                - getTopOffset() + getWindowTitleBarHeight() + getWindowBorderWidth() + getSettings().getStatusBarHeight(),
+                renderImage, null);
+
+        return renderSize;
     }
 
     public void resetingRenderSizes(int renderSize[]){
@@ -281,6 +287,7 @@ public abstract class App {
     }
 
     public void setLeftOffset(int leftOffset) {
+        if(leftOffset>this.leftOffset && getWindowWidth()<getSettings().getScrollbarWidth() + getSettings().getWindowTitleBarHeight()) return;
         this.leftOffset = leftOffset;
     }
 
@@ -289,6 +296,7 @@ public abstract class App {
     }
 
     public void setTopOffset(int topOffset) {
+        if(topOffset>this.topOffset && getWindowHeight()<getSettings().getWindowTitleBarHeight()) return;
         this.topOffset = topOffset;
     }
 
@@ -297,6 +305,7 @@ public abstract class App {
     }
 
     public void setRightOffset(int rightOffset) {
+        if(rightOffset>this.rightOffset && getWindowWidth()<getSettings().getScrollbarWidth() + getSettings().getWindowTitleBarHeight()) return;
         this.rightOffset = rightOffset;
     }
 
@@ -305,6 +314,7 @@ public abstract class App {
     }
 
     public void setBottomOffset(int bottomOffset) {
+        if(bottomOffset>this.bottomOffset && getWindowHeight()<getSettings().getWindowTitleBarHeight()) return;
         this.bottomOffset = bottomOffset;
     }
 
@@ -363,7 +373,7 @@ public abstract class App {
     }
 
     public void setMoving(boolean moving) {
-        isMoving = moving;
+        if(isMovingEnable()) isMoving = moving;
     }
 
     public String getWindowTitle() {
@@ -379,6 +389,39 @@ public abstract class App {
     }
 
     public void setResizing(boolean resizing) {
-        isResizing = resizing;
+        if(isResizingEnable()) isResizing = resizing;
+    }
+
+    public void setRepaintPending(boolean repaintPending, boolean anything) {
+        if(anything){
+            getBaseContainer().setRepaintPending(repaintPending, true);
+            windowTitleBar.setRepaintPending(repaintPending, true);
+        }
+
+        this.setRepaintPending();
+    }
+
+    public boolean isMovingEnable() {
+        return movingEnable;
+    }
+
+    public void setMovingEnable(boolean movingEnable) {
+        this.movingEnable = movingEnable;
+    }
+
+    public boolean isResizingEnable() {
+        return resizingEnable;
+    }
+
+    public void setResizingEnable(boolean resizingEnable) {
+        this.resizingEnable = resizingEnable;
+    }
+
+    public boolean isWindowMode() {
+        return windowMode;
+    }
+
+    public void setWindowMode(boolean windowMode) {
+        this.windowMode = windowMode;
     }
 }

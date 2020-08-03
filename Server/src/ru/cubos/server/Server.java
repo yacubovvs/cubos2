@@ -8,11 +8,11 @@ import ru.cubos.server.helpers.Colors;
 import ru.cubos.server.helpers.framebuffer.Display;
 import ru.cubos.server.settings.Settings;
 import ru.cubos.server.system.ButtonBar;
-import ru.cubos.server.system.StatusBar;
 import ru.cubos.server.system.TimeWidgetView;
 import ru.cubos.server.system.apps.App;
 import ru.cubos.server.system.apps.customApps.TestingApp;
 import ru.cubos.server.system.apps.systemApps.MainMenu;
+import ru.cubos.server.system.apps.systemApps.desktopWidgets.StatusBarDesktopWidget;
 import ru.cubos.server.system.events.*;
 
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class Server {
     public Connector connector;
     public Display display;
     public Settings settings;
-    public StatusBar statusBar;
+    public StatusBarDesktopWidget statusBar;
     public ButtonBar buttonBar;
     public TimeWidgetView timeWidgetView;
     public List<App> openedApps;
@@ -56,11 +56,14 @@ public class Server {
         this.connector = connector;
         display = new Display(connector.getScreenWidth(), connector.getScreenHeight());
         settings = new Settings();
-        statusBar = new StatusBar(this);
+        statusBar = new StatusBarDesktopWidget(this);
         buttonBar = new ButtonBar(this);
         openedApps = new ArrayList<>();
+
+        openedApps.add(statusBar);
         openedApps.add(new TestingApp(this));
         openedApps.add(new MainMenu(this));
+
         timeWidgetView = new TimeWidgetView();
 
         try {
@@ -104,7 +107,7 @@ public class Server {
     }
 
     void drawBars() {
-        if (statusBar.isRepaintPending()) statusBar.paint();
+        if (statusBar.isRepaintPending()) statusBar.draw();
         if (buttonBar.isRepaintPending()) buttonBar.paint();
 
     }
@@ -250,7 +253,7 @@ public class Server {
         drawApps();
         long finish = System.currentTimeMillis();
         long timeConsumedMillis = finish - start;
-        //System.out.println("Repaint time: " + timeConsumedMillis);
+        //System.out.println("Repaint time: " + timeConsumedMillis + " ms");
 
         sendFrameBufferCommands();
     }

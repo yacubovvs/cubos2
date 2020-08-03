@@ -9,12 +9,12 @@ public class TouchDownEvent extends EventTouch {
 
     @Override
     public void runViewEvent(View view) {
-        view.getOnTouchDownListener();
+        view.getOnTouchDownListener().run();
     }
 
     public TouchDownEvent(int x, int y){
         super(x,y);
-        this.setType(Type.EVENT_TOUCH_TAP);
+        this.setType(Type.EVENT_TOUCH_DOWN);
     }
 
     @Override
