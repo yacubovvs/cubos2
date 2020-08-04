@@ -1,6 +1,7 @@
 package ru.cubos.server.system.views.containers;
 
 import ru.cubos.server.helpers.BinaryImage;
+import ru.cubos.server.helpers.BinaryImage_24bit;
 import ru.cubos.server.system.views.View;
 
 public class LinearContainer extends ContainerView {
@@ -38,9 +39,9 @@ public class LinearContainer extends ContainerView {
         }
 
         if(getType()==LinearContainer.Type.HORIZONTAL){
-            renderImage = new BinaryImage(Math.max(size, getWidth()), getHeight() + getPaddingTopBottom() + getMarginTopBottom());
+            renderImage = new BinaryImage_24bit(Math.max(size, getWidth()), getHeight() + getPaddingTopBottom() + getMarginTopBottom());
         } else {
-            renderImage = new BinaryImage(getWidth(), size + getPaddingTopBottom() + getMarginTopBottom());
+            renderImage = new BinaryImage_24bit(getWidth(), size + getPaddingTopBottom() + getMarginTopBottom());
         }
 
         drawBackGround();

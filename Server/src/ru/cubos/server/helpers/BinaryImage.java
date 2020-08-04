@@ -1,13 +1,18 @@
 package ru.cubos.server.helpers;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class BinaryImage {
+public abstract class BinaryImage {
 
+    public enum Type{
+        COLOR_24BIT,
+        COLOR_24BIT_ALPHA
+    }
+
+    public Type type;
     protected byte data[];
 
     private int width;
@@ -18,12 +23,6 @@ public class BinaryImage {
     public BinaryImage(int width, int height){
         setWidth(width);
         setHeight(height);
-
-        data = new byte[width*height*3];
-
-        for(int i=0; i<data.length; i++){
-            data[i] = -128;
-        }
     }
 
     public BinaryImage(String imagePath) throws IOException {
@@ -32,22 +31,12 @@ public class BinaryImage {
         setImage(image);
     }
 
-    public void setColorPixel(int x, int y, byte r, byte g, byte b){
-        int position = (x + (getWidth())*y)*3;
-        data[position]      = r;
-        data[position + 1]  = g;
-        data[position + 2]  = b;
-    }
 
-    public byte[] getColorPixel(int x, int y){
-        int position = (x + (getWidth())*y)*3;
-        byte pixel[] = {
-                data[position],
-                data[position + 1],
-                data[position + 2]
-        };
-        return pixel;
-    }
+    public abstract void setColorPixel(int x, int y, byte r, byte g, byte b);
+    public abstract void setColorPixel(int x, int y, byte r, byte g, byte b, byte a);
+    public abstract byte[] getColorPixel(int x, int y);
+    public abstract byte[] getColorPixel_alpha(int x, int y);
+
 
     public void setColorPixel(int x, int y, byte rgb[]){setColorPixel(x, y, rgb[0], rgb[1], rgb[2]);}
 
@@ -60,44 +49,9 @@ public class BinaryImage {
     }
     public void setHeight(int height) { this.height = height; }
 
-    public void setImage(BufferedImage image){
-        data = new byte[image.getHeight() * image.getWidth() * 3];
-        this.setHeight((char)image.getHeight());
-        this.setWidth((char)image.getWidth());
+    public abstract void setImage(BufferedImage image);
 
-        for(char y=0; y<image.getHeight(); y++){
-            for(char x=0; x<image.getWidth(); x++){
-                int color = image.getRGB(x, y);
-
-                int blue = color & 0xff;
-                int green = (color & 0xff00) >> 8;
-                int red = (color & 0xff0000) >> 16;
-
-                this.setColorPixel(x,y, (byte)(red-128), (byte)(green-128), (byte)(blue-128));
-
-                continue;
-            }
-        }
-    }
-
-    public BufferedImage getBufferedImageImage(){
-        BufferedImage bufferedImage = new BufferedImage( getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
-
-        for(int y=0; y<getHeight(); y++) {
-            for(int x=0; x<getWidth(); x++){
-
-                byte pixel[] = getColorPixel(x, y);
-                int red = pixel[0] + 128;
-                int green = pixel[1] + 128;
-                int blue = pixel[2] + 128;
-                Color color = new Color(red, green, blue);
-                bufferedImage.setRGB(x, y, color.getRGB());
-            }
-        }
-
-        return bufferedImage;
-    }
-
+    public abstract BufferedImage getBufferedImageImage();
 
     /*
     * # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -356,7 +310,11 @@ public class BinaryImage {
         if(x1>=getWidth()) x1 = (char)(getWidth() - 1);
         if(y1>=getHeight()) y1 = (char)(getHeight() - 1);
 
-        BinaryImage binaryImage = new BinaryImage((char)(x1-x0), (char)(y1-y0));
+        BinaryImage binaryImage;
+        if(type==Type.COLOR_24BIT)
+            binaryImage = new BinaryImage_24bit((char)(x1-x0), (char)(y1-y0));
+        else
+            binaryImage = new BinaryImage_24bit_alpha((char)(x1-x0), (char)(y1-y0));
 
         for(char x=0; x<x1-x0; x++){
             for(char y=0; y<y1-y0; y++) {
@@ -384,18 +342,25 @@ public class BinaryImage {
     }
 
     public int[] drawImage(int x0, int y0, BinaryImage binaryImage, byte[] alfaColor){
-        return drawImage(x0, y0, binaryImage.getWidth(), binaryImage.getHeight(), binaryImage, alfaColor);
+        if(binaryImage.type==Type.COLOR_24BIT) return drawImage(x0, y0, binaryImage.getWidth(), binaryImage.getHeight(), (BinaryImage_24bit) binaryImage, alfaColor);
+        //if(binaryImage.type==Type.COLOR_24BIT_ALPHA)
+        else return drawImage(x0, y0, binaryImage.getWidth(), binaryImage.getHeight(), (BinaryImage_24bit_alpha) binaryImage, alfaColor);
     }
 
-    public int[] drawImage(int x0, int y0, int x_max_limit, int y_max_limit, BinaryImage binaryImage){
+    public int[] drawImage(int x0, int y0, int x_max_limit, int y_max_limit, BinaryImage_24bit binaryImage){
         return drawImage(x0, y0, x_max_limit, y_max_limit, binaryImage, null);
     }
 
-    public int[] drawImage(int x0, int y0, int x_max_limit, int y_max_limit, BinaryImage binaryImage, byte[] alfaColor){
+    public int[] drawImage(int x0, int y0, int x_max_limit, int y_max_limit, BinaryImage_24bit binaryImage, byte[] alfaColor){
         return drawImage(x0, y0, x_max_limit, y_max_limit, 0, 0, binaryImage, alfaColor);
     }
 
-    public int[] drawImage(int x0, int y0, int x_max_limit, int y_max_limit, int x_min_limit, int y_min_limit, BinaryImage binaryImage, byte[] alfaColor){
+    public int[] drawImage(int x0, int y0, int x_max_limit, int y_max_limit, BinaryImage_24bit_alpha binaryImage, byte[] alfaColor){
+        return drawImage(x0, y0, x_max_limit, y_max_limit, 0, 0, binaryImage, alfaColor);
+    }
+
+
+    public int[] drawImage(int x0, int y0, int x_max_limit, int y_max_limit, int x_min_limit, int y_min_limit, BinaryImage_24bit binaryImage, byte[] alfaColor){
 
         // x1 and y1 - maximum of image drawing (limits)
 
@@ -416,8 +381,57 @@ public class BinaryImage {
                             imagepixel[1]!=alfaColor[1] ||
                             imagepixel[2]!=alfaColor[2]
                         )
-                )
-                setColorPixel(x + x0,y + y0, imagepixel);
+                ){
+                    setColorPixel(x + x0,y + y0, imagepixel);
+                }
+            }
+        }
+
+        return new int[]{x_limit, y_limit};
+    }
+
+    public int[] drawImage(int x0, int y0, int x_max_limit, int y_max_limit, int x_min_limit, int y_min_limit, BinaryImage_24bit_alpha binaryImage, byte[] alfaColor){
+
+        // x1 and y1 - maximum of image drawing (limits)
+
+        byte[] new_pixel;
+        byte[] current_pixel;
+        int x_limit = Math.min(x_max_limit, Math.min(binaryImage.getWidth(), getWidth() - x0));
+        int y_limit = Math.min(y_max_limit, Math.min(binaryImage.getHeight(), getHeight() - y0));
+
+        int x_start = Math.max(Math.max(-x0, 0), x_min_limit);
+        int y_start = Math.max(Math.max(-y0, 0), y_min_limit);
+
+        for (int x=x_start; x<x_limit; x++){
+            for (int y=y_start; y<y_limit; y++) {
+                current_pixel = getColorPixel_alpha(x,y);
+                new_pixel = binaryImage.getColorPixel_alpha(x,y);
+
+                //setColorPixel(x + x0,y + y0, imagepixel);
+
+                //float pixels_k = (float)current_pixel[3]/new_pixel[3] ;
+                ///*
+
+
+                float r_bg = (float)(current_pixel[0] + 128)/255;
+                float g_bg = (float)(current_pixel[1] + 128)/255;
+                float b_bg = (float)(current_pixel[2] + 128)/255;
+                float a_bg = (float)(current_pixel[3] + 128)/255;
+
+                float r_fg = (float)(new_pixel[0] + 128)/255;
+                float g_fg = (float)(new_pixel[1] + 128)/255;
+                float b_fg = (float)(new_pixel[2] + 128)/255;
+                float a_fg = (float)(new_pixel[3] + 128)/255;
+
+                ////////////////////////////////
+                //float outputRed = (foregroundRed * foregroundAlpha) + (backgroundRed * (1.0 - foregroundAlpha));
+                float out_r = (float) ((r_fg * a_fg) + (r_bg * (1.0 - a_fg)));
+                float out_g = (float) ((g_fg * a_fg) + (g_bg * (1.0 - a_fg)));
+                float out_b = (float) ((b_fg * a_fg) + (b_bg * (1.0 - a_fg)));
+
+                setColorPixel(x + x0,y + y0, check_byte((int) (out_r*255-128)), check_byte((int) (out_g*255-128)), check_byte((int) (out_b*255-128)), check_byte(127));
+
+
             }
         }
 

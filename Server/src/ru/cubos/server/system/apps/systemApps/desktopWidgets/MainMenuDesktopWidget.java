@@ -2,11 +2,13 @@ package ru.cubos.server.system.apps.systemApps.desktopWidgets;
 
 import ru.cubos.server.Server;
 import ru.cubos.server.helpers.Colors;
+import ru.cubos.server.system.events.TouchDownEvent;
 import ru.cubos.server.system.views.IconView;
 import ru.cubos.server.system.views.TextView;
 import ru.cubos.server.system.views.View;
 import ru.cubos.server.system.views.containers.HorizontalContainer;
 import ru.cubos.server.system.views.containers.LinearContainer;
+import ru.cubos.server.system.views.viewListeners.TouchDownListener;
 
 public class MainMenuDesktopWidget extends DesktopWidget {
     public MainMenuDesktopWidget(Server server) {
@@ -37,10 +39,10 @@ public class MainMenuDesktopWidget extends DesktopWidget {
         IconView iconView7 = new IconView("images//icons//texteditor.png", Colors.COLOR_ALFA);
         */
 
-        iconView.setOnTouchDownListener(new Runnable() {
+        iconView.setOnTouchDownListener(new TouchDownListener() {
             @Override
-            public void run() {
-                System.out.println("On widget menu click");
+            public void onTouchDown(TouchDownEvent touchDownEvent) {
+                System.out.println("On widget menu element click");
             }
         }, this);
 

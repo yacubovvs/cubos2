@@ -12,7 +12,7 @@ public class TouchMoveFinishedEvent extends EventTouch {
 
     @Override
     public void runViewEvent(View view) {
-        view.getOnTouchMoveFinishedListener().run();
+        view.getTouchMoveFinishedListener().onTouchMoveFinished(this);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class TouchMoveFinishedEvent extends EventTouch {
         if(viewList==null) return;
         for(View view: viewList){
             if(
-                    view.getOnTouchTapListener()!=null &&
+                    view.getTouchTapListener()!=null &&
                             view.isVisible() &&
                             view.getRenderX() <= x_start &&
                             view.getRenderY() <= y_start &&

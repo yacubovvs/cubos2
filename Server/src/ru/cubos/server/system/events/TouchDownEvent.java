@@ -9,7 +9,7 @@ public class TouchDownEvent extends EventTouch {
 
     @Override
     public void runViewEvent(View view) {
-        view.getOnTouchDownListener().run();
+        view.getTouchDownListener().onTouchDown(this);
     }
 
     public TouchDownEvent(int x, int y){

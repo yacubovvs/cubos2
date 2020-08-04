@@ -22,10 +22,14 @@ public class TestingApp extends App {
         setTopOffset(100);
         setBottomOffset(50);
 
-        getBaseContainer().setBackgroundColor(new byte[]{-96, -96, -96});
+        getBaseContainer().setBackgroundColor(Colors.COLOR_DARK_GRAY);
+        //getBaseContainer().setBackgroundColor(Colors.COLOR_GREEN);
 
         TextView textView = new TextView("Testing Window");
+        //IconView iconView = new IconView("images//tricon.png", true);
+
         addView(textView);
+        //addView(iconView);
 
     }
 

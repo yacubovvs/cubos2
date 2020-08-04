@@ -3,6 +3,7 @@ package ru.cubos.server;
 import ru.cubos.connectors.Connector;
 import ru.cubos.connectors.emulator.Emulator;
 import ru.cubos.server.helpers.BinaryImage;
+import ru.cubos.server.helpers.BinaryImage_24bit;
 import ru.cubos.server.helpers.ByteConverter;
 import ru.cubos.server.helpers.Colors;
 import ru.cubos.server.helpers.framebuffer.Display;
@@ -50,7 +51,7 @@ public class Server {
         return openedApps.get(openedApps.size()-1);
     }
 
-    private BinaryImage backGroundImage;
+    private BinaryImage_24bit backGroundImage;
 
 
 
@@ -63,13 +64,13 @@ public class Server {
         openedApps = new ArrayList<>();
 
         openedApps.add(statusBar);
-        openedApps.add(new TestingApp(this));
         openedApps.add(new ApplicationsList(this));
+        openedApps.add(new TestingApp(this));
 
         timeWidgetView = new TimeWidgetView();
 
         try {
-            backGroundImage = new BinaryImage("images//bg_640x480.png");
+            backGroundImage = new BinaryImage_24bit("images//bg_640x480.png");
         } catch (IOException e) {
             backGroundImage = null;
         }
@@ -142,6 +143,9 @@ public class Server {
         } else {
             //System.out.println("Server: no frame change");
         }
+
+        //long usedBytes = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
+        //System.out.println("Using RAM: " + usedBytes/1048576 + " mb");
     }
 
 

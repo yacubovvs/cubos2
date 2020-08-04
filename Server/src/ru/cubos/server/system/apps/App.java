@@ -2,6 +2,7 @@ package ru.cubos.server.system.apps;
 
 import ru.cubos.server.Server;
 import ru.cubos.server.helpers.BinaryImage;
+import ru.cubos.server.helpers.BinaryImage_24bit;
 import ru.cubos.server.settings.Settings;
 import ru.cubos.server.system.events.Event;
 import ru.cubos.server.system.views.IconView;
@@ -150,7 +151,7 @@ public abstract class App {
 
             baseContainer.draw();
 
-            renderImage = new BinaryImage(getWindowWidth() + 2*getWindowBorderWidth(), getWindowHeight() + getWindowBorderWidth()*2 + getWindowTitleBarHeight());
+            renderImage = new BinaryImage_24bit(getWindowWidth() + 2*getWindowBorderWidth(), getWindowHeight() + getWindowBorderWidth()*2 + getWindowTitleBarHeight());
             contentRenderImage = baseContainer.getRenderImage();
 
             renderImage.drawImage(
@@ -160,7 +161,7 @@ public abstract class App {
                     getWindowHeight() + baseContainer.getScrollY(),
                     baseContainer.getScrollX(),
                     baseContainer.getScrollY(),
-                    contentRenderImage, null);
+                    (BinaryImage_24bit)contentRenderImage, null);
 
             setHasXScroll(contentRenderImage.getWidth()>getWindowWidth());
             setHasYScroll(contentRenderImage.getHeight()>getWindowHeight());
@@ -180,7 +181,7 @@ public abstract class App {
             if(isWindowMode()) {
                 drawWindowBorders(renderImage);
                 windowTitleBar.draw();
-                renderImage.drawImage(getWindowBorderWidth(), getWindowBorderWidth(), windowTitleBar.getRenderImage());
+                renderImage.drawImage(getWindowBorderWidth(), getWindowBorderWidth(), (BinaryImage_24bit)windowTitleBar.getRenderImage());
             }
 
 
@@ -207,7 +208,7 @@ public abstract class App {
                 getDisplayHeight() + 1 - getTopOffset() + getWindowTitleBarHeight() + getWindowBorderWidth() - getSettings().getButtonBarHeight(),
                 0,
                 - getTopOffset() + getWindowTitleBarHeight() + getWindowBorderWidth() + getSettings().getStatusBarHeight(),
-                renderImage, null);
+                (BinaryImage_24bit)renderImage, null);
 
         return renderSize;
     }

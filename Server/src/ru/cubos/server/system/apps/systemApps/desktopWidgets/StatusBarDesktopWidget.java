@@ -1,10 +1,13 @@
 package ru.cubos.server.system.apps.systemApps.desktopWidgets;
 
 import ru.cubos.server.Server;
+import ru.cubos.server.helpers.BinaryImage_24bit;
 import ru.cubos.server.helpers.Colors;
+import ru.cubos.server.system.events.TouchDownEvent;
 import ru.cubos.server.system.views.IconView;
 import ru.cubos.server.system.views.TextView;
 import ru.cubos.server.system.views.containers.LinearContainer;
+import ru.cubos.server.system.views.viewListeners.TouchDownListener;
 
 public class StatusBarDesktopWidget extends DesktopWidget {
     public StatusBarDesktopWidget(Server server) {
@@ -17,13 +20,13 @@ public class StatusBarDesktopWidget extends DesktopWidget {
         IconView iconView = new IconView("images//icons//startButton.png", Colors.COLOR_ALFA);
         iconView.setMargin((getSettings().getStatusBarHeight() - iconView.getIcon().getHeight())/2);
 
-        iconView.setOnTouchDownListener(new Runnable() {
+        iconView.setOnTouchDownListener(new TouchDownListener(){
             @Override
-            public void run() {
-                //System.out.println("On menu click");
+            public void onTouchDown(TouchDownEvent touchDownEvent) {
                 getServer().openApp(new MainMenuDesktopWidget(getServer()));
             }
         }, this);
+
 
         setTopOffset(0);
         setBottomOffset(getDisplayHeight() - getSettings().getStatusBarHeight());
@@ -41,7 +44,7 @@ public class StatusBarDesktopWidget extends DesktopWidget {
                 getServer().settings.getStatusBarHeight(),//getDisplayHeight() + 1 - getTopOffset() + getWindowTitleBarHeight() + getWindowBorderWidth() - getSettings().getButtonBarHeight(),
                 0,
                 0,
-                renderImage, null);
+                (BinaryImage_24bit)renderImage, null);
 
         return renderSize;
     }

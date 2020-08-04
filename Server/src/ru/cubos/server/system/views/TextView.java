@@ -2,6 +2,7 @@ package ru.cubos.server.system.views;
 
 import ru.cubos.server.Server;
 import ru.cubos.server.helpers.BinaryImage;
+import ru.cubos.server.helpers.BinaryImage_24bit;
 import ru.cubos.server.helpers.Colors;
 import ru.cubos.server.helpers.Strings;
 
@@ -36,10 +37,10 @@ public class TextView extends View {
             List<String> words = Strings.splitTextOnWords(getText());
             stringList = Strings.createStrings(getServer(), words, getFontSize(), getWidth() - getMarginRight() - getMarginLeft() - getPaddingRight() - getPaddingLeft());
 
-            renderImage = new BinaryImage(getWidth(), getMarginTop() + getPaddingTop() + getMarginBottom() + getPaddingBottom() + getServer().settings.getSystemCharHeight() * getFontSize() * stringList.size() + (stringList.size()-1)*getLineSpacing());
+            renderImage = new BinaryImage_24bit(getWidth(), getMarginTop() + getPaddingTop() + getMarginBottom() + getPaddingBottom() + getServer().settings.getSystemCharHeight() * getFontSize() * stringList.size() + (stringList.size()-1)*getLineSpacing());
         }else{
             // Single string
-            renderImage = new BinaryImage(getWidth(), getMarginTop() + getPaddingTop() + getMarginBottom() + getPaddingBottom() + getServer().settings.getSystemCharHeight() * getFontSize());
+            renderImage = new BinaryImage_24bit(getWidth(), getMarginTop() + getPaddingTop() + getMarginBottom() + getPaddingBottom() + getServer().settings.getSystemCharHeight() * getFontSize());
         }
 
         drawBackGround();

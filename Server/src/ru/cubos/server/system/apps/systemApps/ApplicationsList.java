@@ -3,11 +3,13 @@ package ru.cubos.server.system.apps.systemApps;
 import ru.cubos.server.Server;
 import ru.cubos.server.helpers.Colors;
 import ru.cubos.server.system.apps.App;
+import ru.cubos.server.system.events.TouchTapEvent;
 import ru.cubos.server.system.views.IconView;
 import ru.cubos.server.system.views.TextView;
 import ru.cubos.server.system.views.View;
 import ru.cubos.server.system.views.containers.TabelContainer;
 import ru.cubos.server.system.views.containers.VerticalContainer;
+import ru.cubos.server.system.views.viewListeners.TouchTapListener;
 
 public class ApplicationsList extends App {
     TabelContainer tabelContainer;
@@ -59,9 +61,14 @@ public class ApplicationsList extends App {
         VerticalContainer appContainer = new VerticalContainer();
 
         appContainer.setId(name);
-        appContainer.setOnTouchTapListener(() -> {
-            System.out.println("OnClick listener ID: " + name);
+        appContainer.setOnTouchTapListener(new TouchTapListener(){
+            @Override
+            public void onTouchTap(TouchTapEvent touchTapEvent) {
+                System.out.println("OnClick listener ID: " + name);
+            }
         }, this);
+
+
 
         appContainer.add(appIcon);
         appContainer.add(appName);

@@ -53,8 +53,6 @@ public class Strings {
                         if(string_size>maxWidth){
                             result.add("" + new_string.trim());
                             new_string = "";
-                            //string = string.substring(x);
-                            //break;
                         }
                         new_string += string.charAt(x);
                     }
