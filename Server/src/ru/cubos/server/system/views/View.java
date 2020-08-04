@@ -27,7 +27,7 @@ public abstract class View {
         return touchTapListener;
     }
 
-    public void setOnTouchTapListener(TouchTapListener touchTapListener, App app) {
+    public void setOnTouchTapListener(App app, TouchTapListener touchTapListener) {
         this.touchTapListener = touchTapListener;
         app.addEventView(this, Event.Type.EVENT_TOUCH_TAP);
     }
@@ -36,7 +36,7 @@ public abstract class View {
         return touchUpListener;
     }
 
-    public void setOnTouchUpListener(TouchUpListener onTouchUpListener, App app) {
+    public void setOnTouchUpListener(App app, TouchUpListener onTouchUpListener) {
         this.touchUpListener = onTouchUpListener;
         app.addEventView(this, Event.Type.EVENT_TOUCH_UP);
     }
@@ -45,7 +45,7 @@ public abstract class View {
         return touchMoveListener;
     }
 
-    public void setOnTouchMoveListener(TouchMoveListener onTouchMoveListener, App app) {
+    public void setOnTouchMoveListener(App app, TouchMoveListener onTouchMoveListener) {
         this.touchMoveListener = onTouchMoveListener;
         app.addEventView(this, Event.Type.EVENT_TOUCH_MOVE);
     }
@@ -54,7 +54,7 @@ public abstract class View {
         return touchMoveFinishedListener;
     }
 
-    public void setOnTouchMoveFinishedListener(TouchMoveFinishedListener onTouchMoveFinishedListener, App app) {
+    public void setOnTouchMoveFinishedListener(App app, TouchMoveFinishedListener onTouchMoveFinishedListener) {
         this.touchMoveFinishedListener = onTouchMoveFinishedListener;
         app.addEventView(this, Event.Type.EVENT_TOUCH_MOVE_FINISHED);
     }
@@ -63,7 +63,7 @@ public abstract class View {
         return touchZoomInListener;
     }
 
-    public void setOnTouchZoomInListener(EventTouch onTouchZoomInListener, App app) {
+    public void setOnTouchZoomInListener(App app, EventTouch onTouchZoomInListener) {
         this.touchZoomInListener = onTouchZoomInListener;
         app.addEventView(this, Event.Type.EVENT_TOUCH_ZOOM_IN);
     }
@@ -72,7 +72,7 @@ public abstract class View {
         return touchZoomOutListener;
     }
 
-    public void setOnTouchZoomOutListener(EventTouch onTouchZoomOutListener, App app) {
+    public void setOnTouchZoomOutListener(App app, EventTouch onTouchZoomOutListener) {
         this.touchZoomOutListener = onTouchZoomOutListener;
         app.addEventView(this, Event.Type.EVENT_TOUCH_ZOOM_OUT);
     }
@@ -81,7 +81,7 @@ public abstract class View {
         return touchZoomFinishedListener;
     }
 
-    public void setOnTouchZoomFinishedListener(EventTouch onTouchZoomFinishedListener, App app) {
+    public void setOnTouchZoomFinishedListener(App app, EventTouch onTouchZoomFinishedListener) {
         this.touchZoomFinishedListener = onTouchZoomFinishedListener;
         app.addEventView(this, Event.Type.EVENT_TOUCH_ZOOM_FINISHED);
     }
@@ -90,7 +90,7 @@ public abstract class View {
         return touchDownListener;
     }
 
-    public void setOnTouchDownListener(TouchDownListener onTouchDownListener, App app) {
+    public void setOnTouchDownListener(App app, TouchDownListener onTouchDownListener) {
         this.touchDownListener = onTouchDownListener;
         app.addEventView(this, Event.Type.EVENT_TOUCH_DOWN);
     }
@@ -99,7 +99,7 @@ public abstract class View {
         return touchLongListener;
     }
 
-    public void setOnTouchLongListener(EventTouch onTouchLongListener, App app) {
+    public void setOnTouchLongListener(App app, EventTouch onTouchLongListener) {
         this.touchLongListener = onTouchLongListener;
         app.addEventView(this, Event.Type.EVENT_TOUCH_LONG);
     }

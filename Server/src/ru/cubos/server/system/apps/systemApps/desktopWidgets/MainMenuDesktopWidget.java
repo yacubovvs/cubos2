@@ -39,12 +39,12 @@ public class MainMenuDesktopWidget extends DesktopWidget {
         IconView iconView7 = new IconView("images//icons//texteditor.png", Colors.COLOR_ALFA);
         */
 
-        iconView.setOnTouchDownListener(new TouchDownListener() {
+        iconView.setOnTouchDownListener(this, new TouchDownListener() {
             @Override
             public void onTouchDown(TouchDownEvent touchDownEvent) {
                 System.out.println("On widget menu element click");
             }
-        }, this);
+        });
 
         setTopOffset(getSettings().getStatusBarHeight());
         setBottomOffset(100);

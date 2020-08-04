@@ -61,12 +61,12 @@ public class ApplicationsList extends App {
         VerticalContainer appContainer = new VerticalContainer();
 
         appContainer.setId(name);
-        appContainer.setOnTouchTapListener(new TouchTapListener(){
+        appContainer.setOnTouchTapListener(this, new TouchTapListener(){
             @Override
             public void onTouchTap(TouchTapEvent touchTapEvent) {
                 System.out.println("OnClick listener ID: " + name);
             }
-        }, this);
+        });
 
 
 

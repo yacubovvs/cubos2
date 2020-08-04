@@ -20,12 +20,12 @@ public class StatusBarDesktopWidget extends DesktopWidget {
         IconView iconView = new IconView("images//icons//startButton.png", Colors.COLOR_ALFA);
         iconView.setMargin((getSettings().getStatusBarHeight() - iconView.getIcon().getHeight())/2);
 
-        iconView.setOnTouchDownListener(new TouchDownListener(){
+        iconView.setOnTouchDownListener(this, new TouchDownListener(){
             @Override
             public void onTouchDown(TouchDownEvent touchDownEvent) {
                 getServer().openApp(new MainMenuDesktopWidget(getServer()));
             }
-        }, this);
+        });
 
 
         setTopOffset(0);

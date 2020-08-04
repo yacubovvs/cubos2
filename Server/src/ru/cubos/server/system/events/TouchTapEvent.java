@@ -24,7 +24,7 @@ public class TouchTapEvent extends EventTouch {
         if (!isInWindowEvent(app)){
             if(app.getServer().settings.isWindowMode() && isOnTitleBarEvent(app)){
                 //System.out.println("On title bar touch");
-                return;
+                //return;
             }else{
                 //System.out.println("Out of form click");
                 return;
