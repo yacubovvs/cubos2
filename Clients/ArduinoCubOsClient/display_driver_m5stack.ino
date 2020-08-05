@@ -1,4 +1,4 @@
-#ifdef M5Stack_esp32
+#ifdef display_M5Stack
 
 #include <M5Stack.h>
 

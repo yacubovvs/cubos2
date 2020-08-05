@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 import static ru.cubos.server.helpers.ByteConverter.uByte;
-import static ru.cubos.server.helpers.Protocol.*;
+import static ru.cubos.connectors.Protocol.*;
 
 public class Emulator extends JFrame implements Connector {
     private JPanel mainpanel;

@@ -1,6 +1,5 @@
 package ru.cubos.server.helpers.framebuffer;
 
-import ru.cubos.server.helpers.BinaryImage;
 import ru.cubos.server.helpers.BinaryImage_24bit;
 
 import java.util.ArrayList;
@@ -8,7 +7,7 @@ import java.util.List;
 
 import static ru.cubos.server.helpers.ByteConverter.char_to_bytes;
 import static ru.cubos.server.helpers.ByteConverter.uByte;
-import static ru.cubos.server.helpers.Protocol.DRAWING_PIXEL;
+import static ru.cubos.connectors.Protocol.DRAWING_PIXEL;
 
 public class Display extends BinaryImage_24bit {
     private BinaryImage_24bit last_frame;

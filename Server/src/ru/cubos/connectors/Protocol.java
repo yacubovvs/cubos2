@@ -1,4 +1,4 @@
-package ru.cubos.server.helpers;
+package ru.cubos.connectors;
 
 public class Protocol {
 
@@ -12,7 +12,7 @@ public class Protocol {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      */
 
-    //Drawind
+    // Drawind
     public static final byte DRAWING_PIXEL          = 0x01;
     public static final byte DRAWING_RECT           = 0x02;
     public static final byte DRAWING_PIXELS_ARRAY   = 0x03;
@@ -27,6 +27,8 @@ public class Protocol {
     public static final byte GO_SLEEP = 0x31;
     public static final byte WAKE_UP = 0x32;
 
+    // Commands
+    public static final String Command_CLOSE_CONNECTION = "cc"; // close connection
 
     /*
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

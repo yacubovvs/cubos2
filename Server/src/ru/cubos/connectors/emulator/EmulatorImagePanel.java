@@ -1,7 +1,7 @@
 package ru.cubos.connectors.emulator;
 
 import ru.cubos.server.helpers.ByteConverter;
-import ru.cubos.server.helpers.Protocol;
+import ru.cubos.connectors.Protocol;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

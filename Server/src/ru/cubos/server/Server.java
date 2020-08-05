@@ -2,7 +2,6 @@ package ru.cubos.server;
 
 import ru.cubos.connectors.Connector;
 import ru.cubos.connectors.emulator.Emulator;
-import ru.cubos.server.helpers.BinaryImage;
 import ru.cubos.server.helpers.BinaryImage_24bit;
 import ru.cubos.server.helpers.ByteConverter;
 import ru.cubos.server.helpers.Colors;
@@ -21,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static ru.cubos.server.helpers.ByteConverter.uByte;
-import static ru.cubos.server.helpers.Protocol.*;
+import static ru.cubos.connectors.Protocol.*;
 
 public class Server {
 

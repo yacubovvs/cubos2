@@ -4,41 +4,42 @@
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 */
 
+
 #define SCREEN_WIDTH 8
 #define FONT_CHAR_WIDTH 6
 
-void drawString(int val, int x, int y){
+void drawString(int val, int x, int y, byte r, byte g, byte b){
   char str[16];
   sprintf(str, "%d", val);
-  drawString( str, 0, y);
+  drawString( str, 0, y, r, g, b);
 }
 
-void drawString(String dString, int x, int y, byte fontSize){
+void drawString(String dString, int x, int y, byte r, byte g, byte b, byte fontSize){
   int str_len = dString.length() + 1;
   char element_value[str_len];
   dString.toCharArray(element_value, str_len);
 
-  drawString(element_value, x, y, 1);
+  drawString(element_value, x, y, r, g, b, fontSize);
 }
 
-void drawString(String dString, int x, int y){
-  drawString(dString, x, y, 1);
+void drawString(String dString, int x, int y, byte r, byte g, byte b){
+  drawString(dString, x, y, r, g, b, 1);
 }
 
-void drawString_centered(char * dString, int y){
-  drawString(dString, (SCREEN_WIDTH - strlen(dString)*FONT_CHAR_WIDTH)/2, y);  
+void drawString_centered(char * dString, int y, byte r, byte g, byte b){
+  drawString(dString, (SCREEN_WIDTH - strlen(dString)*FONT_CHAR_WIDTH)/2, y, r, g, b);  
 }
 
-void drawString_centered(char * dString, int x, int y){
-  drawString(dString, x - strlen(dString)*FONT_CHAR_WIDTH/2, y);  
+void drawString_centered(char * dString, int x, int y, byte r, byte g, byte b){
+  drawString(dString, x - strlen(dString)*FONT_CHAR_WIDTH/2, y, r, g, b);  
 }
 
-void drawString_centered(String dString, int y){
-  drawString(dString, (SCREEN_WIDTH - dString.length()*FONT_CHAR_WIDTH)/2, y);  
+void drawString_centered(String dString, int y, byte r, byte g, byte b){
+  drawString(dString, (SCREEN_WIDTH - dString.length()*FONT_CHAR_WIDTH)/2, y, r, g, b);  
 }
 
-void drawString_centered(String dString, int x, int y){
-  drawString(dString, x - dString.length()*FONT_CHAR_WIDTH/2, y);  
+void drawString_centered(String dString, int x, int y, byte r, byte g, byte b){
+  drawString(dString, x - dString.length()*FONT_CHAR_WIDTH/2, y, r, g, b);  
 }
 
 void drawLine(int x0, int y0, int x1, int y1, byte red, byte green, byte blue){
@@ -142,7 +143,7 @@ int treangle_area(int x0, int y0, int x1, int y1, int x2, int y2){
    return round(abs((x0 - x2)*(y1 - y2) + (x1-x2)*(y2-y0)));
 }
 
-void drawRect_custom( int x0, int y0, int x1, int y1, int x2, int y2, int x3, int y3, boolean fill, byte red, byte green, byte blue){
+void drawRect_custom( int x0, int y0, int x1, int y1, int x2, int y2, int x3, int y3, byte red, byte green, byte blue, boolean fill){
   if (fill){
     // all angles should be less thаn 180 degrees
     const int min_x = min(min(x0, x1), min(x2, x3));
@@ -176,7 +177,7 @@ void drawRect_custom( int x0, int y0, int x1, int y1, int x2, int y2, int x3, in
   }
 }
 
-void drawIcon(const unsigned char* data, int x, int y, byte red, byte green, byte blue){
+void drawIcon(const unsigned char* data, int x, int y){
 
   /*
   ################################################
@@ -260,20 +261,11 @@ void drawIcon(const unsigned char* data, int x, int y, byte red, byte green, byt
 
 //////////////////////////////////////////////////
 // For debugging
-void drawIntString(long val, int x, int y){  
+void drawIntString(long val, int x, int y, byte r, byte g, byte b){  
   char str[14];
   sprintf(str, "%d", val);
-  drawString( str, x, y);
+  drawString( str, x, y, r, g, b, 1);
 }
-
-//////////////////////////////////////////////////
-// For debugging
-void drawDebugString(int val, int y){  
-  drawString(val, 0, y);
-}
-
-
-
 
 /*
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
@@ -541,7 +533,7 @@ static const unsigned char font_cubos[] PROGMEM = {
   0x00, 0x00, 0x00, 0x00, 0x00  // #255 NBSP
 };
 
-void drawString(char * dString, int x, int y, byte fontSize, byte red, byte green, byte blue){
+void drawString(char * dString, int x, int y, byte red, byte green, byte blue, byte fontSize){
         
   for (int i=0; i<strlen(dString); i++){
 
