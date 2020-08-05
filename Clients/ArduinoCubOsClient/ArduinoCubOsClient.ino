@@ -13,11 +13,11 @@
 //#define connector_serial
 #define connector_wifi_socket_server
 
-#define ssid "DIR-615"
-#define password "tsdurovo6200"
+//#define ssid "DIR-615"
+//#define password "tsdurovo6200"
 
-#define ssid "len12-75"
-#define password "doc12345"
+char * ssid = "len12-75";
+char * password = "doc12345";
 /*
 ########################################################
 #                                                      #
@@ -25,6 +25,7 @@
 #                                                      #
 ########################################################
 */
+#include <M5Stack.h>
 
 void setup() {
   M5.begin();

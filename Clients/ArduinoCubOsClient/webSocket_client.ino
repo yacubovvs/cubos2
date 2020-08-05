@@ -1,10 +1,13 @@
 #ifdef connector_wifi_socket_server
 
     #include <WiFi.h>
-    #include <WebSocketsServer.h>
-
-    #define server_wifi_socket_port 80
-    #define server_wifi_socket_ip "10.0.0.153"
+    #include <WebSocketClient.h>
+    
+    WebSocketClient webSocketClient;
+    WiFiClient client;
+    
+    #define server_wifi_socket_port 8000
+    #define server_wifi_socket_ip "192.168.1.38"
 
     void socket_server_setup(){
         WiFi.begin(ssid, password);
