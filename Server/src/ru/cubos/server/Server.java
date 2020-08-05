@@ -2,6 +2,7 @@ package ru.cubos.server;
 
 import ru.cubos.connectors.Connector;
 import ru.cubos.connectors.emulator.Emulator;
+import ru.cubos.connectors.websocket.WebSocketConnector;
 import ru.cubos.server.helpers.BinaryImage_24bit;
 import ru.cubos.server.helpers.ByteConverter;
 import ru.cubos.server.helpers.Colors;
@@ -39,10 +40,15 @@ public class Server {
     }
 
     public static void startServerEmulator() {
+        /*
         Emulator emulator = new Emulator(640, 480);
         Server server = new Server(emulator);
         emulator.setServer(server);
+        */
 
+
+        WebSocketConnector connector = new WebSocketConnector();
+        Server server = new Server(connector);
         server.start();
     }
 

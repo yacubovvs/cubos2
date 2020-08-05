@@ -21,9 +21,9 @@ public class ApplicationsList extends App {
 
         getBaseContainer().setBackgroundColor(new byte[]{-96, -96, -96});
 
-        setLeftOffset(30);
-        setRightOffset(80);
-        setTopOffset(120);
+        setLeftOffset(40);
+        setRightOffset(40);
+        setTopOffset(30);
         setBottomOffset(30);
 
         tabelContainer = new TabelContainer(TabelContainer.TableType.FIXED_ROWS,5);

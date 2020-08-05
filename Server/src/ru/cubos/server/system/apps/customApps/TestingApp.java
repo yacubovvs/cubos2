@@ -17,10 +17,10 @@ public class TestingApp extends App {
 
         setWindowTitle("Testing app");
 
-        setLeftOffset(50);
-        setRightOffset(50);
-        setTopOffset(100);
-        setBottomOffset(50);
+        setLeftOffset(30);
+        setRightOffset(30);
+        setTopOffset(40);
+        setBottomOffset(40);
 
         getBaseContainer().setBackgroundColor(Colors.COLOR_DARK_GRAY);
         //getBaseContainer().setBackgroundColor(Colors.COLOR_GREEN);

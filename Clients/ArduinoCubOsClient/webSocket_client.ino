@@ -3,8 +3,6 @@
     #include <WiFi.h>
     #include <WebSocketsServer.h>
 
-    const char* ssid = "DIR-615";
-    const char* password = "tsdurovo6200";
     #define server_wifi_socket_port 80
     #define server_wifi_socket_ip "10.0.0.153"
 
@@ -21,7 +19,5 @@
     void socket_server_loop(){
         
     }
-
-
 
 #endif
