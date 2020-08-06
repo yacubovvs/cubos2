@@ -1,8 +1,8 @@
 package ru.cubos.server.system.views;
 
-import ru.cubos.server.helpers.BinaryImage;
-import ru.cubos.server.helpers.BinaryImage_24bit;
-import ru.cubos.server.helpers.BinaryImage_24bit_alpha;
+import ru.cubos.server.helpers.binaryImages.BinaryImage;
+import ru.cubos.server.helpers.binaryImages.BinaryImage_24bit;
+import ru.cubos.server.helpers.binaryImages.BinaryImage_24bit_alpha;
 
 import java.io.IOException;
 

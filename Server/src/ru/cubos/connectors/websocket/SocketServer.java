@@ -12,8 +12,8 @@ public class SocketServer {
 
     private static Socket clientSocket; //сокет для общения
     private static ServerSocket server; // серверсокет
-    private static BufferedReader in; // поток чтения из сокета
-    private static BufferedWriter out; // поток записи в сокет
+    private static InputStream  in; // поток чтения из сокета
+    private static OutputStream  out; // поток записи в сокет
     private int port;
     public List<byte[]> messagesToSend = new ArrayList<>();
 
@@ -25,7 +25,7 @@ public class SocketServer {
     }
 
     public void start(){
-        while (true) {
+        //while (true) {
             try {
                 try {
                     server = new ServerSocket(port);
@@ -36,8 +36,8 @@ public class SocketServer {
                     try {
                         String dataString = "";
 
-                        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                        out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+                        in = clientSocket.getInputStream();
+                        out = clientSocket.getOutputStream();
 
                         reader = new Reader();
                         writer = new Writer();
@@ -61,7 +61,8 @@ public class SocketServer {
             } catch (IOException e) {
                 System.err.println(e);
             }
-        }
+
+        //}
     }
 
 
@@ -69,19 +70,19 @@ public class SocketServer {
         @Override
         public void run() {
 
-            String str;
-
                 while (true) {
+                    //try {
+                    //str = in.readLine();
+
+                    //out.write("got string: " + str + "\n");
+                    //out.flush();
+
+                    //} catch (IOException e) {}
                     try {
-                    str = in.readLine();
-                    //if (str.equals("stop")) {
-                    //    break;
-                    //}
-
-                    out.write("got string: " + str + "\n");
-                    out.flush();
-
-                    } catch (IOException e) {}
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
 
 
@@ -93,18 +94,28 @@ public class SocketServer {
         @Override
         public void run() {
             while (true) {
-                String userWord;
                 try {
                     if (messagesToSend.size()>0){
-                        byte string[] = messagesToSend.get(0);
-                        //out.write(string);
-                        //out.w
-                        for(int i=0; i<string.length; i++){
-                            out.write(string[i]);
+                        byte message[] = messagesToSend.get(0);
+
+
+                        int position = 0;
+                        int package_size = 1024;
+                        while (position<message.length) {
+                            int message_size = (position+package_size>message.length?message.length-position:package_size);
+                            byte slice_message[] = new byte[message_size];
+                            for(int i=0; i<message_size; i++) slice_message[i] = message[i + position];
+
+                            out.write(slice_message, 0, message_size);
+                            position += message_size;
                         }
 
+                        //for(int i=0; i<string.length; i++){
+                        //    out.write(string[i]);
+                        //}
+
                         out.flush();
-                        messagesToSend.remove(string);
+                        messagesToSend.remove(message);
                     }
 
                     Thread.sleep(1000);

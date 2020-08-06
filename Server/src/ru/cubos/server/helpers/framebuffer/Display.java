@@ -1,6 +1,6 @@
 package ru.cubos.server.helpers.framebuffer;
 
-import ru.cubos.server.helpers.BinaryImage_24bit;
+import ru.cubos.server.helpers.binaryImages.BinaryImage_24bit;
 
 import java.util.ArrayList;
 import java.util.List;

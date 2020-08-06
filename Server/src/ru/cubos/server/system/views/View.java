@@ -2,7 +2,7 @@ package ru.cubos.server.system.views;
 
 import javafx.scene.input.TouchEvent;
 import ru.cubos.server.Server;
-import ru.cubos.server.helpers.BinaryImage;
+import ru.cubos.server.helpers.binaryImages.BinaryImage;
 import ru.cubos.server.helpers.Colors;
 import ru.cubos.server.system.apps.App;
 import ru.cubos.server.system.events.Event;

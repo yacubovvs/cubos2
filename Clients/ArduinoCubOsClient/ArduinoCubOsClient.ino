@@ -16,8 +16,8 @@
 //#define ssid "DIR-615"
 //#define password "tsdurovo6200"
 
-char * ssid = "len12-75";
-char * password = "doc12345";
+char * ssid = "DIR-615";
+char * password = "tsdurobo6200";
 /*
 ########################################################
 #                                                      #

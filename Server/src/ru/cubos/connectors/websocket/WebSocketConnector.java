@@ -8,6 +8,8 @@ public class WebSocketConnector implements Connector {
     SocketServer socketServer;
     public WebSocketConnector(){
         socketServer = new SocketServer(8000);
+        socketServer.start();
+        /*
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -16,6 +18,8 @@ public class WebSocketConnector implements Connector {
         });
 
         thread.start();
+        */
+
         //socketServer.start();
     }
 
@@ -28,11 +32,11 @@ public class WebSocketConnector implements Connector {
 
     @Override
     public int getScreenWidth() {
-        return 180;
+        return 512;
     }
 
     @Override
     public int getScreenHeight() {
-        return 180;
+        return 512;
     }
 }

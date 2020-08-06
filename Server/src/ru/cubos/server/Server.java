@@ -1,9 +1,8 @@
 package ru.cubos.server;
 
 import ru.cubos.connectors.Connector;
-import ru.cubos.connectors.emulator.Emulator;
 import ru.cubos.connectors.websocket.WebSocketConnector;
-import ru.cubos.server.helpers.BinaryImage_24bit;
+import ru.cubos.server.helpers.binaryImages.BinaryImage_24bit;
 import ru.cubos.server.helpers.ByteConverter;
 import ru.cubos.server.helpers.Colors;
 import ru.cubos.server.helpers.framebuffer.Display;
@@ -36,10 +35,12 @@ public class Server {
     private boolean repaintPending;
 
     public static void main(String[] args) {
-        startServerEmulator();
+        while(true) {
+            startServerSocket();
+        }
     }
 
-    public static void startServerEmulator() {
+    public static void startServerSocket() {
         /*
         Emulator emulator = new Emulator(640, 480);
         Server server = new Server(emulator);
@@ -85,6 +86,10 @@ public class Server {
 
     public void start() {
         System.out.println("Server: Server started");
+        drawApps();
+        drawBars();
+        sendFrameBufferCommands();
+        /*
         Thread serverThread = new Thread(() -> {
             //while(true) {
             drawApps();
@@ -97,6 +102,8 @@ public class Server {
             }
         });
         serverThread.start();
+        */
+         
     }
 
 

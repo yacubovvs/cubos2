@@ -1,4 +1,4 @@
-package ru.cubos.server.helpers;
+package ru.cubos.server.helpers.binaryImages;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
