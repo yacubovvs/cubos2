@@ -2,15 +2,11 @@ package com.example.androidcubosclient;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.view.View;
 
 import com.example.androidcubosclient.connectors.ClientSocket;
-import com.example.androidcubosclient.helpers.binaryImages.BinaryImage;
 
 public class ScreenActivity extends AppCompatActivity {
 
@@ -26,10 +22,12 @@ public class ScreenActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mContentView.invalidate();
+                ActionBar actionBar = getActionBar();
+                if(actionBar!=null) actionBar.hide();
             }
         });
 
-        ClientSocket clientSocket = new ClientSocket("10.0.0.153" , 8000, mContentView);
+        ClientSocket clientSocket = new ClientSocket("192.168.1.38" , 8000, mContentView);
     }
 
     @Override
@@ -38,7 +36,12 @@ public class ScreenActivity extends AppCompatActivity {
         fullScreen();
     }
 
-    private void fullScreen() { mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE); }
+    private void fullScreen() {
+        mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE);
+        ActionBar actionBar = getActionBar();
+        if(actionBar!=null) actionBar.hide();
+
+    }
 
 
 }

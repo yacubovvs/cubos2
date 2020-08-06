@@ -32,11 +32,11 @@ public class WebSocketConnector implements Connector {
 
     @Override
     public int getScreenWidth() {
-        return 512;
+        return 1080/2;
     }
 
     @Override
     public int getScreenHeight() {
-        return 512;
+        return 1920/2;
     }
 }

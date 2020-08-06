@@ -88,7 +88,13 @@ public class Server {
         System.out.println("Server: Server started");
         drawApps();
         drawBars();
+
+        System.out.println("Sending starting");
+        long start = System.currentTimeMillis();
         sendFrameBufferCommands();
+        long timeConsumedMillis = System.currentTimeMillis() - start;
+        System.out.println("Sending time: " + timeConsumedMillis + " ms");
+
         /*
         Thread serverThread = new Thread(() -> {
             //while(true) {
@@ -284,13 +290,13 @@ public class Server {
         this.repaintPending = true;
 
         // TODO: Remove this in future
-        long start = System.currentTimeMillis();
+        //long start = System.currentTimeMillis();
         drawApps();
-        long finish = System.currentTimeMillis();
-        long timeConsumedMillis = finish - start;
+        //long timeConsumedMillis = System.currentTimeMillis() - start;
         //System.out.println("Repaint time: " + timeConsumedMillis + " ms");
 
         sendFrameBufferCommands();
+
     }
 
     public void cancelRepaintPending() {
