@@ -21,7 +21,7 @@ public class CanvasScreen extends View {
 
     public CanvasScreen(Context context) {
         super(context);
-        binaryImage = new BinaryImage_24bit(720/image_scale,1280/image_scale);
+        binaryImage = new BinaryImage_24bit(1080/image_scale,2340/image_scale);
     }
 
     public BinaryImage getBinaryImage(){
@@ -47,12 +47,11 @@ public class CanvasScreen extends View {
                 if(image_scale==1){
                     canvas.drawPoint(x,y,paint);
                 } else{
-                    //canvas.drawPoint(x,y,paint);
-                    //canvas.drawRect(x*image_scale,y*image_scale,x+image_scale, y+image_scale, paint);
-                    canvas.drawPoint(x*2,y*2,paint);
-                    canvas.drawPoint(x*2+1,y*2,paint);
-                    canvas.drawPoint(x*2,y*2+1,paint);
-                    canvas.drawPoint(x*2+1,y*2+1,paint);
+                    for (int xi=0; xi<image_scale; xi++){
+                        for (int yi=0; yi<image_scale; yi++){
+                            canvas.drawPoint(x*image_scale + xi,y*image_scale + yi,paint);
+                        }
+                    }
                 }
 
             }
