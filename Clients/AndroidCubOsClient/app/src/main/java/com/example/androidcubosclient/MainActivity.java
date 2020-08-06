@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
-    static public byte image_scale = 2;
+    static public byte image_scale = 1;
 
     Button connectButton;
     @Override

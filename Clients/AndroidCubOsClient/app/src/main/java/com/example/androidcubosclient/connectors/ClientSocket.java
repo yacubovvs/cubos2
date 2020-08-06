@@ -1,5 +1,7 @@
 package com.example.androidcubosclient.connectors;
 
+import android.util.Log;
+
 import com.example.androidcubosclient.CanvasScreen;
 import com.example.androidcubosclient.helpers.ByteConverter;
 import com.example.androidcubosclient.helpers.binaryImages.BinaryImage;
@@ -77,7 +79,7 @@ public class ClientSocket{
             while (true) {
 
                 int count;
-                byte bytes[] = new byte[128*1024];
+                byte bytes[] = new byte[16*1024*1024];
 
                 try {
                     byte rest_bytes[] = null;
@@ -86,14 +88,21 @@ public class ClientSocket{
                             byte sum_bytes[] = new byte[count + rest_bytes.length];
                             for (int i=0; i< rest_bytes.length; i++) sum_bytes[i] = rest_bytes[i];
                             for (int i=rest_bytes.length; i< count + rest_bytes.length; i++) sum_bytes[i] = bytes[i - rest_bytes.length];
+
                             rest_bytes = decodeCommands(sum_bytes);
-                        }else rest_bytes = decodeCommands(bytes);
-                        System.out.println("Read " + count + " bytes");
-                        System.out.println("Rest bytes " + rest_bytes.length + " bytes");
+                        }else{
+                            rest_bytes = decodeCommands(bytes);
+                        }
+                        //System.out.println("Read " + count + " bytes");
+                        //System.out.println("Rest bytes " + rest_bytes.length + " bytes");
                     }
 
                     decodeCommands(rest_bytes);
+
+                    Thread.sleep(200);
                 } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
@@ -153,21 +162,21 @@ public class ClientSocket{
 
                         current_position += 12;
                         //drawRect(x0, y0, x1, y1, new Color(r, g, b));
-                        System.out.printf("Drawing rectangle");
+                        //System.out.printf("Drawing rectangle");
                         break;
                     case DRAWING_RECTS_ARRAY:
-                        System.out.println("Emulator client: drawing rectangle array");
+                        //System.out.println("Emulator client: drawing rectangle array");
                         break;
                     case DRAWING_PIXELS_ARRAY:
-                        System.out.println("Emulator client: drawing pixels array");
+                        //System.out.println("Emulator client: drawing pixels array");
                         break;
                     case UPDATE_SCREEN:
-                        System.out.println("Emulator client: update screen");
+                        //System.out.println("Emulator client: update screen");
                         //updateImage();
-                        System.out.printf("Update image");
+                        //System.out.printf("Update image");
                         break;
                     default:
-                        System.out.println("Emulator client: unknown protocol command");
+                        //System.out.println("Emulator client: unknown protocol command");
                         current_position++;
                         //return false;
                 }

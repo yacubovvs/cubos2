@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.View;
 
 import com.example.androidcubosclient.helpers.binaryImages.BinaryImage;
@@ -20,7 +21,7 @@ public class CanvasScreen extends View {
 
     public CanvasScreen(Context context) {
         super(context);
-        binaryImage = new BinaryImage_24bit(1080/image_scale,1920/image_scale);
+        binaryImage = new BinaryImage_24bit(720/image_scale,1280/image_scale);
     }
 
     public BinaryImage getBinaryImage(){
@@ -33,6 +34,9 @@ public class CanvasScreen extends View {
     }
 
     public void updateByBinaryImage(Canvas canvas){
+        long start = System.currentTimeMillis();
+        Log.i("timing", "canvas start");
+
         for (int x=0; x<binaryImage.getWidth(); x++){
             for (int y=0; y<binaryImage.getHeight(); y++){
                 byte color_pixel[] = binaryImage.getColorPixel(x,y);
@@ -53,6 +57,9 @@ public class CanvasScreen extends View {
 
             }
         }
+
+        long finish = System.currentTimeMillis() - start;
+        Log.i("timing", "canvas finish: " + finish + " ms");
 
     }
 }
