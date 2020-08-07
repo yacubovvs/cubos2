@@ -34,13 +34,13 @@ public class EmulatorImagePanel extends ImagePanel {
                 byte x_bytes[] = ByteConverter.char_to_bytes((char)(mousePosition[0]));
                 byte y_bytes[] = ByteConverter.char_to_bytes((char)(mousePosition[1]));
 
-                byte clickData[] = new byte[5];
+                byte eventData[] = new byte[5];
 
-                clickData[0] = Protocol.EVENT_TOUCH_DOWN;
-                clickData[1] = x_bytes[0];
-                clickData[2] = x_bytes[1];
-                clickData[3] = y_bytes[0];
-                clickData[4] = y_bytes[1];
+                eventData[0] = Protocol.EVENT_TOUCH_DOWN;
+                eventData[1] = x_bytes[0];
+                eventData[2] = x_bytes[1];
+                eventData[3] = y_bytes[0];
+                eventData[4] = y_bytes[1];
 
                 startPositionCoords = mousePosition;
 
@@ -50,7 +50,8 @@ public class EmulatorImagePanel extends ImagePanel {
                 startPosition[2] = y_bytes[0];
                 startPosition[3] = y_bytes[1];
 
-                emulator.getServer().transmitData(clickData);
+                emulator.sendToServer(eventData);
+
             }
 
             @Override
@@ -67,40 +68,40 @@ public class EmulatorImagePanel extends ImagePanel {
                 byte x_bytes[] = ByteConverter.char_to_bytes((char)(mousePosition[0]));
                 byte y_bytes[] = ByteConverter.char_to_bytes((char)(mousePosition[1]));
 
-                byte clickData[];
+                byte eventData[];
 
                 if(Math.abs(mousePosition[0] - startPositionCoords[0])<minClickPositionDiff && Math.abs(mousePosition[1] - startPositionCoords[1])<minClickPositionDiff){
-                    clickData = new byte[5];
-                    clickData[0] = Protocol.EVENT_TOUCH_TAP;
-                    clickData[1] = x_bytes[0];
-                    clickData[2] = x_bytes[1];
-                    clickData[3] = y_bytes[0];
-                    clickData[4] = y_bytes[1];
+                    eventData = new byte[5];
+                    eventData[0] = Protocol.EVENT_TOUCH_TAP;
+                    eventData[1] = x_bytes[0];
+                    eventData[2] = x_bytes[1];
+                    eventData[3] = y_bytes[0];
+                    eventData[4] = y_bytes[1];
 
-                    emulator.getServer().transmitData(clickData);
+                    emulator.sendToServer(eventData);
                 }else{
-                    clickData = new byte[9];
-                    clickData[0] = Protocol.EVENT_TOUCH_MOVE_FINISHED;
-                    clickData[1] = x_bytes[0];
-                    clickData[2] = x_bytes[1];
-                    clickData[3] = y_bytes[0];
-                    clickData[4] = y_bytes[1];
-                    clickData[5] = startPosition[0];
-                    clickData[6] = startPosition[1];
-                    clickData[7] = startPosition[2];
-                    clickData[8] = startPosition[3];
+                    eventData = new byte[9];
+                    eventData[0] = Protocol.EVENT_TOUCH_MOVE_FINISHED;
+                    eventData[1] = x_bytes[0];
+                    eventData[2] = x_bytes[1];
+                    eventData[3] = y_bytes[0];
+                    eventData[4] = y_bytes[1];
+                    eventData[5] = startPosition[0];
+                    eventData[6] = startPosition[1];
+                    eventData[7] = startPosition[2];
+                    eventData[8] = startPosition[3];
 
-                    emulator.getServer().transmitData(clickData);
+                    emulator.sendToServer(eventData);
                 }
 
-                clickData = new byte[5];
-                clickData[0] = Protocol.EVENT_TOUCH_UP;
-                clickData[1] = x_bytes[0];
-                clickData[2] = x_bytes[1];
-                clickData[3] = y_bytes[0];
-                clickData[4] = y_bytes[1];
+                eventData = new byte[5];
+                eventData[0] = Protocol.EVENT_TOUCH_UP;
+                eventData[1] = x_bytes[0];
+                eventData[2] = x_bytes[1];
+                eventData[3] = y_bytes[0];
+                eventData[4] = y_bytes[1];
 
-                emulator.getServer().transmitData(clickData);
+                emulator.sendToServer(eventData);
 
                 startPosition = null;
                 lastPosition = null;
@@ -119,23 +120,23 @@ public class EmulatorImagePanel extends ImagePanel {
                 byte x_bytes[] = ByteConverter.char_to_bytes((char)(mousePosition[0]));
                 byte y_bytes[] = ByteConverter.char_to_bytes((char)(mousePosition[1]));
 
-                byte clickData[] = new byte[13];
+                byte eventData[] = new byte[13];
 
                 if(lastPosition==null) lastPosition = startPosition;
 
-                clickData[0]  = Protocol.EVENT_TOUCH_MOVE;
-                clickData[1]  = x_bytes[0];
-                clickData[2]  = x_bytes[1];
-                clickData[3]  = y_bytes[0];
-                clickData[4]  = y_bytes[1];
-                clickData[5]  = lastPosition[0];
-                clickData[6]  = lastPosition[1];
-                clickData[7]  = lastPosition[2];
-                clickData[8]  = lastPosition[3];
-                clickData[9]  = startPosition[0];
-                clickData[10] = startPosition[1];
-                clickData[11] = startPosition[2];
-                clickData[12] = startPosition[3];
+                eventData[0]  = Protocol.EVENT_TOUCH_MOVE;
+                eventData[1]  = x_bytes[0];
+                eventData[2]  = x_bytes[1];
+                eventData[3]  = y_bytes[0];
+                eventData[4]  = y_bytes[1];
+                eventData[5]  = lastPosition[0];
+                eventData[6]  = lastPosition[1];
+                eventData[7]  = lastPosition[2];
+                eventData[8]  = lastPosition[3];
+                eventData[9]  = startPosition[0];
+                eventData[10] = startPosition[1];
+                eventData[11] = startPosition[2];
+                eventData[12] = startPosition[3];
 
                 lastPosition = new byte[4];
                 lastPosition[0] = x_bytes[0];
@@ -143,7 +144,7 @@ public class EmulatorImagePanel extends ImagePanel {
                 lastPosition[2] = y_bytes[0];
                 lastPosition[3] = y_bytes[1];
 
-                emulator.getServer().transmitData(clickData);
+                emulator.sendToServer(eventData);
             }
         };
 

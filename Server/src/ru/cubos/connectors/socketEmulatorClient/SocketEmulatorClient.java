@@ -9,6 +9,10 @@ public class SocketEmulatorClient extends Emulator implements Connector {
         super(width, height);
     }
 
+    @Override
+    public boolean sendToServer(byte[] data) {
+        return false;
+    }
 
 
 }

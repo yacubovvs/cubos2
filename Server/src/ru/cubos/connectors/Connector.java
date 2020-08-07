@@ -6,4 +6,5 @@ public interface Connector {
     public boolean OnDataGotFromServer(byte[] data);
     public int getScreenWidth();
     public int getScreenHeight();
+
 }

@@ -9,7 +9,19 @@ public class StraightEmulator extends Emulator implements Connector {
         super(width, height);
     }
 
-    public void start(Server server) {
-        setServer(server);
+    private Server server;
+
+    @Override
+    public boolean sendToServer(byte[] data) {
+        getServer().transmitData(data);
+        return true;
+    }
+
+    public Server getServer() {
+        return server;
+    }
+
+    public void setServer(Server server) {
+        this.server = server;
     }
 }

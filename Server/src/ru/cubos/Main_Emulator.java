@@ -8,7 +8,7 @@ public class Main_Emulator {
     public static void main(String[] args) {
         StraightEmulator straightEmulator = new StraightEmulator(320, 640);
         Server server = new Server(straightEmulator);
-        straightEmulator.start(server);
+        straightEmulator.setServer(server);
         server.setRepaintPending();
     }
 

@@ -15,13 +15,11 @@ public abstract class Emulator extends JFrame implements Connector {
     private JPanel mainpanel;
     private JPanel imageWrapper;
     BufferedImage image;
-    private Server server;
 
-    protected int width = 320;
-    protected int height = 480;
+    protected int width;
+    protected int height;
 
     public Emulator(int width, int height){
-        setServer(server);
         setContentPane(mainpanel);
         setTitle("CubOS2 Emulator");
 
@@ -53,7 +51,7 @@ public abstract class Emulator extends JFrame implements Connector {
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
     */
-
+    public abstract boolean sendToServer(byte[] data);
 
     @Override
     public boolean OnDataGotFromServer(byte[] data) {
@@ -312,11 +310,5 @@ public abstract class Emulator extends JFrame implements Connector {
         return height;
     }
 
-    public Server getServer() {
-        return server;
-    }
 
-    public void setServer(Server server) {
-        this.server = server;
-    }
 }
