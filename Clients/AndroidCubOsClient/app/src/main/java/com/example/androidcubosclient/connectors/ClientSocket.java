@@ -1,23 +1,15 @@
 package com.example.androidcubosclient.connectors;
 
-import android.util.Log;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 
 import com.example.androidcubosclient.CanvasScreen;
 import com.example.androidcubosclient.helpers.ByteConverter;
 import com.example.androidcubosclient.helpers.binaryImages.BinaryImage;
 
-import org.w3c.dom.ls.LSOutput;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.Writer;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +45,7 @@ public class ClientSocket{
                     in = clientSocket.getInputStream();
                     out = clientSocket.getOutputStream();
 
-                    reader = new ClientSocket.Reader();
+                    reader = new Reader();
                     writer = new Writer();
 
                     reader.start();
@@ -90,6 +82,7 @@ public class ClientSocket{
                             for (int i=rest_bytes.length; i< count + rest_bytes.length; i++) sum_bytes[i] = bytes[i - rest_bytes.length];
 
                             rest_bytes = decodeCommands(sum_bytes);
+                            canvasScreen.invalidate();
                         }else{
                             rest_bytes = decodeCommands(bytes);
                         }
@@ -102,8 +95,10 @@ public class ClientSocket{
                     Thread.sleep(200);
                 } catch (IOException e) {
                     e.printStackTrace();
+                    return;
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                    return;
                 }
 
             }
@@ -119,7 +114,7 @@ public class ClientSocket{
             int current_position = 0;
             byte r, g, b;
 
-            BinaryImage binaryImage = canvasScreen.getBinaryImage();
+            Bitmap bitmap = canvasScreen.getBitmap();
 
             while (current_position < data.length) {
 
@@ -145,7 +140,9 @@ public class ClientSocket{
 
                         //drawPixel(x0, y0, new Color(r, g, b));
                         //System.out.printf("Drawing pixel");
-                        binaryImage.setColorPixel(x0, y0, r, g, b);
+                        //bitmap.setColorPixel(x0, y0, r, g, b);
+                        int color = Color.rgb(r + 128, g + 128, b + 128);
+                        bitmap.setPixel(x0, y0, color);
 
                         current_position += 8;
 
@@ -196,15 +193,18 @@ public class ClientSocket{
                 String userWord;
                 try {
                     if (messagesToSend.size()>0){
-                        byte string[] = messagesToSend.get(0);
-                        //out.write(string);
+                        byte data[] = messagesToSend.get(0);
+                        //out.write(data);
                         //out.w
-                        for(int i=0; i<string.length; i++){
-                            out.write(string[i]);
-                        }
 
+                        out.write(data);
                         out.flush();
-                        messagesToSend.remove(string);
+                        //for(int i=0; i<data.length; i++){
+                        //    out.write(data[i]);
+                        //}
+
+                        //out.flush();
+                        messagesToSend.remove(data);
                     }
 
                     Thread.sleep(1000);

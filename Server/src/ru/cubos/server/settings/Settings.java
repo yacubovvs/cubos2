@@ -59,7 +59,7 @@ public class Settings {
      *
      * */
 
-    private boolean     windowMode                      = true;
+    private boolean     windowMode                      = false;
     private int         cornerWindowResizeSize          = 12;
     private int         windowBorderWidth               = 2;
     private int         windowBorderActiveOffsetWidth   = 8; // Active area out of window's borders to get click on border

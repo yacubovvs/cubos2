@@ -21,12 +21,12 @@ public class ApplicationsList extends App {
 
         getBaseContainer().setBackgroundColor(new byte[]{-96, -96, -96});
 
-        setLeftOffset(40);
-        setRightOffset(40);
-        setTopOffset(30);
-        setBottomOffset(30);
+        setLeftOffset(0);
+        setRightOffset(0);
+        setTopOffset(getServer().settings.getStatusBarHeight());
+        setBottomOffset(0);
 
-        tabelContainer = new TabelContainer(TabelContainer.TableType.FIXED_ROWS,5);
+        tabelContainer = new TabelContainer(TabelContainer.TableType.FIXED_ROWS,4);
         tabelContainer.setMargin(15);
 
         addIcon("Settings" , "images//icons//apps//settings.png");

@@ -1,26 +1,31 @@
 package ru.cubos.connectors.websocket;
 
-import java.io.*;
+import ru.cubos.server.Server;
+
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.cubos.connectors.Protocol.Command_CLOSE_CONNECTION;
-
 public class SocketServer {
 
-    private static Socket clientSocket; //сокет для общения
-    private static ServerSocket server; // серверсокет
-    private static InputStream  in; // поток чтения из сокета
-    private static OutputStream  out; // поток записи в сокет
+    private Server server;
+    private Socket clientSocket; //сокет для общения
+    private ServerSocket socketServer; // серверсокет
+    private InputStream in; // поток чтения из сокета
+    private OutputStream out; // поток записи в сокет
     private int port;
     public List<byte[]> messagesToSend = new ArrayList<>();
 
     private Reader reader;
     private Writer writer;
 
-    public SocketServer(int port){
+    public SocketServer(int port, Server server){
+        this.server = server;
         this.port = port;
     }
 
@@ -28,10 +33,10 @@ public class SocketServer {
         //while (true) {
             try {
                 try {
-                    server = new ServerSocket(port);
+                    socketServer = new ServerSocket(port);
                     System.out.println("Socket server started at port " + port);
 
-                    clientSocket = server.accept();
+                    clientSocket = socketServer.accept();
 
                     try {
                         String dataString = "";
@@ -56,7 +61,7 @@ public class SocketServer {
                     System.out.println("Server error #2");
                 } finally {
                     System.out.println("Server closed!");
-                    server.close();
+                    socketServer.close();
                 }
             } catch (IOException e) {
                 System.err.println(e);
@@ -65,31 +70,39 @@ public class SocketServer {
         //}
     }
 
+    public Server getServer() {
+        return server;
+    }
+
+    public void setServer(Server server) {
+        this.server = server;
+    }
+
 
     private class Reader extends Thread {
         @Override
         public void run() {
+            int count;
+            byte bytes[] = new byte[32];
 
-                while (true) {
-                    //try {
-                    //str = in.readLine();
+                byte rest_bytes[] = null;
+                try{
+                    while ((count = in.read(bytes)) > 0) {
 
-                    //out.write("got string: " + str + "\n");
-                    //out.flush();
-
-                    //} catch (IOException e) {}
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        //System.out.println("Recieved " + bytes.length + " bytes, with count " + count );
+                        byte recievedData[] = new byte[count];
+                        for(int i=0; i<count; i++){
+                            recievedData[i] = bytes[i];
+                        }
+                        server.transmitData(recievedData);
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-
-
         }
     }
 
-    public class Writer extends Thread {
+    private class Writer extends Thread {
 
         @Override
         public void run() {
@@ -100,7 +113,7 @@ public class SocketServer {
 
 
                         int position = 0;
-                        int package_size = 1024;
+                        int package_size = 16*1024*1024;
                         while (position<message.length) {
                             int message_size = (position+package_size>message.length?message.length-position:package_size);
                             byte slice_message[] = new byte[message_size];

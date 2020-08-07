@@ -11,14 +11,14 @@ import java.awt.image.BufferedImage;
 import static ru.cubos.server.helpers.ByteConverter.uByte;
 import static ru.cubos.connectors.Protocol.*;
 
-public class Emulator extends JFrame implements Connector {
+public abstract class Emulator extends JFrame implements Connector {
     private JPanel mainpanel;
     private JPanel imageWrapper;
     BufferedImage image;
     private Server server;
 
-    private int width = 320;
-    private int height = 480;
+    protected int width = 320;
+    protected int height = 480;
 
     public Emulator(int width, int height){
         setServer(server);
@@ -48,7 +48,7 @@ public class Emulator extends JFrame implements Connector {
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
     * *                                                                                                             * *
-    * *                                           TRANSIM AND RECIEVE DATA                                          * *
+    * *                                             SEND AND RECIEVE DATA                                           * *
     * *                                                                                                             * *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -56,7 +56,7 @@ public class Emulator extends JFrame implements Connector {
 
 
     @Override
-    public boolean transmitData(byte[] data) {
+    public boolean OnDataGotFromServer(byte[] data) {
 
         if(data.length==0){
             return true; // No data
@@ -136,7 +136,7 @@ public class Emulator extends JFrame implements Connector {
         image.setRGB(x,y, color.getRGB());
     }
 
-    void drawPixel(int x, int y, Color color){
+    protected void drawPixel(int x, int y, Color color){
         image.setRGB(x,y, color.getRGB());
     }
 
@@ -302,10 +302,12 @@ public class Emulator extends JFrame implements Connector {
         this.height = height;
     }
 
+    @Override
     public int getScreenWidth() {
         return width;
     }
 
+    @Override
     public int getScreenHeight() {
         return height;
     }

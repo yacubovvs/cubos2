@@ -1,7 +1,6 @@
 package ru.cubos.server;
 
 import ru.cubos.connectors.Connector;
-import ru.cubos.connectors.websocket.WebSocketConnector;
 import ru.cubos.server.helpers.binaryImages.BinaryImage_24bit;
 import ru.cubos.server.helpers.ByteConverter;
 import ru.cubos.server.helpers.Colors;
@@ -10,7 +9,6 @@ import ru.cubos.server.settings.Settings;
 import ru.cubos.server.system.ButtonBar;
 import ru.cubos.server.system.TimeWidgetView;
 import ru.cubos.server.system.apps.App;
-import ru.cubos.server.system.apps.customApps.TestingApp;
 import ru.cubos.server.system.apps.systemApps.ApplicationsList;
 import ru.cubos.server.system.apps.systemApps.desktopWidgets.StatusBarDesktopWidget;
 import ru.cubos.server.system.events.*;
@@ -34,25 +32,6 @@ public class Server {
 
     private boolean repaintPending;
 
-    public static void main(String[] args) {
-        while(true) {
-            startServerSocket();
-        }
-    }
-
-    public static void startServerSocket() {
-        /*
-        Emulator emulator = new Emulator(640, 480);
-        Server server = new Server(emulator);
-        emulator.setServer(server);
-        */
-
-
-        WebSocketConnector connector = new WebSocketConnector();
-        Server server = new Server(connector);
-        server.start();
-    }
-
     public App getActiveApp(){
         return openedApps.get(openedApps.size()-1);
     }
@@ -71,7 +50,7 @@ public class Server {
 
         openedApps.add(statusBar);
         openedApps.add(new ApplicationsList(this));
-        openedApps.add(new TestingApp(this));
+        //openedApps.add(new TestingApp(this));
 
         timeWidgetView = new TimeWidgetView();
 
@@ -80,9 +59,8 @@ public class Server {
         } catch (IOException e) {
             backGroundImage = null;
         }
-
-        //display.drawLine(0,0,100,100, Colors.COLOR_RED);
     }
+
 
     public void start() {
         System.out.println("Server: Server started");
@@ -130,7 +108,6 @@ public class Server {
     void drawBars() {
         if (statusBar.isRepaintPending()) statusBar.draw();
         if (buttonBar.isRepaintPending()) buttonBar.paint();
-
     }
 
     public void sendFrameBufferCommands() {
@@ -157,7 +134,7 @@ public class Server {
             }
 
             //System.out.println("Server: sending " + message.length + " bytes");
-            connector.transmitData(message);
+            connector.OnDataGotFromServer(message);
         } else {
             //System.out.println("Server: no frame change");
         }
@@ -187,7 +164,7 @@ public class Server {
                     x0 = ByteConverter.bytesToChar(uByte(data[current_position + 1]), uByte(data[current_position + 2]));
                     y0 = ByteConverter.bytesToChar(uByte(data[current_position + 3]), uByte(data[current_position + 4]));
 
-                    //System.out.println("Server: on screen click " + (int)x0 + ", " + (int)y0);
+                    System.out.println("Server: on screen tap " + (int)x0 + ", " + (int)y0);
                     getActiveApp().execEvent(new TouchTapEvent(x0, y0));
 
                     current_position += 5;
@@ -207,6 +184,7 @@ public class Server {
                     current_position += 5;
 
                     //System.out.println("Server: on screen mouse down");
+                    //System.out.println("Server: on screen down " + (int)x0 + ", " + (int)y0);
                     for (App app: openedApps) app.setMoving(false);
                     for (App app: openedApps) app.setResizing(false);
                     activateAppByCoordinates(x0, y0);
@@ -289,7 +267,7 @@ public class Server {
     public void setRepaintPending() {
         this.repaintPending = true;
 
-        // TODO: Remove this in future
+        // TODO: Remove this in future, should checking in loop
         //long start = System.currentTimeMillis();
         drawApps();
         //long timeConsumedMillis = System.currentTimeMillis() - start;

@@ -1,10 +1,11 @@
 package ru.cubos.connectors.localserial;
 
 import ru.cubos.connectors.Connector;
+import ru.cubos.server.Server;
 
 public class SerialConnector implements Connector {
     @Override
-    public boolean transmitData(byte[] data) {
+    public boolean OnDataGotFromServer(byte[] data) {
         return false;
     }
 
@@ -17,4 +18,5 @@ public class SerialConnector implements Connector {
     public int getScreenHeight() {
         return 0;
     }
+
 }
