@@ -1,25 +1,13 @@
 package ru.cubos.connectors.websocket;
 
 import ru.cubos.connectors.Connector;
+import ru.cubos.connectors.sockets.ServerSocket;
 import ru.cubos.server.Server;
 
 public class WebSocketConnector implements Connector {
 
-    SocketServer socketServer;
+    ServerSocket socketServer;
     public WebSocketConnector(){
-
-        /*
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                socketServer.start();
-            }
-        });
-
-        thread.start();
-        */
-
-        //socketServer.start();
     }
 
     @Override
@@ -40,7 +28,7 @@ public class WebSocketConnector implements Connector {
     }
 
     public void start(Server server) {
-        socketServer = new SocketServer(8000, server);
+        socketServer = new ServerSocket(8000, server);
         socketServer.start();
     }
 }

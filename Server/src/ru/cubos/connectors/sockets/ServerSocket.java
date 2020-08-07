@@ -1,4 +1,4 @@
-package ru.cubos.connectors.websocket;
+package ru.cubos.connectors.sockets;
 
 import ru.cubos.server.Server;
 
@@ -6,16 +6,15 @@ import ru.cubos.server.Server;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SocketServer {
+public class ServerSocket {
 
     private Server server;
     private Socket clientSocket; //сокет для общения
-    private ServerSocket socketServer; // серверсокет
+    private java.net.ServerSocket socketServer; // серверсокет
     private InputStream in; // поток чтения из сокета
     private OutputStream out; // поток записи в сокет
     private int port;
@@ -24,7 +23,7 @@ public class SocketServer {
     private Reader reader;
     private Writer writer;
 
-    public SocketServer(int port, Server server){
+    public ServerSocket(int port, Server server){
         this.server = server;
         this.port = port;
     }
@@ -33,7 +32,7 @@ public class SocketServer {
         //while (true) {
             try {
                 try {
-                    socketServer = new ServerSocket(port);
+                    socketServer = new java.net.ServerSocket(port);
                     System.out.println("Socket server started at port " + port);
 
                     clientSocket = socketServer.accept();
@@ -89,7 +88,7 @@ public class SocketServer {
                 try{
                     while ((count = in.read(bytes)) > 0) {
 
-                        //System.out.println("Recieved " + bytes.length + " bytes, with count " + count );
+                        System.out.println("Recieved " + bytes.length + " bytes, with count " + count );
                         byte recievedData[] = new byte[count];
                         for(int i=0; i<count; i++){
                             recievedData[i] = bytes[i];

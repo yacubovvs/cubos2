@@ -1,7 +1,6 @@
 package ru.cubos.connectors.emulator;
 
 import ru.cubos.connectors.Connector;
-import ru.cubos.server.Server;
 import ru.cubos.server.helpers.ByteConverter;
 
 import javax.swing.*;
@@ -14,7 +13,7 @@ import static ru.cubos.connectors.Protocol.*;
 public abstract class Emulator extends JFrame implements Connector {
     private JPanel mainpanel;
     private JPanel imageWrapper;
-    BufferedImage image;
+    private BufferedImage image;
 
     protected int width;
     protected int height;
@@ -31,6 +30,10 @@ public abstract class Emulator extends JFrame implements Connector {
         image = new BufferedImage(getScreenWidth(), getScreenHeight(), BufferedImage.TYPE_INT_RGB);
         updateImage();
         setVisible(true);
+    }
+
+    public BufferedImage getImage(){
+        return image;
     }
 
     public void updateImage(){
