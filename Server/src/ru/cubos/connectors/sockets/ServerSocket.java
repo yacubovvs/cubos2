@@ -133,8 +133,6 @@ public class ServerSocket {
                     messagesToSend.remove(data);
                 } catch (IOException e) {}
 
-
-
             }
 
             writer = null;
