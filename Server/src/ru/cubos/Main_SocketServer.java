@@ -9,27 +9,12 @@ import java.awt.image.BufferedImage;
 
 public class Main_SocketServer {
     public static void main(String[] args) {
-        //while(true) {
+        while(true) {
             WebSocketConnector connector = new WebSocketConnector();
             Server server = new Server(connector);
             connector.start(server);
             server.start();
-
-
-            for (int i=0; i<50; i++) {
-                server.display.resetLastFrame();
-                server.drawApps();
-                server.sendFrameBufferCommands();
-            }
-
-            Profiler.start("test");
-            for (int i=0; i<300; i++) {
-                server.display.resetLastFrame();
-                server.drawApps();
-                server.sendFrameBufferCommands();
-                Profiler.point("test");
-            }
-        //}
+        }
     }
 
 }
