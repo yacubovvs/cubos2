@@ -1,6 +1,7 @@
 package ru.cubos.connectors.sockets;
 
 import javafx.scene.paint.Color;
+import ru.cubos.profiler.Profiler;
 import ru.cubos.server.helpers.ByteConverter;
 import ru.cubos.server.helpers.binaryImages.BinaryImage;
 
@@ -11,6 +12,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import static ru.cubos.connectors.Protocol.*;
 
@@ -21,66 +23,66 @@ public class ClientSocket{
     private static OutputStream out; // поток записи в сокет
     private int port;
     private String addr;
-    public List<byte[]> messagesToSend = new ArrayList<>();
-
+    private List<byte[]> messagesToSend = new ArrayList<>();
     private ClientSocket_Updater clientSocket_updater;
     private Reader reader;
     private Writer writer;
 
+    public void addMessage(byte[] message){
+        messagesToSend.add(message);
+
+        if(writer==null){
+            writer = new Writer();
+            writer.start();
+        }
+    }
+
     public ClientSocket(final String addr, final int port, ClientSocket_Updater clientSocket_updater){
         this.clientSocket_updater = clientSocket_updater;
+        try {
+            clientSocket = new Socket(addr, port);
 
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    clientSocket = new Socket(addr, port);
+            ClientSocket.this.addr = addr;
+            ClientSocket.this.port = port;
 
-                    ClientSocket.this.addr = addr;
-                    ClientSocket.this.port = port;
+            in = clientSocket.getInputStream();
+            out = clientSocket.getOutputStream();
 
-                    in = clientSocket.getInputStream();
-                    out = clientSocket.getOutputStream();
+            reader = new Reader();
+            writer = new Writer();
 
-                    reader = new Reader();
-                    writer = new Writer();
-
-                    reader.start();
-                    writer.start();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    System.out.println("Error starting socket client");
-                    return;
-                }
-            }
-        });
-
-
-        thread.start();
-
+            reader.start();
+            writer.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error starting socket client");
+            return;
+        }
 
     }
 
     private class Reader extends Thread {
+
         @Override
         public void run() {
 
             while (true) {
-
                 int count;
-                byte bytes[] = new byte[16*1024*1024];
+                //byte bytes[] = new byte[16 * 1024 * 1024];
+                byte bytes[] = new byte[128 * 1024];
 
                 try {
                     byte rest_bytes[] = null;
                     while ((count = in.read(bytes)) > 0) {
-                        if(rest_bytes!=null){
+                        if (rest_bytes != null) {
                             byte sum_bytes[] = new byte[count + rest_bytes.length];
-                            for (int i=0; i< rest_bytes.length; i++) sum_bytes[i] = rest_bytes[i];
-                            for (int i=rest_bytes.length; i< count + rest_bytes.length; i++) sum_bytes[i] = bytes[i - rest_bytes.length];
+                            for (int i = 0; i < rest_bytes.length; i++) sum_bytes[i] = rest_bytes[i];
+                            for (int i = rest_bytes.length; i < count + rest_bytes.length; i++)
+                                sum_bytes[i] = bytes[i - rest_bytes.length];
 
                             rest_bytes = decodeCommands(sum_bytes);
                             clientSocket_updater.updateImage();
-                        }else{
+                        } else {
                             rest_bytes = decodeCommands(bytes);
                         }
                         //System.out.println("Read " + count + " bytes");
@@ -89,18 +91,14 @@ public class ClientSocket{
 
                     decodeCommands(rest_bytes);
 
-                    Thread.sleep(200);
                 } catch (IOException e) {
-                    e.printStackTrace();
-                    return;
-                } catch (InterruptedException e) {
                     e.printStackTrace();
                     return;
                 }
 
             }
-
         }
+
 
         private byte[] decodeCommands(byte data[]){
             return decodeCommands(data, false);
@@ -109,13 +107,14 @@ public class ClientSocket{
         private byte[] decodeCommands(byte data[], boolean lastMessage){
             char x0, y0, x1, y1;
             int current_position = 0;
+            final int rest_count_max = 8; //64
             byte r, g, b;
 
             BufferedImage bitmap = clientSocket_updater.getBitmap();
 
             while (current_position < data.length) {
 
-                if(data.length-current_position<=64 && !lastMessage){
+                if(data.length-current_position<=rest_count_max && !lastMessage){
                     byte rest_data[] = new byte[data.length-current_position];
                     for(int i=0; i<data.length-current_position; i++){
                         rest_data[i] = data[current_position + i];
@@ -186,29 +185,19 @@ public class ClientSocket{
 
         @Override
         public void run() {
-            while (true) {
-                String userWord;
-                try {
-                    if (messagesToSend.size()>0){
-                        byte data[] = messagesToSend.get(0);
-                        //out.write(data);
-                        //out.w
+            while (messagesToSend.size()>0) {
 
+                try {
+                        byte data[] = messagesToSend.get(0);
                         out.write(data);
                         out.flush();
-                        //for(int i=0; i<data.length; i++){
-                        //    out.write(data[i]);
-                        //}
-
-                        //out.flush();
                         messagesToSend.remove(data);
-                    }
 
-                    Thread.sleep(1000);
-
-                } catch (IOException | InterruptedException e) {}
+                } catch (IOException e) {}
 
             }
+
+            writer = null;
         }
     }
 }

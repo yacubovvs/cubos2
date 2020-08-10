@@ -1,5 +1,6 @@
 package ru.cubos.connectors.sockets;
 
+import ru.cubos.profiler.Profiler;
 import ru.cubos.server.Server;
 
 
@@ -22,6 +23,15 @@ public class ServerSocket {
 
     private Reader reader;
     private Writer writer;
+
+    public void addMessage(byte[] message){
+        messagesToSend.add(message);
+
+        if(writer==null){
+            writer = new Writer();
+            writer.start();
+        }
+    }
 
     public ServerSocket(int port, Server server){
         this.server = server;
@@ -60,7 +70,7 @@ public class ServerSocket {
                     System.out.println("Server error #2");
                 } finally {
                     System.out.println("Server closed!");
-                    socketServer.close();
+                    if(socketServer!=null)socketServer.close();
                 }
             } catch (IOException e) {
                 System.err.println(e);
@@ -82,13 +92,14 @@ public class ServerSocket {
         @Override
         public void run() {
             int count;
-            byte bytes[] = new byte[32];
+            //byte bytes[] = new byte[16 * 1024 * 1024];
+            byte bytes[] = new byte[128 * 1024];
 
                 byte rest_bytes[] = null;
                 try{
                     while ((count = in.read(bytes)) > 0) {
+                        //System.out.println("Recieved " + bytes.length + " bytes, with count " + count );
 
-                        System.out.println("Recieved " + bytes.length + " bytes, with count " + count );
                         byte recievedData[] = new byte[count];
                         for(int i=0; i<count; i++){
                             recievedData[i] = bytes[i];
@@ -101,6 +112,28 @@ public class ServerSocket {
         }
     }
 
+    public class Writer extends Thread {
+
+        @Override
+        public void run() {
+            while (messagesToSend.size()>0) {
+
+                try {
+                    byte data[] = messagesToSend.get(0);
+                    out.write(data);
+                    out.flush();
+                    messagesToSend.remove(data);
+                } catch (IOException e) {}
+
+
+
+            }
+
+            writer = null;
+        }
+    }
+
+    /*
     private class Writer extends Thread {
 
         @Override
@@ -122,10 +155,6 @@ public class ServerSocket {
                             position += message_size;
                         }
 
-                        //for(int i=0; i<string.length; i++){
-                        //    out.write(string[i]);
-                        //}
-
                         out.flush();
                         messagesToSend.remove(message);
                     }
@@ -136,7 +165,7 @@ public class ServerSocket {
 
             }
         }
-    }
+    }*/
 
 }
 

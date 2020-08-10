@@ -13,7 +13,8 @@ public class WebSocketConnector implements Connector {
     @Override
     public boolean OnDataGotFromServer(byte[] data) {
         //String outstring = data.toString();
-        socketServer.messagesToSend.add(data);
+        socketServer.addMessage(data);
+
         return true;
     }
 

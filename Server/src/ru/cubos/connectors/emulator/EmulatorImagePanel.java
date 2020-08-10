@@ -1,5 +1,6 @@
 package ru.cubos.connectors.emulator;
 
+import ru.cubos.profiler.Profiler;
 import ru.cubos.server.helpers.ByteConverter;
 import ru.cubos.connectors.Protocol;
 
@@ -23,6 +24,7 @@ public class EmulatorImagePanel extends ImagePanel {
 
             @Override
             public void mousePressed(MouseEvent e) {
+
                 int xPosition;
                 int yPosition;
 

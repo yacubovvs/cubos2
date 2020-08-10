@@ -76,7 +76,7 @@ public class ScreenActivity extends AppCompatActivity {
                     eventStartTouchPosition[2] = y_bytes[0];
                     eventStartTouchPosition[3] = y_bytes[1];
 
-                    clientSocket.messagesToSend.add(eventData);
+                    clientSocket.addMessage(eventData);
 
                     break;
                 case MotionEvent.ACTION_UP:
@@ -89,7 +89,7 @@ public class ScreenActivity extends AppCompatActivity {
                         eventData[3] = y_bytes[0];
                         eventData[4] = y_bytes[1];
 
-                        clientSocket.messagesToSend.add(eventData);
+                        clientSocket.addMessage(eventData);
                     }else{
                         eventData = new byte[9];
                         eventData[0] = Protocol.EVENT_TOUCH_MOVE_FINISHED;
@@ -102,7 +102,7 @@ public class ScreenActivity extends AppCompatActivity {
                         eventData[7] = eventStartTouchPosition[2];
                         eventData[8] = eventStartTouchPosition[3];
 
-                        clientSocket.messagesToSend.add(eventData);
+                        clientSocket.addMessage(eventData);
                     }
 
                     eventData = new byte[5];
@@ -112,7 +112,7 @@ public class ScreenActivity extends AppCompatActivity {
                     eventData[3] = y_bytes[0];
                     eventData[4] = y_bytes[1];
 
-                    clientSocket.messagesToSend.add(eventData);
+                    clientSocket.addMessage(eventData);
 
                     eventStartTouchPosition = null;
                     eventTouchPositionLast = null;
@@ -145,7 +145,7 @@ public class ScreenActivity extends AppCompatActivity {
                     eventTouchPositionLast[2] = y_bytes[0];
                     eventTouchPositionLast[3] = y_bytes[1];
 
-                    clientSocket.messagesToSend.add(eventData);
+                    clientSocket.addMessage(eventData);
 
                     break;
             }

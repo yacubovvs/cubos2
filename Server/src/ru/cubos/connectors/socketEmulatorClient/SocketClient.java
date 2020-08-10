@@ -16,7 +16,8 @@ public class SocketClient extends Emulator implements Connector, ClientSocket_Up
 
     @Override
     public boolean sendToServer(byte[] data) {
-        clientSocket.messagesToSend.add(data);
+        //clientSocket.messagesToSend.add(data);
+        clientSocket.addMessage(data);
         return true;
     }
 

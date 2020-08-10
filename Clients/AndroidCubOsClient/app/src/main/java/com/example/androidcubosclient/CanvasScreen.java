@@ -26,18 +26,7 @@ public class CanvasScreen extends ImageView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        //long start = System.currentTimeMillis();
-        //Log.i("timing", "canvas start");
         super.onDraw(canvas);
-        //long finish = System.currentTimeMillis() - start;
-        //Log.i("timing", "canvas finish: " + finish + " ms");
-        /*
-        try {
-            Thread.sleep(100);
-            this.invalidate();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
     }
 
 }

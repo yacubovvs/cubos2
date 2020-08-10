@@ -5,7 +5,6 @@ import android.graphics.Color;
 
 import com.example.androidcubosclient.CanvasScreen;
 import com.example.androidcubosclient.helpers.ByteConverter;
-import com.example.androidcubosclient.helpers.binaryImages.BinaryImage;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,8 +12,14 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
-import static com.example.androidcubosclient.helpers.Protocol.*;
+import static com.example.androidcubosclient.helpers.Protocol.DRAWING_PIXEL;
+import static com.example.androidcubosclient.helpers.Protocol.DRAWING_PIXELS_ARRAY;
+import static com.example.androidcubosclient.helpers.Protocol.DRAWING_RECT;
+import static com.example.androidcubosclient.helpers.Protocol.DRAWING_RECTS_ARRAY;
+import static com.example.androidcubosclient.helpers.Protocol.UPDATE_SCREEN;
+
 
 public class ClientSocket{
 
@@ -23,12 +28,20 @@ public class ClientSocket{
     private static OutputStream out; // поток записи в сокет
     private int port;
     private String addr;
-    public List<byte[]> messagesToSend = new ArrayList<>();
+    private List<byte[]> messagesToSend = new ArrayList<>();
+    private CanvasScreen canvasScreen;
 
     private Reader reader;
     private Writer writer;
 
-    private CanvasScreen canvasScreen;
+    public void addMessage(byte[] message){
+        messagesToSend.add(message);
+
+        if(writer==null){
+            writer = new Writer();
+            writer.start();
+        }
+    }
 
     public ClientSocket(final String addr, final int port, final CanvasScreen canvasScreen){
         this.canvasScreen = canvasScreen;
@@ -65,25 +78,29 @@ public class ClientSocket{
     }
 
     private class Reader extends Thread {
+
         @Override
         public void run() {
 
             while (true) {
-
                 int count;
-                byte bytes[] = new byte[16*1024*1024];
+                //byte bytes[] = new byte[16 * 1024 * 1024];
+                //byte bytes[] = new byte[14 * 100000];
+                byte bytes[] = new byte[1024];
+                //byte bytes[] = new byte[160000];
 
                 try {
                     byte rest_bytes[] = null;
                     while ((count = in.read(bytes)) > 0) {
-                        if(rest_bytes!=null){
+                        if (rest_bytes != null) {
                             byte sum_bytes[] = new byte[count + rest_bytes.length];
-                            for (int i=0; i< rest_bytes.length; i++) sum_bytes[i] = rest_bytes[i];
-                            for (int i=rest_bytes.length; i< count + rest_bytes.length; i++) sum_bytes[i] = bytes[i - rest_bytes.length];
+                            for (int i = 0; i < rest_bytes.length; i++) sum_bytes[i] = rest_bytes[i];
+                            for (int i = rest_bytes.length; i < count + rest_bytes.length; i++)
+                                sum_bytes[i] = bytes[i - rest_bytes.length];
 
                             rest_bytes = decodeCommands(sum_bytes);
                             canvasScreen.invalidate();
-                        }else{
+                        } else {
                             rest_bytes = decodeCommands(bytes);
                         }
                         //System.out.println("Read " + count + " bytes");
@@ -92,18 +109,14 @@ public class ClientSocket{
 
                     decodeCommands(rest_bytes);
 
-                    Thread.sleep(200);
                 } catch (IOException e) {
-                    e.printStackTrace();
-                    return;
-                } catch (InterruptedException e) {
                     e.printStackTrace();
                     return;
                 }
 
             }
-
         }
+
 
         private byte[] decodeCommands(byte data[]){
             return decodeCommands(data, false);
@@ -118,7 +131,7 @@ public class ClientSocket{
 
             while (current_position < data.length) {
 
-                if(data.length-current_position<=64 && !lastMessage){
+                if(data.length-current_position<=8 && !lastMessage){
                     byte rest_data[] = new byte[data.length-current_position];
                     for(int i=0; i<data.length-current_position; i++){
                         rest_data[i] = data[current_position + i];
@@ -189,29 +202,19 @@ public class ClientSocket{
 
         @Override
         public void run() {
-            while (true) {
-                String userWord;
+            while (messagesToSend.size()>0) {
+
                 try {
-                    if (messagesToSend.size()>0){
-                        byte data[] = messagesToSend.get(0);
-                        //out.write(data);
-                        //out.w
+                    byte data[] = messagesToSend.get(0);
+                    out.write(data);
+                    out.flush();
+                    messagesToSend.remove(data);
 
-                        out.write(data);
-                        out.flush();
-                        //for(int i=0; i<data.length; i++){
-                        //    out.write(data[i]);
-                        //}
-
-                        //out.flush();
-                        messagesToSend.remove(data);
-                    }
-
-                    Thread.sleep(1000);
-
-                } catch (IOException | InterruptedException e) {}
+                } catch (IOException e) {}
 
             }
+
+            writer = null;
         }
     }
 }

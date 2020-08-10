@@ -67,31 +67,11 @@ public class Server {
         drawApps();
         drawBars();
 
-        System.out.println("Sending starting");
-        long start = System.currentTimeMillis();
         sendFrameBufferCommands();
-        long timeConsumedMillis = System.currentTimeMillis() - start;
-        System.out.println("Sending time: " + timeConsumedMillis + " ms");
-
-        /*
-        Thread serverThread = new Thread(() -> {
-            //while(true) {
-            drawApps();
-            drawBars();
-            sendFrameBufferCommands();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-        serverThread.start();
-        */
-         
     }
 
 
-    void drawApps(){
+    public void drawApps(){
         if(backGroundImage==null) display.drawRect(0, settings.getStatusBarHeight(), display.getWidth(), display.getHeight() - settings.getButtonBarHeight(), Colors.COLOR_BLACK, true);
         else display.drawImage(
                 0, 0,
@@ -157,20 +137,31 @@ public class Server {
 
         while(current_position<data.length) {
 
+            int restLength = data.length - current_position;
             switch (data[current_position]) {
 
                 case EVENT_TOUCH_TAP:
                     //System.out.println("Emulator client: drawing rectangle command");
+                    if(restLength<5){
+                        current_position += 5;
+                        break;
+                    }
+
                     x0 = ByteConverter.bytesToChar(uByte(data[current_position + 1]), uByte(data[current_position + 2]));
                     y0 = ByteConverter.bytesToChar(uByte(data[current_position + 3]), uByte(data[current_position + 4]));
 
-                    System.out.println("Server: on screen tap " + (int)x0 + ", " + (int)y0);
+                    //System.out.println("Server: on screen tap " + (int)x0 + ", " + (int)y0);
                     getActiveApp().execEvent(new TouchTapEvent(x0, y0));
 
                     current_position += 5;
 
                     break;
                 case EVENT_TOUCH_UP:
+                    if(restLength<5){
+                        current_position += 5;
+                        break;
+                    }
+
                     x0      = ByteConverter.bytesToChar(uByte(data[current_position + 1]),  uByte(data[current_position + 2]));
                     y0      = ByteConverter.bytesToChar(uByte(data[current_position + 3]),  uByte(data[current_position + 4]));
                     current_position += 5;
@@ -179,6 +170,11 @@ public class Server {
                     getActiveApp().execEvent(new TouchUpEvent(x0, y0));
                     break;
                 case EVENT_TOUCH_DOWN:
+                    if(restLength<5){
+                        current_position += 5;
+                        break;
+                    }
+
                     x0      = ByteConverter.bytesToChar(uByte(data[current_position + 1]),  uByte(data[current_position + 2]));
                     y0      = ByteConverter.bytesToChar(uByte(data[current_position + 3]),  uByte(data[current_position + 4]));
                     current_position += 5;
@@ -191,6 +187,11 @@ public class Server {
                     getActiveApp().execEvent(new TouchDownEvent(x0, y0));
                     break;
                 case EVENT_TOUCH_MOVE:
+                    if(restLength<13){
+                        current_position += 13;
+                        break;
+                    }
+
                     x0      = ByteConverter.bytesToChar(uByte(data[current_position + 1]),  uByte(data[current_position + 2]));
                     y0      = ByteConverter.bytesToChar(uByte(data[current_position + 3]),  uByte(data[current_position + 4]));
                     x1      = ByteConverter.bytesToChar(uByte(data[current_position + 5]),  uByte(data[current_position + 6]));
@@ -203,6 +204,11 @@ public class Server {
                     getActiveApp().execEvent(new TouchMoveEvent(x0, y0, x1, y1, x_start, y_start));
                     break;
                 case EVENT_TOUCH_MOVE_FINISHED:
+                    if(restLength<9){
+                        current_position += 9;
+                        break;
+                    }
+
                     x0      = ByteConverter.bytesToChar(uByte(data[current_position + 1]),  uByte(data[current_position + 2]));
                     y0      = ByteConverter.bytesToChar(uByte(data[current_position + 3]),  uByte(data[current_position + 4]));
                     x_start = ByteConverter.bytesToChar(uByte(data[current_position + 5]),  uByte(data[current_position + 6]));
@@ -214,6 +220,7 @@ public class Server {
                     break;
                 default:
                     System.out.println("Server: unknown protocol command recieved");
+                    current_position += 1;
                     return false;
             }
 
@@ -266,7 +273,6 @@ public class Server {
 
     public void setRepaintPending() {
         this.repaintPending = true;
-
         // TODO: Remove this in future, should checking in loop
         //long start = System.currentTimeMillis();
         drawApps();

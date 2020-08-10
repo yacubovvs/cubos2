@@ -13,6 +13,10 @@ public class Display extends BinaryImage_24bit {
     private BinaryImage_24bit last_frame;
     private List<DisplayCommand> displayCommands;
 
+    public void resetLastFrame(){
+        last_frame   = new BinaryImage_24bit(getWidth(), getHeight());
+    }
+
     public Display(int width, int height){
         super(width, height);
         last_frame   = new BinaryImage_24bit(width, height);
