@@ -4,10 +4,13 @@ import ru.cubos.connectors.Connector;
 import ru.cubos.connectors.sockets.ServerSocket;
 import ru.cubos.server.Server;
 
-public class WebSocketConnector implements Connector {
+import static ru.cubos.commonHelpers.StaticScreenSettings.screenHeight_init;
+import static ru.cubos.commonHelpers.StaticScreenSettings.screenWidth_init;
+
+public class SocketConnector implements Connector {
 
     ServerSocket socketServer;
-    public WebSocketConnector(){
+    public SocketConnector(){
     }
 
     @Override
@@ -20,15 +23,16 @@ public class WebSocketConnector implements Connector {
 
     @Override
     public int getScreenWidth() {
-        return 1080/3;
+        return screenWidth_init;
     }
 
     @Override
     public int getScreenHeight() {
-        return 2340/3;
+        return screenHeight_init;
     }
 
     public void start(Server server) {
+        //socketServer = new ServerSocket(8000, server);
         socketServer = new ServerSocket(8000, server);
         socketServer.start();
     }

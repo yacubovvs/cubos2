@@ -7,9 +7,14 @@ import ru.cubos.server.Server;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+
+import static ru.cubos.commonHelpers.StaticSocketSettings.serverBufferSize;
+import static ru.cubos.commonHelpers.StaticSocketSettings.serverBufferSize_max;
 
 public class ServerSocket {
 
@@ -42,7 +47,10 @@ public class ServerSocket {
         //while (true) {
             try {
                 try {
-                    socketServer = new java.net.ServerSocket(port);
+                    //socketServer = new java.net.ServerSocket(port);
+                    socketServer = new java.net.ServerSocket();
+                    socketServer.setReceiveBufferSize(serverBufferSize_max);
+                    socketServer.bind(new InetSocketAddress( (InetAddress) null, port));
                     System.out.println("Socket server started at port " + port);
 
                     clientSocket = socketServer.accept();
@@ -93,7 +101,7 @@ public class ServerSocket {
         public void run() {
             int count;
             //byte bytes[] = new byte[16 * 1024 * 1024];
-            byte bytes[] = new byte[128 * 1024];
+            byte bytes[] = new byte[serverBufferSize];
 
                 byte rest_bytes[] = null;
                 try{

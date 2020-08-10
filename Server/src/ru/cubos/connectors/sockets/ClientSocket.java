@@ -9,11 +9,15 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import static ru.cubos.commonHelpers.StaticSocketSettings.clientBufferSize;
+import static ru.cubos.commonHelpers.StaticSocketSettings.clientBufferSize_max;
 import static ru.cubos.connectors.Protocol.*;
 
 public class ClientSocket{
@@ -40,7 +44,12 @@ public class ClientSocket{
     public ClientSocket(final String addr, final int port, ClientSocket_Updater clientSocket_updater){
         this.clientSocket_updater = clientSocket_updater;
         try {
-            clientSocket = new Socket(addr, port);
+            //clientSocket = new Socket(addr, port);
+            clientSocket = new Socket();
+
+            InetAddress addr_obj = InetAddress.getByName(addr);
+            clientSocket.connect(new InetSocketAddress( addr_obj, port));
+            clientSocket.setReceiveBufferSize(clientBufferSize_max);
 
             ClientSocket.this.addr = addr;
             ClientSocket.this.port = port;
@@ -69,7 +78,7 @@ public class ClientSocket{
             while (true) {
                 int count;
                 //byte bytes[] = new byte[16 * 1024 * 1024];
-                byte bytes[] = new byte[128 * 1024];
+                byte bytes[] = new byte[clientBufferSize];
 
                 try {
                     byte rest_bytes[] = null;

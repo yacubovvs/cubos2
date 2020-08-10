@@ -1,13 +1,13 @@
 package ru.cubos;
 
-import ru.cubos.connectors.websocket.WebSocketConnector;
+import ru.cubos.connectors.websocket.SocketConnector;
 import ru.cubos.profiler.Profiler;
 import ru.cubos.server.Server;
 
 public class Main_SocketServer_Bench {
     public static void main(String[] args) {
         //while(true) {
-            WebSocketConnector connector = new WebSocketConnector();
+            SocketConnector connector = new SocketConnector();
             Server server = new Server(connector);
             connector.start(server);
             server.start();
@@ -20,7 +20,7 @@ public class Main_SocketServer_Bench {
             }
 
             Profiler.start("test");
-            for (int i=0; i<300; i++) {
+            for (int i=0; i<100; i++) {
                 server.display.resetLastFrame();
                 server.drawApps();
                 server.sendFrameBufferCommands();
