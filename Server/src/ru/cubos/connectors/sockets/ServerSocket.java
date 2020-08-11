@@ -1,6 +1,5 @@
 package ru.cubos.connectors.sockets;
 
-import ru.cubos.profiler.Profiler;
 import ru.cubos.server.Server;
 
 

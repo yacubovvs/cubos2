@@ -1,6 +1,5 @@
 package ru.cubos.connectors.emulator;
 
-import ru.cubos.profiler.Profiler;
 import ru.cubos.server.helpers.ByteConverter;
 import ru.cubos.connectors.Protocol;
 

@@ -1,5 +1,7 @@
 package ru.cubos;
 
+import ru.cubos.commonHelpers.profiler.Profiler;
+
 import java.net.UnknownHostException;
 
 public class Main_ClientAndServerSocket_bench {

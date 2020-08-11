@@ -1,5 +1,6 @@
 package ru.cubos.server.helpers.framebuffer;
 
+import ru.cubos.commonHelpers.profiler.Profiler;
 import ru.cubos.server.helpers.binaryImages.BinaryImage_24bit;
 
 import java.util.ArrayList;
@@ -33,12 +34,15 @@ public class Display extends BinaryImage_24bit {
      */
 
     public List<DisplayCommand> getFrame(){
+
         displayCommands = new ArrayList<>();
 
-        for(int x=0; x<getWidth(); x++){
-            for(int y=0; y<getHeight(); y++){
+        for(char x=0; x<getWidth(); x++){
+            for(char y=0; y<getHeight(); y++){
+
                 byte[] newPixel = getColorPixel(x,y);
-                byte[] oldPixel = last_frame.getColorPixel(x,y);
+                byte[] oldPixel = ((BinaryImage_24bit)last_frame).getColorPixel(x,y);
+
                 if(newPixel[0]!=oldPixel[0] || newPixel[1]!=oldPixel[1] || newPixel[2]!=oldPixel[2]){
                     //System.out.println("New pixel");
                     DisplayCommand displayCommand = new DisplayCommand();
@@ -58,15 +62,12 @@ public class Display extends BinaryImage_24bit {
                     };
 
                     displayCommands.add(displayCommand);
+
                 }
             }
         }
 
-        for(int x=0; x<getWidth(); x++) {
-            for (int y = 0; y < getHeight(); y++) {
-                last_frame.setColorPixel(x,y, getColorPixel(x,y));
-            }
-        }
+        System.arraycopy(this.data, 0, last_frame.data, 0, this.data.length);
 
         return displayCommands;
     }

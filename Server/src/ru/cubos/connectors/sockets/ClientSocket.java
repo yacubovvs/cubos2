@@ -1,9 +1,6 @@
 package ru.cubos.connectors.sockets;
 
-import javafx.scene.paint.Color;
-import ru.cubos.profiler.Profiler;
 import ru.cubos.server.helpers.ByteConverter;
-import ru.cubos.server.helpers.binaryImages.BinaryImage;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -14,7 +11,6 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import static ru.cubos.commonHelpers.StaticSocketSettings.clientBufferSize;
 import static ru.cubos.commonHelpers.StaticSocketSettings.clientBufferSize_max;

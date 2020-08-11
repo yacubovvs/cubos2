@@ -99,4 +99,9 @@ public class BinaryImage_24bit extends BinaryImage {
 
         return bufferedImage;
     }
+
+    @Override
+    public void setColorPixel(int x, int y, byte rgb[]){
+        setColorPixel(x, y, rgb[0], rgb[1], rgb[2]);
+    }
 }

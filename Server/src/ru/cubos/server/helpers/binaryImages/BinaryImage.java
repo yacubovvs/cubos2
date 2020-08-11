@@ -13,10 +13,10 @@ public abstract class BinaryImage {
     }
 
     public Type type;
-    protected byte data[];
+    public byte data[];
 
-    private int width;
-    private int height;
+    protected int width;
+    protected int height;
 
     private String imagePath;
 
@@ -38,7 +38,7 @@ public abstract class BinaryImage {
     public abstract byte[] getColorPixel_alpha(int x, int y);
 
 
-    public void setColorPixel(int x, int y, byte rgb[]){setColorPixel(x, y, rgb[0], rgb[1], rgb[2]);}
+    public abstract void setColorPixel(int x, int y, byte rgb[]);//{setColorPixel(x, y, rgb[0], rgb[1], rgb[2]);}
 
     public int getWidth() { return width; }
     public void setWidth(int width) {
@@ -359,7 +359,6 @@ public abstract class BinaryImage {
         return drawImage(x0, y0, x_max_limit, y_max_limit, 0, 0, binaryImage, alfaColor);
     }
 
-
     public int[] drawImage(int x0, int y0, int x_max_limit, int y_max_limit, int x_min_limit, int y_min_limit, BinaryImage_24bit binaryImage, byte[] alfaColor){
 
         // x1 and y1 - maximum of image drawing (limits)
@@ -371,23 +370,32 @@ public abstract class BinaryImage {
         int x_start = Math.max(Math.max(-x0, 0), x_min_limit);
         int y_start = Math.max(Math.max(-y0, 0), y_min_limit);
 
-        for (int x=x_start; x<x_limit; x++){
-            for (int y=y_start; y<y_limit; y++) {
-                imagepixel = binaryImage.getColorPixel(x,y);
-                if(
-                        alfaColor == null ||
-                        (
-                            imagepixel[0]!=alfaColor[0] ||
-                            imagepixel[1]!=alfaColor[1] ||
-                            imagepixel[2]!=alfaColor[2]
-                        )
-                ){
-                    setColorPixel(x + x0,y + y0, imagepixel);
+        if(alfaColor==null && type==Type.COLOR_24BIT){
+            for(int y=y_start; y<y_limit; y++){
+                int position = (x0 + (getWidth())*(y + y0))*3;
+                int position_source = (x_start + (binaryImage.getWidth())*y)*3;
+                System.arraycopy(binaryImage.data, position_source, this.data, position, (x_limit - x_start) * 3);
+            }
+            return new int[]{x_limit, y_limit};
+        }else {
+
+            for (int x = x_start; x < x_limit; x++) {
+                for (int y = y_start; y < y_limit; y++) {
+                    imagepixel = binaryImage.getColorPixel(x, y);
+                    if (
+                            alfaColor == null ||
+                            (
+                                    imagepixel[0] != alfaColor[0] ||
+                                    imagepixel[1] != alfaColor[1] ||
+                                    imagepixel[2] != alfaColor[2]
+                            )
+                    ) {
+                        setColorPixel(x + x0, y + y0, imagepixel);
+                    }
                 }
             }
+            return new int[]{x_limit, y_limit};
         }
-
-        return new int[]{x_limit, y_limit};
     }
 
     public int[] drawImage(int x0, int y0, int x_max_limit, int y_max_limit, int x_min_limit, int y_min_limit, BinaryImage_24bit_alpha binaryImage, byte[] alfaColor){

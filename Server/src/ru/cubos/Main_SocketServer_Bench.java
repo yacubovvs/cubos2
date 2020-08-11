@@ -1,7 +1,7 @@
 package ru.cubos;
 
 import ru.cubos.connectors.websocket.SocketConnector;
-import ru.cubos.profiler.Profiler;
+import ru.cubos.commonHelpers.profiler.Profiler;
 import ru.cubos.server.Server;
 
 public class Main_SocketServer_Bench {
@@ -11,19 +11,33 @@ public class Main_SocketServer_Bench {
         connector.start(server);
         server.start();
 
+        server.display.resetLastFrame();
+        server.drawApps();
+
         for (int i=0; i<20; i++) {
-            server.display.resetLastFrame();
-            server.drawApps();
-            server.sendFrameBufferCommands();
+            benchFoo(server);
         }
 
         Profiler.start("test");
-        for (int i=0; i<100; i++) {
-            server.display.resetLastFrame();
-            server.drawApps();
-            server.sendFrameBufferCommands();
+        for (int i=0; i<3000; i++) {
+            benchFoo(server);
             Profiler.point("test");
         }
+
+        Profiler.showSumTimers();
     }
+
+    static public void benchFoo(Server server){
+        server.drawApps();
+        //server.display.getFrame();
+
+        /*
+        server.display.resetLastFrame();
+        server.drawApps();
+        server.sendFrameBufferCommands();
+        */
+    }
+
+
 
 }
