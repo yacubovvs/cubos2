@@ -9,7 +9,7 @@ import android.widget.ImageView;
 
 import static com.example.androidcubosclient.MainActivity.image_scale;
 
-public class CanvasScreen extends ImageView {
+public class CanvasScreen extends androidx.appcompat.widget.AppCompatImageView {
 
     Bitmap bitmap;
     Paint paint = new Paint();

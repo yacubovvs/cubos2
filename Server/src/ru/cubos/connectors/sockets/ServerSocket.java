@@ -138,40 +138,6 @@ public class ServerSocket {
         }
     }
 
-    /*
-    private class Writer extends Thread {
-
-        @Override
-        public void run() {
-            while (true) {
-                try {
-                    if (messagesToSend.size()>0){
-                        byte message[] = messagesToSend.get(0);
-
-
-                        int position = 0;
-                        int package_size = 16*1024*1024;
-                        while (position<message.length) {
-                            int message_size = (position+package_size>message.length?message.length-position:package_size);
-                            byte slice_message[] = new byte[message_size];
-                            for(int i=0; i<message_size; i++) slice_message[i] = message[i + position];
-
-                            out.write(slice_message, 0, message_size);
-                            position += message_size;
-                        }
-
-                        out.flush();
-                        messagesToSend.remove(message);
-                    }
-
-                    Thread.sleep(1000);
-
-                } catch (IOException | InterruptedException e) {}
-
-            }
-        }
-    }*/
-
 }
 
 

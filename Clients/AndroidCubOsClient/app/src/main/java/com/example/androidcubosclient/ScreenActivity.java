@@ -19,6 +19,7 @@ public class ScreenActivity extends AppCompatActivity {
     private CanvasScreen mContentView;
     char eventTouchPosition_coords[];
     byte eventStartTouchPosition[];
+    char[] eventStartTouchPosition_coords;
     byte eventTouchPositionLast[];
     final char minClickPositionDiff = 15; // If position between touch down and touch up less then N, it is tab, else drag
 
@@ -42,6 +43,7 @@ public class ScreenActivity extends AppCompatActivity {
 
         clientSocket = new ClientSocket("10.0.0.153" , 8000, mContentView);
         mContentView.setOnTouchListener(onScreenTouchListener);
+
     }
 
     View.OnTouchListener onScreenTouchListener = new View.OnTouchListener() {
@@ -49,8 +51,9 @@ public class ScreenActivity extends AppCompatActivity {
         public boolean onTouch(View v, MotionEvent event) {
             char xPosition = (char)((int)event.getX()/image_scale);
             char yPosition = (char)((int)event.getY()/image_scale);
-            Log.d("touch", "onTouch x: " + Math.floor(xPosition) + ", y: " + Math.floor(yPosition));
 
+            char xPosition_coords = (char)((int)event.getX());
+            char yPosition_coords = (char)((int)event.getY());
 
             byte x_bytes[], y_bytes[], eventData[];
 
@@ -59,7 +62,7 @@ public class ScreenActivity extends AppCompatActivity {
 
             switch (event.getAction()){
                 case MotionEvent.ACTION_DOWN:
-
+                    Log.d("touch", "On touch DOWN x: " + Math.floor(xPosition) + ", y: " + Math.floor(yPosition));
                     eventData = new byte[5];
 
                     eventData[0] = Protocol.EVENT_TOUCH_DOWN;
@@ -69,6 +72,7 @@ public class ScreenActivity extends AppCompatActivity {
                     eventData[4] = y_bytes[1];
 
                     eventTouchPosition_coords = new char[]{xPosition, yPosition};
+                    eventStartTouchPosition_coords = new char[]{xPosition_coords, yPosition_coords};
 
                     eventStartTouchPosition = new byte[4];
                     eventStartTouchPosition[0] = x_bytes[0];
@@ -81,7 +85,7 @@ public class ScreenActivity extends AppCompatActivity {
                     break;
                 case MotionEvent.ACTION_UP:
 
-                    if(Math.abs(xPosition - eventStartTouchPosition[0])<minClickPositionDiff && Math.abs(yPosition - eventStartTouchPosition[1])<minClickPositionDiff){
+                    if(Math.abs(xPosition_coords - eventStartTouchPosition_coords[0])<minClickPositionDiff && Math.abs(yPosition_coords - eventStartTouchPosition_coords[1])<minClickPositionDiff){
                         eventData = new byte[5];
                         eventData[0] = Protocol.EVENT_TOUCH_TAP;
                         eventData[1] = x_bytes[0];
@@ -89,8 +93,11 @@ public class ScreenActivity extends AppCompatActivity {
                         eventData[3] = y_bytes[0];
                         eventData[4] = y_bytes[1];
 
+                        Log.d("touch", "On touch TAP x: " + Math.floor(xPosition) + ", y: " + Math.floor(yPosition));
                         clientSocket.addMessage(eventData);
                     }else{
+
+                        Log.d("touch", "On touch MOVE FINISHED x: " + Math.floor(xPosition) + ", y: " + Math.floor(yPosition));
                         eventData = new byte[9];
                         eventData[0] = Protocol.EVENT_TOUCH_MOVE_FINISHED;
                         eventData[1] = x_bytes[0];
@@ -105,6 +112,8 @@ public class ScreenActivity extends AppCompatActivity {
                         clientSocket.addMessage(eventData);
                     }
 
+                    Log.d("touch", "On touch UP x: " + Math.floor(xPosition) + ", y: " + Math.floor(yPosition));
+
                     eventData = new byte[5];
                     eventData[0] = Protocol.EVENT_TOUCH_UP;
                     eventData[1] = x_bytes[0];
@@ -116,10 +125,13 @@ public class ScreenActivity extends AppCompatActivity {
 
                     eventStartTouchPosition = null;
                     eventTouchPositionLast = null;
+                    eventStartTouchPosition_coords = null;
 
                     break;
 
                 case MotionEvent.ACTION_MOVE:
+
+                    Log.d("touch", "On touch MOVE MOVE  x: " + Math.floor(xPosition) + ", y: " + Math.floor(yPosition));
 
                     eventData = new byte[13];
 
@@ -150,7 +162,7 @@ public class ScreenActivity extends AppCompatActivity {
                     break;
             }
 
-            return false;
+            return true;
         }
     };
 

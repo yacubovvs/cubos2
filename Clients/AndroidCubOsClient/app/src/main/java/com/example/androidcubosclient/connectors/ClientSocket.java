@@ -85,9 +85,7 @@ public class ClientSocket{
             while (true) {
                 int count;
                 //byte bytes[] = new byte[16 * 1024 * 1024];
-                //byte bytes[] = new byte[14 * 100000];
-                byte bytes[] = new byte[1024];
-                //byte bytes[] = new byte[160000];
+                byte bytes[] = new byte[8 * 1024 * 1024];
 
                 try {
                     byte rest_bytes[] = null;
