@@ -37,7 +37,7 @@ public class EmulatorImagePanel extends ImagePanel {
 
                 byte eventData[] = new byte[5];
 
-                eventData[0] = Protocol.EVENT_TOUCH_DOWN;
+                eventData[0] = Protocol._1_3_EVENT_TOUCH_DOWN;
                 eventData[1] = x_bytes[0];
                 eventData[2] = x_bytes[1];
                 eventData[3] = y_bytes[0];
@@ -73,7 +73,7 @@ public class EmulatorImagePanel extends ImagePanel {
 
                 if(Math.abs(mousePosition[0] - startPositionCoords[0])<minClickPositionDiff && Math.abs(mousePosition[1] - startPositionCoords[1])<minClickPositionDiff){
                     eventData = new byte[5];
-                    eventData[0] = Protocol.EVENT_TOUCH_TAP;
+                    eventData[0] = Protocol._1_1_EVENT_TOUCH_TAP;
                     eventData[1] = x_bytes[0];
                     eventData[2] = x_bytes[1];
                     eventData[3] = y_bytes[0];
@@ -82,7 +82,7 @@ public class EmulatorImagePanel extends ImagePanel {
                     emulator.sendToServer(eventData);
                 }else{
                     eventData = new byte[9];
-                    eventData[0] = Protocol.EVENT_TOUCH_MOVE_FINISHED;
+                    eventData[0] = Protocol._1_5_EVENT_TOUCH_MOVE_FINISHED;
                     eventData[1] = x_bytes[0];
                     eventData[2] = x_bytes[1];
                     eventData[3] = y_bytes[0];
@@ -96,7 +96,7 @@ public class EmulatorImagePanel extends ImagePanel {
                 }
 
                 eventData = new byte[5];
-                eventData[0] = Protocol.EVENT_TOUCH_UP;
+                eventData[0] = Protocol._1_2_EVENT_TOUCH_UP;
                 eventData[1] = x_bytes[0];
                 eventData[2] = x_bytes[1];
                 eventData[3] = y_bytes[0];
@@ -125,7 +125,7 @@ public class EmulatorImagePanel extends ImagePanel {
 
                 if(lastPosition==null) lastPosition = startPosition;
 
-                eventData[0]  = Protocol.EVENT_TOUCH_MOVE;
+                eventData[0]  = Protocol._1_4_EVENT_TOUCH_MOVE;
                 eventData[1]  = x_bytes[0];
                 eventData[2]  = x_bytes[1];
                 eventData[3]  = y_bytes[0];

@@ -1,5 +1,6 @@
 package ru.cubos.server;
 
+import ru.cubos.commonHelpers.profiler.Profiler;
 import ru.cubos.connectors.Connector;
 import ru.cubos.server.helpers.binaryImages.BinaryImage_24bit;
 import ru.cubos.server.helpers.ByteConverter;
@@ -115,6 +116,9 @@ public class Server {
 
             //System.out.println("Server: sending " + message.length + " bytes");
             connector.OnDataGotFromServer(message);
+            Profiler.addCount("Received data", message.length);
+            Profiler.showCountAccumulators();
+
         } else {
             //System.out.println("Server: no frame change");
         }
@@ -129,6 +133,9 @@ public class Server {
             return true; // No data
         }
 
+        Profiler.addCount("Transmit data", data.length);
+        //Profiler.showCountAccumulators();
+
         //System.out.println("Server: received " + data.length + " bytes");
 
         char x_start, y_start;
@@ -140,7 +147,7 @@ public class Server {
             int restLength = data.length - current_position;
             switch (data[current_position]) {
 
-                case EVENT_TOUCH_TAP:
+                case _1_1_EVENT_TOUCH_TAP:
                     //System.out.println("Emulator client: drawing rectangle command");
                     if(restLength<5){
                         current_position += 5;
@@ -156,7 +163,7 @@ public class Server {
                     current_position += 5;
 
                     break;
-                case EVENT_TOUCH_UP:
+                case _1_2_EVENT_TOUCH_UP:
                     if(restLength<5){
                         current_position += 5;
                         break;
@@ -169,7 +176,7 @@ public class Server {
                     //System.out.println("Server: on screen mouse up");
                     getActiveApp().execEvent(new TouchUpEvent(x0, y0));
                     break;
-                case EVENT_TOUCH_DOWN:
+                case _1_3_EVENT_TOUCH_DOWN:
                     if(restLength<5){
                         current_position += 5;
                         break;
@@ -186,7 +193,7 @@ public class Server {
                     activateAppByCoordinates(x0, y0);
                     getActiveApp().execEvent(new TouchDownEvent(x0, y0));
                     break;
-                case EVENT_TOUCH_MOVE:
+                case _1_4_EVENT_TOUCH_MOVE:
                     if(restLength<13){
                         current_position += 13;
                         break;
@@ -203,7 +210,7 @@ public class Server {
                     //System.out.println("Server: on screen move");
                     getActiveApp().execEvent(new TouchMoveEvent(x0, y0, x1, y1, x_start, y_start));
                     break;
-                case EVENT_TOUCH_MOVE_FINISHED:
+                case _1_5_EVENT_TOUCH_MOVE_FINISHED:
                     if(restLength<9){
                         current_position += 9;
                         break;

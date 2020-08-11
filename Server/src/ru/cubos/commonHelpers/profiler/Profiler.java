@@ -3,9 +3,27 @@ package ru.cubos.commonHelpers.profiler;
 import java.util.HashMap;
 
 public class Profiler {
-    static HashMap<String, Long> startTimers = new HashMap<>();
-    static HashMap<String, Long> pointTimers = new HashMap<>();
-    static HashMap<String, Long> sumTimers = new HashMap<>();
+    static HashMap<String, Long> startTimers        = new HashMap<>();
+    static HashMap<String, Long> pointTimers        = new HashMap<>();
+    static HashMap<String, Long> sumTimers          = new HashMap<>();
+    static HashMap<String, Long> countAccumulators  = new HashMap<>();
+
+    static public void addCount(String tag, long value){
+        if(countAccumulators.get(tag)==null) countAccumulators.put(tag, value);
+        else{
+            value += countAccumulators.get(tag);
+            countAccumulators.put(tag, value);
+        }
+    }
+
+    static public void showCountAccumulators(){
+        if(countAccumulators.size()!=0){
+            System.out.println("\nCount Accumulators:");
+            for(String tag: countAccumulators.keySet()){
+                System.out.println(tag + ": " + countAccumulators.get(tag) + " bytes (" + countAccumulators.get(tag)/1048576+ " Mb)");
+            }
+        }
+    }
 
     static public void start(String tag){
         startTimers.put(tag, System.currentTimeMillis());
