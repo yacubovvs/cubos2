@@ -20,4 +20,7 @@ public class ClientSessionSettings {
     static public byte image_scale = 3;
     static public int screen_width = 1080/image_scale;
     static public int screen_height = 2320/image_scale;
+    // TODO: error showing status bar on 240x240 resolution
+    //static public int screen_width = 240/image_scale;
+    //static public int screen_height = 230/image_scale;
 }

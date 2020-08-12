@@ -165,8 +165,8 @@ public class Server {
             if(getActiveApp().onFocusLose()) {
                 for (int i = openedApps.size() - 1; i >= 0; i--) {
                     App app = openedApps.get(i);
-
                     if (app.coordinatesInActiveArea(x, y)) {
+                        // TODO: Do not making deactivation main menu in not window mode
                         if (getActiveApp() != app) {
                             activateApp(app);
                         }

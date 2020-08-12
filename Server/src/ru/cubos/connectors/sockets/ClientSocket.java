@@ -93,7 +93,10 @@ public class ClientSocket{
 
                     _1_SET_OPTION,                           // Command to set option
                     _1_4_SERVER_OPTION,
-                    _1_4_1_START_SERVER
+                    _1_4_1_START_SERVER,
+
+                    _0_MODE_OPTION,                          // Switch mode
+                    _0_3_EVENT_MODE,                         // Switch to COMMON MODE 1
             };
 
             addMessage(message);
@@ -120,6 +123,8 @@ public class ClientSocket{
                     while ((count = in.read(bytes)) > 0) {
                         if (rest_bytes != null) {
                             byte sum_bytes[] = new byte[count + rest_bytes.length];
+
+                            // TODO: change to arraycopy
                             for (int i = 0; i < rest_bytes.length; i++) sum_bytes[i] = rest_bytes[i];
                             for (int i = rest_bytes.length; i < count + rest_bytes.length; i++)
                                 sum_bytes[i] = bytes[i - rest_bytes.length];
@@ -127,7 +132,10 @@ public class ClientSocket{
                             rest_bytes = decodeCommands(sum_bytes);
                             clientSocket_updater.updateImage();
                         } else {
-                            rest_bytes = decodeCommands(bytes);
+                            // TODO: change to arraycopy
+                            byte sum_bytes[] = new byte[count];
+                            for (int i = 0; i < count; i++) sum_bytes[i] = bytes[i];
+                            rest_bytes = decodeCommands(sum_bytes);
                         }
                         //System.out.println("Read " + count + " bytes");
                         //System.out.println("Rest bytes " + rest_bytes.length + " bytes");
