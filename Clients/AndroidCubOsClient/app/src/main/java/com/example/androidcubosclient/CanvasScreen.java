@@ -4,10 +4,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.Log;
-import android.widget.ImageView;
 
-import static com.example.androidcubosclient.MainActivity.image_scale;
+import static com.example.androidcubosclient.helpers.ClientSessionSettings.screen_height;
+import static com.example.androidcubosclient.helpers.ClientSessionSettings.screen_width;
 
 public class CanvasScreen extends androidx.appcompat.widget.AppCompatImageView {
 
@@ -16,7 +15,7 @@ public class CanvasScreen extends androidx.appcompat.widget.AppCompatImageView {
 
     public CanvasScreen(Context context) {
         super(context);
-        bitmap = Bitmap.createBitmap(1080/image_scale,2340/image_scale, Bitmap.Config.RGB_565);
+        bitmap = Bitmap.createBitmap(screen_width,screen_height, Bitmap.Config.RGB_565);
         setImageBitmap(bitmap);
     }
 

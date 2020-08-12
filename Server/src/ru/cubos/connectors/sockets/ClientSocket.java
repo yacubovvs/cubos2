@@ -1,8 +1,9 @@
 package ru.cubos.connectors.sockets;
 
+import ru.cubos.connectors.ClientSessionSettings;
+import ru.cubos.connectors.socketEmulatorClient.SocketEmulatorClientCommandDecoder;
 import ru.cubos.server.helpers.ByteConverter;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -27,6 +28,8 @@ public class ClientSocket{
     private ClientSocket_Updater clientSocket_updater;
     private Reader reader;
     private Writer writer;
+    private SocketEmulatorClientCommandDecoder socketEmulatorClientCommandDecoder;
+    //protected BufferedImage bitmap = clientSocket_updater.getBitmap();
 
     public void addMessage(byte[] message){
         messagesToSend.add(message);
@@ -37,8 +40,12 @@ public class ClientSocket{
         }
     }
 
-    public ClientSocket(final String addr, final int port, ClientSocket_Updater clientSocket_updater){
+
+
+    public ClientSocket(final String addr, final int port, ClientSocket_Updater clientSocket_updater, SocketEmulatorClientCommandDecoder socketEmulatorClientCommandDecoder){
         this.clientSocket_updater = clientSocket_updater;
+        this.socketEmulatorClientCommandDecoder = socketEmulatorClientCommandDecoder;
+
         try {
             //clientSocket = new Socket(addr, port);
             clientSocket = new Socket();
@@ -58,6 +65,38 @@ public class ClientSocket{
 
             reader.start();
             writer.start();
+
+            // Sending screen params
+            byte[] screenWidth = ByteConverter.char_to_bytes((char)(ClientSessionSettings.screen_width));
+            byte[] screenHeight = ByteConverter.char_to_bytes((char)(ClientSessionSettings.screen_height));
+
+            byte message[] = new byte[]{
+                    _0_MODE_OPTION,                         // Switch mode
+                    _0_1_OPTIONS_MODE,                      // Switch to COMMON MODE 1
+
+                    _1_SET_OPTION,                          // Command to set option
+                    _1_6_OPTIONS_SCREEN,                    // Screen param
+                    _1_6_1_OPTIONS_SETTINGS_WIDTH,          // Setting screen width
+                    screenWidth[0],
+                    screenWidth[1],
+
+                    _1_SET_OPTION,                           // Command to set option
+                    _1_6_OPTIONS_SCREEN,                     // Screen param
+                    _1_6_2_OPTIONS_SETTINGS_HEIGHT,          // Setting screen height
+                    screenHeight[0],
+                    screenHeight[1],
+
+                    _1_SET_OPTION,                           // Command to set option
+                    _1_6_OPTIONS_SCREEN,                     // Screen param
+                    _1_6_3_OPTIONS_SETTINGS_COLORS,          // Setting screen color
+                    _1_6_3_2_SCREEN_COLORS_24BIT__8_8_8,
+
+                    _1_SET_OPTION,                           // Command to set option
+                    _1_4_SERVER_OPTION,
+                    _1_4_1_START_SERVER
+            };
+
+            addMessage(message);
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Error starting socket client");
@@ -94,7 +133,7 @@ public class ClientSocket{
                         //System.out.println("Rest bytes " + rest_bytes.length + " bytes");
                     }
 
-                    decodeCommands(rest_bytes);
+                    socketEmulatorClientCommandDecoder.decodeCommands(rest_bytes);
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -106,9 +145,11 @@ public class ClientSocket{
 
 
         private byte[] decodeCommands(byte data[]){
-            return decodeCommands(data, false);
+            return socketEmulatorClientCommandDecoder.decodeCommands(data, false, 8);
         }
 
+
+        /*
         private byte[] decodeCommands(byte data[], boolean lastMessage){
             char x0, y0, x1, y1;
             int current_position = 0;
@@ -128,7 +169,7 @@ public class ClientSocket{
                 }
 
                 switch (data[current_position]) {
-                    case DRAWING_PIXEL:
+                    case _1_DRAWING_PIXEL:
                         //System.out.println("Emulator client: drawing pixel command");
 
                         x0 = ByteConverter.bytesToChar(data[current_position + 1], data[current_position + 2]);
@@ -148,7 +189,7 @@ public class ClientSocket{
                         current_position += 8;
 
                         break;
-                    case DRAWING_RECT:
+                    case _2_DRAWING_RECT:
                         //System.out.println("Emulator client: drawing rectangle command");
                         x0 = ByteConverter.bytesToChar(data[current_position + 1], data[current_position + 2]);
                         y0 = ByteConverter.bytesToChar(data[current_position + 3], data[current_position + 4]);
@@ -162,17 +203,18 @@ public class ClientSocket{
                         //drawRect(x0, y0, x1, y1, new Color(r, g, b));
                         //System.out.printf("Drawing rectangle");
                         break;
-                    case DRAWING_RECTS_ARRAY:
+                    case _4_DRAWING_RECTS_ARRAY:
                         //System.out.println("Emulator client: drawing rectangle array");
                         break;
-                    case DRAWING_PIXELS_ARRAY:
+                    case _3_DRAWING_PIXELS_ARRAY:
                         //System.out.println("Emulator client: drawing pixels array");
                         break;
-                    case UPDATE_SCREEN:
+
+                    //case UPDATE_SCREEN:
                         //System.out.println("Emulator client: update screen");
                         //updateImage();
                         //System.out.printf("Update image");
-                        break;
+                    //    break;
                     default:
                         //System.out.println("Emulator client: unknown protocol command");
                         current_position++;
@@ -182,7 +224,7 @@ public class ClientSocket{
 
             }
             return null;
-        }
+        }*/
     }
 
 

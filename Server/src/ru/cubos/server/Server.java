@@ -3,7 +3,6 @@ package ru.cubos.server;
 import ru.cubos.commonHelpers.profiler.Profiler;
 import ru.cubos.connectors.Connector;
 import ru.cubos.server.helpers.binaryImages.BinaryImage_24bit;
-import ru.cubos.server.helpers.ByteConverter;
 import ru.cubos.server.helpers.Colors;
 import ru.cubos.server.helpers.framebuffer.Display;
 import ru.cubos.server.settings.Settings;
@@ -12,7 +11,6 @@ import ru.cubos.server.system.TimeWidgetView;
 import ru.cubos.server.system.apps.App;
 import ru.cubos.server.system.apps.systemApps.ApplicationsList;
 import ru.cubos.server.system.apps.systemApps.desktopWidgets.StatusBarDesktopWidget;
-import ru.cubos.server.system.events.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,6 +28,7 @@ public class Server {
     public ButtonBar buttonBar;
     public TimeWidgetView timeWidgetView;
     public List<App> openedApps;
+    public byte currentMode = _0_1_OPTIONS_MODE;
 
     private boolean repaintPending;
 
@@ -38,11 +37,12 @@ public class Server {
     }
 
     private BinaryImage_24bit backGroundImage;
-
+    private ServerCommandsDecoder serverCommandsDecoder;
 
 
     public Server(Connector connector) {
         this.connector = connector;
+        serverCommandsDecoder = new ServerCommandsDecoder(this);
         display = new Display(connector.getScreenWidth(), connector.getScreenHeight());
         settings = new Settings();
         statusBar = new StatusBarDesktopWidget(this);
@@ -128,6 +128,7 @@ public class Server {
     }
 
 
+
     public boolean transmitData(byte[] data) {
         if(data.length==0){
             return true; // No data
@@ -138,100 +139,7 @@ public class Server {
 
         //System.out.println("Server: received " + data.length + " bytes");
 
-        char x_start, y_start;
-        char x0, y0, x1, y1, r, g, b;
-        int current_position = 0;
-
-        while(current_position<data.length) {
-
-            int restLength = data.length - current_position;
-            switch (data[current_position]) {
-
-                case _1_1_EVENT_TOUCH_TAP:
-                    //System.out.println("Emulator client: drawing rectangle command");
-                    if(restLength<5){
-                        current_position += 5;
-                        break;
-                    }
-
-                    x0 = ByteConverter.bytesToChar(uByte(data[current_position + 1]), uByte(data[current_position + 2]));
-                    y0 = ByteConverter.bytesToChar(uByte(data[current_position + 3]), uByte(data[current_position + 4]));
-
-                    //System.out.println("Server: on screen tap " + (int)x0 + ", " + (int)y0);
-                    getActiveApp().execEvent(new TouchTapEvent(x0, y0));
-
-                    current_position += 5;
-
-                    break;
-                case _1_2_EVENT_TOUCH_UP:
-                    if(restLength<5){
-                        current_position += 5;
-                        break;
-                    }
-
-                    x0      = ByteConverter.bytesToChar(uByte(data[current_position + 1]),  uByte(data[current_position + 2]));
-                    y0      = ByteConverter.bytesToChar(uByte(data[current_position + 3]),  uByte(data[current_position + 4]));
-                    current_position += 5;
-
-                    //System.out.println("Server: on screen mouse up");
-                    getActiveApp().execEvent(new TouchUpEvent(x0, y0));
-                    break;
-                case _1_3_EVENT_TOUCH_DOWN:
-                    if(restLength<5){
-                        current_position += 5;
-                        break;
-                    }
-
-                    x0      = ByteConverter.bytesToChar(uByte(data[current_position + 1]),  uByte(data[current_position + 2]));
-                    y0      = ByteConverter.bytesToChar(uByte(data[current_position + 3]),  uByte(data[current_position + 4]));
-                    current_position += 5;
-
-                    //System.out.println("Server: on screen mouse down");
-                    //System.out.println("Server: on screen down " + (int)x0 + ", " + (int)y0);
-                    for (App app: openedApps) app.setMoving(false);
-                    for (App app: openedApps) app.setResizing(false);
-                    activateAppByCoordinates(x0, y0);
-                    getActiveApp().execEvent(new TouchDownEvent(x0, y0));
-                    break;
-                case _1_4_EVENT_TOUCH_MOVE:
-                    if(restLength<13){
-                        current_position += 13;
-                        break;
-                    }
-
-                    x0      = ByteConverter.bytesToChar(uByte(data[current_position + 1]),  uByte(data[current_position + 2]));
-                    y0      = ByteConverter.bytesToChar(uByte(data[current_position + 3]),  uByte(data[current_position + 4]));
-                    x1      = ByteConverter.bytesToChar(uByte(data[current_position + 5]),  uByte(data[current_position + 6]));
-                    y1      = ByteConverter.bytesToChar(uByte(data[current_position + 7]),  uByte(data[current_position + 8]));
-                    x_start = ByteConverter.bytesToChar(uByte(data[current_position + 9]),  uByte(data[current_position + 10]));
-                    y_start = ByteConverter.bytesToChar(uByte(data[current_position + 11]), uByte(data[current_position + 12]));
-                    current_position += 13;
-
-                    //System.out.println("Server: on screen move");
-                    getActiveApp().execEvent(new TouchMoveEvent(x0, y0, x1, y1, x_start, y_start));
-                    break;
-                case _1_5_EVENT_TOUCH_MOVE_FINISHED:
-                    if(restLength<9){
-                        current_position += 9;
-                        break;
-                    }
-
-                    x0      = ByteConverter.bytesToChar(uByte(data[current_position + 1]),  uByte(data[current_position + 2]));
-                    y0      = ByteConverter.bytesToChar(uByte(data[current_position + 3]),  uByte(data[current_position + 4]));
-                    x_start = ByteConverter.bytesToChar(uByte(data[current_position + 5]),  uByte(data[current_position + 6]));
-                    y_start = ByteConverter.bytesToChar(uByte(data[current_position + 7]),  uByte(data[current_position + 8]));
-                    current_position += 9;
-
-                    //System.out.println("Server: on move finished");
-                    getActiveApp().execEvent(new TouchMoveFinishedEvent(x0, y0, x_start, y_start));
-                    break;
-                default:
-                    System.out.println("Server: unknown protocol command recieved");
-                    current_position += 1;
-                    return false;
-            }
-
-        }
+        serverCommandsDecoder.decodeCommands(data);
 
         return true;
     }

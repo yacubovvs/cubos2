@@ -5,6 +5,7 @@ import android.graphics.Color;
 
 import com.example.androidcubosclient.CanvasScreen;
 import com.example.androidcubosclient.helpers.ByteConverter;
+import com.example.androidcubosclient.helpers.ClientSessionSettings;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,13 +13,8 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
-import static com.example.androidcubosclient.helpers.Protocol.DRAWING_PIXEL;
-import static com.example.androidcubosclient.helpers.Protocol.DRAWING_PIXELS_ARRAY;
-import static com.example.androidcubosclient.helpers.Protocol.DRAWING_RECT;
-import static com.example.androidcubosclient.helpers.Protocol.DRAWING_RECTS_ARRAY;
-import static com.example.androidcubosclient.helpers.Protocol.UPDATE_SCREEN;
+import static com.example.androidcubosclient.helpers.Protocol.*;
 
 
 public class ClientSocket{
@@ -63,6 +59,36 @@ public class ClientSocket{
 
                     reader.start();
                     writer.start();
+
+                    // Sending screen params
+                    byte[] screenWidth = ByteConverter.char_to_bytes((char)(ClientSessionSettings.screen_width));
+                    byte[] screenHeight = ByteConverter.char_to_bytes((char)(ClientSessionSettings.screen_height));
+
+                    byte message[] = new byte[]{
+                        _COMMON_MODE,                           // Switch to COMMON MODE 1
+
+                        _1_SET_PARAM,                           // Command to set option
+                        _1_6_OPTIONS_SCREEN,                    // Screen param
+                        _1_6_1_OPTIONS_SETTINGS_WIDTH,          // Setting screen width
+                        screenWidth[0],
+                        screenWidth[1],
+
+                        _1_SET_PARAM,                           // Command to set option
+                        _1_6_OPTIONS_SCREEN,                    // Screen param
+                        _1_6_2_OPTIONS_SETTINGS_HEIGHT,         // Setting screen height
+                        screenHeight[0],
+                        screenHeight[1],
+
+                        _1_SET_PARAM,                           // Command to set option
+                        _1_6_OPTIONS_SCREEN,                    // Screen param
+                        _1_6_3_OPTIONS_SETTINGS_COLORS,         // Setting screen color
+                        _1_6_3_2_SCREEN_COLORS_24BIT__8_8_8,
+
+                        _1_SET_PARAM,                           // Command to set option
+                        _1_4_START_SERVER
+                    };
+
+                    addMessage(message);
                 } catch (IOException e) {
                     e.printStackTrace();
                     System.out.println("Error starting socket client");
@@ -138,7 +164,7 @@ public class ClientSocket{
                 }
 
                 switch (data[current_position]) {
-                    case DRAWING_PIXEL:
+                    case _2_1_DRAWING_PIXEL:
                         //System.out.println("Emulator client: drawing pixel command");
 
                         x0 = ByteConverter.bytesToChar(data[current_position + 1], data[current_position + 2]);
@@ -158,7 +184,7 @@ public class ClientSocket{
                         current_position += 8;
 
                         break;
-                    case DRAWING_RECT:
+                    case _2_2_DRAWING_RECT:
                         //System.out.println("Emulator client: drawing rectangle command");
                         x0 = ByteConverter.bytesToChar(data[current_position + 1], data[current_position + 2]);
                         y0 = ByteConverter.bytesToChar(data[current_position + 3], data[current_position + 4]);
@@ -172,17 +198,21 @@ public class ClientSocket{
                         //drawRect(x0, y0, x1, y1, new Color(r, g, b));
                         //System.out.printf("Drawing rectangle");
                         break;
-                    case DRAWING_RECTS_ARRAY:
+                    case _2_4_DRAWING_RECTS_ARRAY:
                         //System.out.println("Emulator client: drawing rectangle array");
                         break;
-                    case DRAWING_PIXELS_ARRAY:
+                    /*
+                    case _2_3_DRAWING_PIXELS_ARRAY:
                         //System.out.println("Emulator client: drawing pixels array");
                         break;
-                    case UPDATE_SCREEN:
+                     */
+                    /*
+                    case _1_1_UPDATE_SCREEN:
                         //System.out.println("Emulator client: update screen");
                         //updateImage();
                         //System.out.printf("Update image");
                         break;
+                     */
                     default:
                         //System.out.println("Emulator client: unknown protocol command");
                         current_position++;

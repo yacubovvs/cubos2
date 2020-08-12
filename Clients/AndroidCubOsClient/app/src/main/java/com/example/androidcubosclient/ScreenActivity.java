@@ -12,7 +12,7 @@ import com.example.androidcubosclient.connectors.ClientSocket;
 import com.example.androidcubosclient.helpers.ByteConverter;
 import com.example.androidcubosclient.helpers.Protocol;
 
-import static com.example.androidcubosclient.MainActivity.image_scale;
+import static com.example.androidcubosclient.helpers.ClientSessionSettings.image_scale;
 
 public class ScreenActivity extends AppCompatActivity {
 
@@ -65,7 +65,7 @@ public class ScreenActivity extends AppCompatActivity {
                     Log.d("touch", "On touch DOWN x: " + Math.floor(xPosition) + ", y: " + Math.floor(yPosition));
                     eventData = new byte[5];
 
-                    eventData[0] = Protocol.EVENT_TOUCH_DOWN;
+                    eventData[0] = Protocol._1_3_EVENT_TOUCH_DOWN;
                     eventData[1] = x_bytes[0];
                     eventData[2] = x_bytes[1];
                     eventData[3] = y_bytes[0];
@@ -87,7 +87,7 @@ public class ScreenActivity extends AppCompatActivity {
 
                     if(Math.abs(xPosition_coords - eventStartTouchPosition_coords[0])<minClickPositionDiff && Math.abs(yPosition_coords - eventStartTouchPosition_coords[1])<minClickPositionDiff){
                         eventData = new byte[5];
-                        eventData[0] = Protocol.EVENT_TOUCH_TAP;
+                        eventData[0] = Protocol._1_1_EVENT_TOUCH_TAP;
                         eventData[1] = x_bytes[0];
                         eventData[2] = x_bytes[1];
                         eventData[3] = y_bytes[0];
@@ -99,7 +99,7 @@ public class ScreenActivity extends AppCompatActivity {
 
                         Log.d("touch", "On touch MOVE FINISHED x: " + Math.floor(xPosition) + ", y: " + Math.floor(yPosition));
                         eventData = new byte[9];
-                        eventData[0] = Protocol.EVENT_TOUCH_MOVE_FINISHED;
+                        eventData[0] = Protocol._1_5_EVENT_TOUCH_MOVE_FINISHED;
                         eventData[1] = x_bytes[0];
                         eventData[2] = x_bytes[1];
                         eventData[3] = y_bytes[0];
@@ -115,7 +115,7 @@ public class ScreenActivity extends AppCompatActivity {
                     Log.d("touch", "On touch UP x: " + Math.floor(xPosition) + ", y: " + Math.floor(yPosition));
 
                     eventData = new byte[5];
-                    eventData[0] = Protocol.EVENT_TOUCH_UP;
+                    eventData[0] = Protocol._1_2_EVENT_TOUCH_UP;
                     eventData[1] = x_bytes[0];
                     eventData[2] = x_bytes[1];
                     eventData[3] = y_bytes[0];
@@ -137,7 +137,7 @@ public class ScreenActivity extends AppCompatActivity {
 
                     if(eventTouchPositionLast ==null) eventTouchPositionLast = eventStartTouchPosition;
 
-                    eventData[0]  = Protocol.EVENT_TOUCH_MOVE;
+                    eventData[0]  = Protocol._1_4_EVENT_TOUCH_MOVE;
                     eventData[1]  = x_bytes[0];
                     eventData[2]  = x_bytes[1];
                     eventData[3]  = y_bytes[0];

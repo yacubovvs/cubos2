@@ -6,11 +6,7 @@ public class Main_ClientAndServerSocket {
     public static void main(String[] args) {
         Thread serverThread = new Thread(() -> Main_SocketServer.main(args));
         Thread clientThread = new Thread(() -> {
-            try {
-                Main_SocketClient.main(args);
-            } catch (UnknownHostException e) {
-                System.out.println("Client socket start error");
-            }
+            Main_SocketClient.main(args);
         });
 
         serverThread.start();

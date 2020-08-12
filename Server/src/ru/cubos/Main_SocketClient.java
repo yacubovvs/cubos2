@@ -1,5 +1,6 @@
 package ru.cubos;
 
+import ru.cubos.connectors.ClientSessionSettings;
 import ru.cubos.connectors.socketEmulatorClient.SocketClient;
 
 import java.net.Inet4Address;
@@ -10,10 +11,9 @@ import static ru.cubos.commonHelpers.StaticScreenSettings.screenWidth_init;
 import static ru.cubos.commonHelpers.StaticSocketSettings.cosketServerADdress;
 
 public class Main_SocketClient {
-    public static void main(String[] args) throws UnknownHostException {
-        SocketClient socketClient = new SocketClient(screenWidth_init, screenHeight_init);
-        socketClient.start(cosketServerADdress, 8000);
-        //socketClient.start("192.168.1.38", 8000);
+    public static void main(String[] args){
+        SocketClient socketClient = new SocketClient();
+        socketClient.start(ClientSessionSettings.host_address, ClientSessionSettings.host_port);
     }
 
 

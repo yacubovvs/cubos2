@@ -9,7 +9,7 @@ public class Main_SocketServer_Bench {
         SocketConnector connector = new SocketConnector();
         Server server = new Server(connector);
         connector.start(server);
-        server.start();
+        //server.start();
 
         server.display.resetLastFrame();
         server.drawApps();

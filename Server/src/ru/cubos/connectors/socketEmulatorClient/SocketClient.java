@@ -1,5 +1,6 @@
 package ru.cubos.connectors.socketEmulatorClient;
 
+import ru.cubos.connectors.ClientSessionSettings;
 import ru.cubos.connectors.Connector;
 import ru.cubos.connectors.emulator.Emulator;
 import ru.cubos.connectors.sockets.ClientSocket;
@@ -9,9 +10,11 @@ import java.awt.image.BufferedImage;
 
 public class SocketClient extends Emulator implements Connector, ClientSocket_Updater {
     ClientSocket clientSocket;
+    SocketEmulatorClientCommandDecoder socketEmulatorClientCommandDecoder;
 
-    public SocketClient(int width, int height) {
-        super(width, height);
+    public SocketClient() {
+        super(ClientSessionSettings.screen_width, ClientSessionSettings.screen_height);
+        socketEmulatorClientCommandDecoder = new SocketEmulatorClientCommandDecoder(this);
     }
 
     @Override
@@ -27,6 +30,6 @@ public class SocketClient extends Emulator implements Connector, ClientSocket_Up
     }
 
     public void start(String host, int port){
-        clientSocket = new ClientSocket(host, port, this);
+        clientSocket = new ClientSocket(host, port, this, socketEmulatorClientCommandDecoder);
     }
 }
