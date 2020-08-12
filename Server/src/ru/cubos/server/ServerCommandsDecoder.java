@@ -18,7 +18,21 @@ public class ServerCommandsDecoder extends CommandDecoder {
             for (App app: server.openedApps) app.setResizing(false);
             server.activateAppByCoordinates(event.getX(), event.getY());
         }
-
-
     }
+
+    @Override
+    protected void setScreenHeight(char value){
+        server.settings.setSystemScreenHeight(value);
+    }
+
+    @Override
+    protected void setScreenWidth(char value){
+        server.settings.setSystemScreenWidth(value);
+    }
+
+    @Override
+    protected void startServer(){
+        server.start();
+    }
+
 }

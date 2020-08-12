@@ -73,12 +73,14 @@ public abstract class CommandDecoder {
                                 case _1_6_OPTIONS_SCREEN:
                                     switch (data[current_position+2]){
                                         case _1_6_1_OPTIONS_SETTINGS_WIDTH:
-                                            x0 = ByteConverter.bytesToChar(data[current_position + 3], data[current_position + 4]);
+                                            x0 = ByteConverter.bytesToChar((byte)(data[current_position + 3]-128), (byte)(data[current_position + 4]-128));
                                             current_position+=5;
+                                            setScreenWidth(x0);
                                             break;
                                         case _1_6_2_OPTIONS_SETTINGS_HEIGHT:
-                                            x0 = ByteConverter.bytesToChar(data[current_position + 3], data[current_position + 4]);
+                                            x0 = ByteConverter.bytesToChar((byte)(data[current_position + 3]-128), (byte)(data[current_position + 4]-128));
                                             current_position+=5;
+                                            setScreenHeight(x0);
                                             break;
                                         case _1_6_3_OPTIONS_SETTINGS_COLORS:
                                             switch (data[current_position+3]){
@@ -162,12 +164,6 @@ public abstract class CommandDecoder {
                         case _3_DRAWING_PIXELS_ARRAY:
                             //System.out.println("Emulator client: drawing pixels array");
                             break;
-                        case _1_6_EVENT_TOUCH_ZOOM_IN:
-                            break;
-                        case _1_7_EVENT_TOUCH_ZOOM_OUT:
-                            break;
-                        case _1_8_EVENT_TOUCH_ZOOM_FINISHED:
-                            break;
                         default:
                             System.out.println("Unknown draw mode command");
                             current_position += 1;
@@ -214,6 +210,12 @@ public abstract class CommandDecoder {
                             current_position += 9;
                             execTouchEvent(new TouchMoveFinishedEvent(x0, y0, x_start, y_start));
                             break;
+                        case _1_6_EVENT_TOUCH_ZOOM_IN:
+                            break;
+                        case _1_7_EVENT_TOUCH_ZOOM_OUT:
+                            break;
+                        case _1_8_EVENT_TOUCH_ZOOM_FINISHED:
+                            break;
                         default:
                             System.out.println("CommandDecoder: unknown protocol command recieved");
                             current_position += 1;
@@ -228,6 +230,8 @@ public abstract class CommandDecoder {
     protected void execTouchEvent(EventTouch event){}
     protected void startServer(){}
     protected void stopServer(){}
+    protected void setScreenHeight(char value){}
+    protected void setScreenWidth(char value){}
 
 
 }

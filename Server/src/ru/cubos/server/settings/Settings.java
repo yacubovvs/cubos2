@@ -6,6 +6,15 @@ public class Settings {
 
     /*
      *
+     *  SCREEN
+     *
+     * */
+
+    private char systemScreenWidth = 240;
+    private char systemScreenHeight = 240;
+
+    /*
+     *
      *  FONTS
      *
      * */
@@ -297,5 +306,21 @@ public class Settings {
 
     public void setCornerWindowResizeSize(int cornerWindowResizeSize) {
         this.cornerWindowResizeSize = cornerWindowResizeSize;
+    }
+
+    public char getSystemScreenWidth() {
+        return systemScreenWidth;
+    }
+
+    public void setSystemScreenWidth(char systemScreenWidth) {
+        this.systemScreenWidth = systemScreenWidth;
+    }
+
+    public char getSystemScreenHeight() {
+        return systemScreenHeight;
+    }
+
+    public void setSystemScreenHeight(char systemScreenHeight) {
+        this.systemScreenHeight = systemScreenHeight;
     }
 }

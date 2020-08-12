@@ -43,8 +43,11 @@ public class Server {
     public Server(Connector connector) {
         this.connector = connector;
         serverCommandsDecoder = new ServerCommandsDecoder(this);
-        display = new Display(connector.getScreenWidth(), connector.getScreenHeight());
         settings = new Settings();
+
+        // TODO: delete this string later:
+        display = new Display(settings.getSystemScreenWidth(), settings.getSystemScreenHeight());
+
         statusBar = new StatusBarDesktopWidget(this);
         buttonBar = new ButtonBar(this);
         openedApps = new ArrayList<>();
@@ -64,9 +67,17 @@ public class Server {
 
 
     public void start() {
+        display = new Display(settings.getSystemScreenWidth(), settings.getSystemScreenHeight());
         System.out.println("Server: Server started");
         drawApps();
         drawBars();
+
+        byte message[] = new byte[]{
+                _0_MODE_OPTION,                         // Switch mode
+                _0_2_DRAW_MODE,                      // Switch to COMMON MODE 1
+        };
+
+        connector.OnDataGotFromServer(message);
 
         sendFrameBufferCommands();
     }
