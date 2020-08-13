@@ -9,6 +9,7 @@ import static ru.cubos.server.helpers.ByteConverter.uByte;
 
 public abstract class CommandDecoder {
     byte current_mode = 0;
+    public byte currentColorScheme = _1_6_3_2_SCREEN_COLORS_24BIT__8_8_8;
 
     public void decodeCommands(byte data[]){
         decodeCommands(data, true, 0);
@@ -84,25 +85,32 @@ public abstract class CommandDecoder {
                                             break;
                                         case _1_6_3_OPTIONS_SETTINGS_COLORS:
                                             switch (data[current_position+3]){
-                                                case _1_6_3_1_SCREEN_COLORS_1BIT:
+                                                case _1_6_3_1_SCREEN_COLORS_1BIT_BLACK_WHITE:
+                                                    setColorScheme(_1_6_3_1_SCREEN_COLORS_1BIT_BLACK_WHITE);
                                                     current_position+=4;
                                                     break;
                                                 case _1_6_3_2_SCREEN_COLORS_2BIT_3_COLORS:
+                                                    setColorScheme(_1_6_3_2_SCREEN_COLORS_2BIT_3_COLORS);
                                                     current_position+=4;
                                                     break;
                                                 case _1_6_3_2_SCREEN_COLORS_2BIT_4_COLORS:
+                                                    setColorScheme(_1_6_3_2_SCREEN_COLORS_2BIT_4_COLORS);
                                                     current_position+=4;
                                                     break;
                                                 case _1_6_3_2_SCREEN_COLORS_4BIT_16_COLORS:
+                                                    setColorScheme(_1_6_3_2_SCREEN_COLORS_4BIT_16_COLORS);
                                                     current_position+=4;
                                                     break;
                                                 case _1_6_3_2_SCREEN_COLORS_8BIT_256_COLORS:
+                                                    setColorScheme(_1_6_3_2_SCREEN_COLORS_8BIT_256_COLORS);
                                                     current_position+=4;
                                                     break;
                                                 case _1_6_3_2_SCREEN_COLORS_16BIT__5_6_5:
+                                                    setColorScheme(_1_6_3_2_SCREEN_COLORS_16BIT__5_6_5);
                                                     current_position+=4;
                                                     break;
                                                 case _1_6_3_2_SCREEN_COLORS_24BIT__8_8_8:
+                                                    setColorScheme(_1_6_3_2_SCREEN_COLORS_24BIT__8_8_8);
                                                     current_position+=4;
                                                     break;
                                                 default:
@@ -112,6 +120,7 @@ public abstract class CommandDecoder {
                                             }
                                             break;
                                         case _1_6_4_UPDATE_SCREEN:
+                                            updateScreen();
                                             break;
                                         default:
                                             System.out.println("Unknown screen parameter");
@@ -232,6 +241,8 @@ public abstract class CommandDecoder {
     protected void stopServer(){}
     protected void setScreenHeight(char value){}
     protected void setScreenWidth(char value){}
+    protected void setColorScheme(byte value){}
+    protected void updateScreen(){}
 
 
 }

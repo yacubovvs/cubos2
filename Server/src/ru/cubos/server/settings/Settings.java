@@ -2,6 +2,8 @@ package ru.cubos.server.settings;
 
 import ru.cubos.server.helpers.Colors;
 
+import static ru.cubos.connectors.Protocol.*;
+
 public class Settings {
 
     /*
@@ -12,7 +14,7 @@ public class Settings {
 
     private char systemScreenWidth = 240;
     private char systemScreenHeight = 240;
-
+    private byte systemScreenColorScheme = _1_6_3_2_SCREEN_COLORS_24BIT__8_8_8;
     /*
      *
      *  FONTS
@@ -322,5 +324,13 @@ public class Settings {
 
     public void setSystemScreenHeight(char systemScreenHeight) {
         this.systemScreenHeight = systemScreenHeight;
+    }
+
+    public byte getSystemScreenColorScheme() {
+        return systemScreenColorScheme;
+    }
+
+    public void setSystemScreenColorScheme(byte systemScreenColorScheme) {
+        this.systemScreenColorScheme = systemScreenColorScheme;
     }
 }

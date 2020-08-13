@@ -70,6 +70,9 @@ public class ClientSocket{
             byte[] screenWidth = ByteConverter.char_to_bytes((char)(ClientSessionSettings.screen_width));
             byte[] screenHeight = ByteConverter.char_to_bytes((char)(ClientSessionSettings.screen_height));
 
+            byte colorScheme = _1_6_3_2_SCREEN_COLORS_24BIT__8_8_8;
+            socketEmulatorClientCommandDecoder.currentColorScheme = colorScheme;
+
             byte message[] = new byte[]{
                     _0_MODE_OPTION,                         // Switch mode
                     _0_1_OPTIONS_MODE,                      // Switch to COMMON MODE 1
@@ -89,7 +92,7 @@ public class ClientSocket{
                     _1_SET_OPTION,                           // Command to set option
                     _1_6_OPTIONS_SCREEN,                     // Screen param
                     _1_6_3_OPTIONS_SETTINGS_COLORS,          // Setting screen color
-                    _1_6_3_2_SCREEN_COLORS_24BIT__8_8_8,
+                    colorScheme,
 
                     _1_SET_OPTION,                           // Command to set option
                     _1_4_SERVER_OPTION,

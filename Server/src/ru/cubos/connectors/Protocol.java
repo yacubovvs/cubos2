@@ -25,7 +25,7 @@ public class Protocol {
     public static final byte _1_6_3_OPTIONS_SETTINGS_COLORS     = 0x03;
     public static final byte _1_6_4_UPDATE_SCREEN               = 0x04;
 
-    public static final byte _1_6_3_1_SCREEN_COLORS_1BIT                = 0x01;
+    public static final byte _1_6_3_1_SCREEN_COLORS_1BIT_BLACK_WHITE    = 0x01;
     public static final byte _1_6_3_2_SCREEN_COLORS_2BIT_3_COLORS       = 0x02;
     public static final byte _1_6_3_2_SCREEN_COLORS_2BIT_4_COLORS       = 0x03;
     public static final byte _1_6_3_2_SCREEN_COLORS_4BIT_16_COLORS      = 0x04;
