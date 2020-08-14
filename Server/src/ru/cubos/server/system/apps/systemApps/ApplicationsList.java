@@ -1,7 +1,7 @@
 package ru.cubos.server.system.apps.systemApps;
 
 import ru.cubos.server.Server;
-import ru.cubos.server.helpers.Colors;
+import ru.cubos.commonHelpers.Colors;
 import ru.cubos.server.system.apps.App;
 import ru.cubos.server.system.events.TouchTapEvent;
 import ru.cubos.server.system.views.IconView;

@@ -14,8 +14,9 @@ public class SocketEmulatorClientCommandDecoder extends CommandDecoder {
     }
 
     @Override
-    protected void setPixel(int x, int y, int rgb){
-        bitmap.setRGB(x, y, rgb);
+    protected void setPixel(int x, int y, byte rgb[]){
+        java.awt.Color color = new java.awt.Color(rgb[0]+128,rgb[1]+128,rgb[2]+128);
+        bitmap.setRGB(x, y, color.getRGB());
     }
 
 }

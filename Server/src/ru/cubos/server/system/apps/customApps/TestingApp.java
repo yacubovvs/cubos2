@@ -1,13 +1,10 @@
 package ru.cubos.server.system.apps.customApps;
 
 import ru.cubos.server.Server;
-import ru.cubos.server.helpers.Colors;
+import ru.cubos.commonHelpers.Colors;
 import ru.cubos.server.system.apps.App;
-import ru.cubos.server.system.views.IconView;
 import ru.cubos.server.system.views.TextView;
-import ru.cubos.server.system.views.View;
 import ru.cubos.server.system.views.containers.TabelContainer;
-import ru.cubos.server.system.views.containers.VerticalContainer;
 
 public class TestingApp extends App {
     TabelContainer tabelContainer;

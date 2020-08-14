@@ -70,7 +70,7 @@ public class ClientSocket{
             byte[] screenWidth = ByteConverter.char_to_bytes((char)(ClientSessionSettings.screen_width));
             byte[] screenHeight = ByteConverter.char_to_bytes((char)(ClientSessionSettings.screen_height));
 
-            byte colorScheme = _1_6_3_2_SCREEN_COLORS_24BIT__8_8_8;
+            byte colorScheme = _1_6_3_7_SCREEN_COLORS_24BIT__8_8_8;
             socketEmulatorClientCommandDecoder.currentColorScheme = colorScheme;
 
             byte message[] = new byte[]{

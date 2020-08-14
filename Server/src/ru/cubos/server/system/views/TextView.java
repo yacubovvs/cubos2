@@ -1,10 +1,9 @@
 package ru.cubos.server.system.views;
 
 import ru.cubos.server.helpers.binaryImages.BinaryImage_24bit;
-import ru.cubos.server.helpers.Colors;
+import ru.cubos.commonHelpers.Colors;
 import ru.cubos.server.helpers.Strings;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TextView extends View {

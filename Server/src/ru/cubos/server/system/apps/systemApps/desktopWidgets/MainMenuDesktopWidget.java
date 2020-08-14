@@ -1,13 +1,12 @@
 package ru.cubos.server.system.apps.systemApps.desktopWidgets;
 
 import ru.cubos.server.Server;
-import ru.cubos.server.helpers.Colors;
+import ru.cubos.commonHelpers.Colors;
 import ru.cubos.server.system.events.TouchDownEvent;
 import ru.cubos.server.system.views.IconView;
 import ru.cubos.server.system.views.TextView;
 import ru.cubos.server.system.views.View;
 import ru.cubos.server.system.views.containers.HorizontalContainer;
-import ru.cubos.server.system.views.containers.LinearContainer;
 import ru.cubos.server.system.views.viewListeners.TouchDownListener;
 
 public class MainMenuDesktopWidget extends DesktopWidget {

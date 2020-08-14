@@ -9,7 +9,7 @@ import static ru.cubos.server.helpers.ByteConverter.uByte;
 
 public abstract class CommandDecoder {
     byte current_mode = 0;
-    public byte currentColorScheme = _1_6_3_2_SCREEN_COLORS_24BIT__8_8_8;
+    public byte currentColorScheme = _1_6_3_7_SCREEN_COLORS_24BIT__8_8_8;
 
     public void decodeCommands(byte data[]){
         decodeCommands(data, true, 0);
@@ -18,7 +18,7 @@ public abstract class CommandDecoder {
     public byte[] decodeCommands(byte data[], boolean lastMessage, final int rest_count_max){
         char x0, y0, x1, y1, x_start, y_start;
         int current_position = 0;
-        byte r, g, b;
+        byte rgb[] = null;
 
         while (current_position < data.length) {
 
@@ -86,38 +86,22 @@ public abstract class CommandDecoder {
                                         case _1_6_3_OPTIONS_SETTINGS_COLORS:
                                             switch (data[current_position+3]){
                                                 case _1_6_3_1_SCREEN_COLORS_1BIT_BLACK_WHITE:
-                                                    setColorScheme(_1_6_3_1_SCREEN_COLORS_1BIT_BLACK_WHITE);
-                                                    current_position+=4;
-                                                    break;
                                                 case _1_6_3_2_SCREEN_COLORS_2BIT_3_COLORS:
-                                                    setColorScheme(_1_6_3_2_SCREEN_COLORS_2BIT_3_COLORS);
-                                                    current_position+=4;
-                                                    break;
-                                                case _1_6_3_2_SCREEN_COLORS_2BIT_4_COLORS:
-                                                    setColorScheme(_1_6_3_2_SCREEN_COLORS_2BIT_4_COLORS);
-                                                    current_position+=4;
-                                                    break;
-                                                case _1_6_3_2_SCREEN_COLORS_4BIT_16_COLORS:
-                                                    setColorScheme(_1_6_3_2_SCREEN_COLORS_4BIT_16_COLORS);
-                                                    current_position+=4;
-                                                    break;
-                                                case _1_6_3_2_SCREEN_COLORS_8BIT_256_COLORS:
-                                                    setColorScheme(_1_6_3_2_SCREEN_COLORS_8BIT_256_COLORS);
-                                                    current_position+=4;
-                                                    break;
-                                                case _1_6_3_2_SCREEN_COLORS_16BIT__5_6_5:
-                                                    setColorScheme(_1_6_3_2_SCREEN_COLORS_16BIT__5_6_5);
-                                                    current_position+=4;
-                                                    break;
-                                                case _1_6_3_2_SCREEN_COLORS_24BIT__8_8_8:
-                                                    setColorScheme(_1_6_3_2_SCREEN_COLORS_24BIT__8_8_8);
-                                                    current_position+=4;
+                                                case _1_6_3_3_SCREEN_COLORS_2BIT_4_COLORS:
+                                                case _1_6_3_4_SCREEN_COLORS_4BIT_16_COLORS:
+                                                case _1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS:
+                                                case _1_6_3_6_SCREEN_COLORS_16BIT__5_6_5:
+                                                case _1_6_3_7_SCREEN_COLORS_24BIT__8_8_8:
+                                                case _1_6_3_8_SCREEN_COLORS_8BIT__GRAY:
+                                                case _1_6_3_9_SCREEN_COLORS_4BIT__GRAY:
+                                                case _1_6_3_A_SCREEN_COLORS_2BIT__GRAY:
+                                                    setColorScheme(data[current_position+3]);
                                                     break;
                                                 default:
                                                     System.out.println("Unknown screen color parameter");
-                                                    current_position+=4;
                                                     break;
                                             }
+                                            current_position+=4;
                                             break;
                                         case _1_6_4_UPDATE_SCREEN:
                                             updateScreen();
@@ -145,13 +129,20 @@ public abstract class CommandDecoder {
                         case _1_DRAWING_PIXEL:
                             x0 = ByteConverter.bytesToChar(data[current_position + 1], data[current_position + 2]);
                             y0 = ByteConverter.bytesToChar(data[current_position + 3], data[current_position + 4]);
-                            r = data[current_position + 5];
-                            g = data[current_position + 6];
-                            b = data[current_position + 7];
 
-                            java.awt.Color color = new java.awt.Color(r+128,g+128,b+128);
-                            setPixel(x0, y0, color.getRGB());
+                            rgb = readRgb_1_6_3_2_SCREEN_COLORS_24BIT__8_8_8(data, current_position + 5);
                             current_position += 8;
+
+                            if(currentColorScheme==_1_6_3_7_SCREEN_COLORS_24BIT__8_8_8){
+                                rgb = readRgb_1_6_3_2_SCREEN_COLORS_24BIT__8_8_8(data, current_position + 5);
+                                current_position += 8;
+                            }else if(currentColorScheme==_1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS){
+                                rgb = readRgb_1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS(data, current_position + 5);
+                                current_position += 6;
+                            }
+
+                            setPixel(x0, y0, rgb);
+
 
                             break;
                         case _2_DRAWING_RECT:
@@ -159,9 +150,9 @@ public abstract class CommandDecoder {
                             y0 = ByteConverter.bytesToChar(data[current_position + 3], data[current_position + 4]);
                             x1 = ByteConverter.bytesToChar(data[current_position + 5], data[current_position + 6]);
                             y1 = ByteConverter.bytesToChar(data[current_position + 7], data[current_position + 8]);
-                            r = data[current_position + 9];
-                            g = data[current_position + 10];
-                            b = data[current_position + 11];
+                            if(currentColorScheme== _1_6_3_7_SCREEN_COLORS_24BIT__8_8_8){
+                                setPixel(x0, y0, readRgb_1_6_3_2_SCREEN_COLORS_24BIT__8_8_8(data, current_position + 9));
+                            }
 
                             current_position += 12;
                             //drawRect(x0, y0, x1, y1, new Color(r, g, b));
@@ -235,7 +226,21 @@ public abstract class CommandDecoder {
         return null;
     }
 
-    protected void setPixel(int x, int y, int rgb){}
+    private byte[] readRgb_1_6_3_2_SCREEN_COLORS_24BIT__8_8_8(byte data[], int position){
+        byte rgb[] = new byte[3];
+        rgb[0] = data[position];
+        rgb[1] = data[position + 1];
+        rgb[2] = data[position + 2];
+
+        return rgb;
+    }
+
+    private byte[] readRgb_1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS(byte data[], int position){
+        byte rgb[] = Colors.color_256_to_rgb(data[position]);
+        return rgb;
+    }
+
+    protected void setPixel(int x, int y, byte rgb[]){}
     protected void execTouchEvent(EventTouch event){}
     protected void startServer(){}
     protected void stopServer(){}

@@ -1,10 +1,12 @@
 package ru.cubos.server.helpers.framebuffer;
 
+import ru.cubos.commonHelpers.Colors;
 import ru.cubos.server.helpers.binaryImages.BinaryImage_24bit;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static ru.cubos.connectors.Protocol.*;
 import static ru.cubos.server.helpers.ByteConverter.char_to_bytes;
 import static ru.cubos.server.helpers.ByteConverter.uByte;
 import static ru.cubos.connectors.Protocol._1_DRAWING_PIXEL;
@@ -12,6 +14,7 @@ import static ru.cubos.connectors.Protocol._1_DRAWING_PIXEL;
 public class Display extends BinaryImage_24bit {
     private BinaryImage_24bit last_frame;
     private List<DisplayCommand> displayCommands;
+    private byte colorScheme = _1_6_3_7_SCREEN_COLORS_24BIT__8_8_8;
 
     public void resetLastFrame(){
         last_frame   = new BinaryImage_24bit(getWidth(), getHeight());
@@ -51,14 +54,35 @@ public class Display extends BinaryImage_24bit {
 
                     displayCommand.type = _1_DRAWING_PIXEL;
                     displayCommand.params = new byte[]{
-                        uByte(x_bytes[0]),   // X0
-                        uByte(x_bytes[1]),   // X0
-                        uByte(y_bytes[0]),   // Y0
-                        uByte(y_bytes[1]),   // Y0
-                        newPixel[0],   // R
-                        newPixel[1],   // G
-                        newPixel[2],   // B
+                            uByte(x_bytes[0]),   // X0
+                            uByte(x_bytes[1]),   // X0
+                            uByte(y_bytes[0]),   // Y0
+                            uByte(y_bytes[1]),   // Y0
+                            newPixel[0],   // R
+                            newPixel[1],   // G
+                            newPixel[2],   // B
                     };
+
+                    /*
+                    if(colorScheme == _1_6_3_7_SCREEN_COLORS_24BIT__8_8_8){
+                        displayCommand.params = new byte[]{
+                            uByte(x_bytes[0]),   // X0
+                            uByte(x_bytes[1]),   // X0
+                            uByte(y_bytes[0]),   // Y0
+                            uByte(y_bytes[1]),   // Y0
+                            newPixel[0],   // R
+                            newPixel[1],   // G
+                            newPixel[2],   // B
+                        };
+                    }else if(colorScheme == _1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS){
+                        displayCommand.params = new byte[]{
+                            uByte(x_bytes[0]),   // X0
+                            uByte(x_bytes[1]),   // X0
+                            uByte(y_bytes[0]),   // Y0
+                            uByte(y_bytes[1]),   // Y0
+                            Colors.rgb_to_color_256(newPixel)
+                        };
+                    }*/
 
                     displayCommands.add(displayCommand);
 
@@ -69,6 +93,14 @@ public class Display extends BinaryImage_24bit {
         System.arraycopy(this.data, 0, last_frame.data, 0, this.data.length);
 
         return displayCommands;
+    }
+
+    public byte getColorScheme() {
+        return colorScheme;
+    }
+
+    public void setColorScheme(byte colorScheme) {
+        this.colorScheme = colorScheme;
     }
 
     public class DisplayCommand{

@@ -3,7 +3,7 @@ package ru.cubos.server;
 import ru.cubos.commonHelpers.profiler.Profiler;
 import ru.cubos.connectors.Connector;
 import ru.cubos.server.helpers.binaryImages.BinaryImage_24bit;
-import ru.cubos.server.helpers.Colors;
+import ru.cubos.commonHelpers.Colors;
 import ru.cubos.server.helpers.framebuffer.Display;
 import ru.cubos.server.settings.Settings;
 import ru.cubos.server.system.ButtonBar;

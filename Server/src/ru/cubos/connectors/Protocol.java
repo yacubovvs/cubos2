@@ -27,11 +27,14 @@ public class Protocol {
 
     public static final byte _1_6_3_1_SCREEN_COLORS_1BIT_BLACK_WHITE    = 0x01;
     public static final byte _1_6_3_2_SCREEN_COLORS_2BIT_3_COLORS       = 0x02;
-    public static final byte _1_6_3_2_SCREEN_COLORS_2BIT_4_COLORS       = 0x03;
-    public static final byte _1_6_3_2_SCREEN_COLORS_4BIT_16_COLORS      = 0x04;
-    public static final byte _1_6_3_2_SCREEN_COLORS_8BIT_256_COLORS     = 0x05;
-    public static final byte _1_6_3_2_SCREEN_COLORS_16BIT__5_6_5        = 0x06;
-    public static final byte _1_6_3_2_SCREEN_COLORS_24BIT__8_8_8        = 0x07;
+    public static final byte _1_6_3_3_SCREEN_COLORS_2BIT_4_COLORS       = 0x03;
+    public static final byte _1_6_3_4_SCREEN_COLORS_4BIT_16_COLORS      = 0x04;
+    public static final byte _1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS     = 0x05;
+    public static final byte _1_6_3_6_SCREEN_COLORS_16BIT__5_6_5        = 0x06;
+    public static final byte _1_6_3_7_SCREEN_COLORS_24BIT__8_8_8        = 0x07;
+    public static final byte _1_6_3_8_SCREEN_COLORS_8BIT__GRAY          = 0x08;
+    public static final byte _1_6_3_9_SCREEN_COLORS_4BIT__GRAY          = 0x09;
+    public static final byte _1_6_3_A_SCREEN_COLORS_2BIT__GRAY          = 0x0A;
 
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
