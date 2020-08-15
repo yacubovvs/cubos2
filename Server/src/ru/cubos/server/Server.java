@@ -68,6 +68,7 @@ public class Server {
 
     public void start() {
         display = new Display(settings.getSystemScreenWidth(), settings.getSystemScreenHeight());
+        display.setColorScheme(settings.getSystemScreenColorScheme());
         System.out.println("Server: Server started");
         drawApps();
         drawBars();

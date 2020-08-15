@@ -39,6 +39,6 @@ public class ServerCommandsDecoder extends CommandDecoder {
     @Override
     protected void setColorScheme(byte value){
         server.settings.setSystemScreenColorScheme(value);
-        //server.display.setColorScheme(value);
+        server.display.setColorScheme(value);
     }
 }

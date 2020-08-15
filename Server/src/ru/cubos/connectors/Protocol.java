@@ -2,7 +2,7 @@ package ru.cubos.connectors;
 
 public class Protocol {
 
-    public static final byte _0_MODE_OPTION     = -128;
+    public static final byte _0_MODE_OPTION         = -128;
     public static final byte _0_0_MODE_SELECT       = 0x00;
     public static final byte _0_1_OPTIONS_MODE      = 0x01;
     public static final byte _0_2_DRAW_MODE         = 0x02;
@@ -16,7 +16,7 @@ public class Protocol {
     public static final byte _1_3_WAKE_UP           = 0x03;
     public static final byte _1_4_SERVER_OPTION     = 0x04;
     public static final byte _1_6_OPTIONS_SCREEN    = 0x06;
-    //----------------------------------------- _1_5
+    //------------------------------------- -  -   -     -          -                    -                             -
 
     public static final byte _1_4_1_START_SERVER                = 0x01;
     public static final byte _1_4_2_STOP_SERVER                 = 0x02;
@@ -40,10 +40,14 @@ public class Protocol {
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // Drawing
     //DRAWING MODE
-    public static final byte _1_DRAWING_PIXEL         = 0x01;
-    public static final byte _2_DRAWING_RECT          = 0x02;
-    public static final byte _3_DRAWING_PIXELS_ARRAY  = 0x03;
-    public static final byte _4_DRAWING_RECTS_ARRAY   = 0x04;
+    public static final byte _1_DRAW_PIXEL                              = 0x01;
+    public static final byte _2_DRAW_RECT                               = 0x02;
+    public static final byte _3_DRAW_PIXELS_ARRAY                       = 0x03;
+    public static final byte _4_DRAW_RECTS_ARRAY                        = 0x04;
+    public static final byte _5_DRAW_LINE_VERTICAL_255L                 = 0x05;
+    public static final byte _6_DRAW_LINE_VERTICAL_MORE_255_LENGTH      = 0x06;
+    public static final byte _7_DRAW_LINE_HORIZONTAL_255L               = 0x07;
+    public static final byte _8_DRAW_LINE_HORIZONTAL_MORE_255_LENGTH    = 0x08;
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // EVENTS

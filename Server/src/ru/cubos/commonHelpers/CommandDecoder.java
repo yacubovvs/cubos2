@@ -4,7 +4,6 @@ import ru.cubos.server.helpers.ByteConverter;
 import ru.cubos.server.system.events.*;
 
 import static ru.cubos.connectors.Protocol.*;
-import static ru.cubos.connectors.Protocol._3_DRAWING_PIXELS_ARRAY;
 import static ru.cubos.server.helpers.ByteConverter.uByte;
 
 public abstract class CommandDecoder {
@@ -126,12 +125,12 @@ public abstract class CommandDecoder {
                     break;
                 case _0_2_DRAW_MODE:
                     switch (current_byte) {
-                        case _1_DRAWING_PIXEL:
+                        case _1_DRAW_PIXEL:
                             x0 = ByteConverter.bytesToChar(data[current_position + 1], data[current_position + 2]);
                             y0 = ByteConverter.bytesToChar(data[current_position + 3], data[current_position + 4]);
 
-                            rgb = readRgb_1_6_3_2_SCREEN_COLORS_24BIT__8_8_8(data, current_position + 5);
-                            current_position += 8;
+                            //rgb = readRgb_1_6_3_2_SCREEN_COLORS_24BIT__8_8_8(data, current_position + 5);
+                            //current_position += 8;
 
                             if(currentColorScheme==_1_6_3_7_SCREEN_COLORS_24BIT__8_8_8){
                                 rgb = readRgb_1_6_3_2_SCREEN_COLORS_24BIT__8_8_8(data, current_position + 5);
@@ -145,7 +144,7 @@ public abstract class CommandDecoder {
 
 
                             break;
-                        case _2_DRAWING_RECT:
+                        case _2_DRAW_RECT:
                             x0 = ByteConverter.bytesToChar(data[current_position + 1], data[current_position + 2]);
                             y0 = ByteConverter.bytesToChar(data[current_position + 3], data[current_position + 4]);
                             x1 = ByteConverter.bytesToChar(data[current_position + 5], data[current_position + 6]);
@@ -158,10 +157,10 @@ public abstract class CommandDecoder {
                             //drawRect(x0, y0, x1, y1, new Color(r, g, b));
                             //System.out.printf("Drawing rectangle");
                             break;
-                        case _4_DRAWING_RECTS_ARRAY:
+                        case _4_DRAW_RECTS_ARRAY:
                             //System.out.println("Emulator client: drawing rectangle array");
                             break;
-                        case _3_DRAWING_PIXELS_ARRAY:
+                        case _3_DRAW_PIXELS_ARRAY:
                             //System.out.println("Emulator client: drawing pixels array");
                             break;
                         default:

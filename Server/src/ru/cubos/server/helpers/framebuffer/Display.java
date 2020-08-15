@@ -9,7 +9,7 @@ import java.util.List;
 import static ru.cubos.connectors.Protocol.*;
 import static ru.cubos.server.helpers.ByteConverter.char_to_bytes;
 import static ru.cubos.server.helpers.ByteConverter.uByte;
-import static ru.cubos.connectors.Protocol._1_DRAWING_PIXEL;
+import static ru.cubos.connectors.Protocol._1_DRAW_PIXEL;
 
 public class Display extends BinaryImage_24bit {
     private BinaryImage_24bit last_frame;
@@ -35,35 +35,49 @@ public class Display extends BinaryImage_24bit {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      */
 
+    boolean pointsEqual(byte a[], byte b[]){
+        return a[0]==b[0] && a[1]==b[1] && a[2]==b[2];
+    }
+
     public List<DisplayCommand> getFrame(){
 
         displayCommands = new ArrayList<>();
 
-        for(char x=0; x<getWidth(); x++){
-            for(char y=0; y<getHeight(); y++){
+        for(char y=0; y<getHeight(); y++){
+            for(char x=0; x<getWidth(); x++){
 
                 byte[] newPixel = getColorPixel(x,y);
-                byte[] oldPixel = ((BinaryImage_24bit)last_frame).getColorPixel(x,y);
+                byte[] oldPixel = last_frame.getColorPixel(x,y);
 
-                if(newPixel[0]!=oldPixel[0] || newPixel[1]!=oldPixel[1] || newPixel[2]!=oldPixel[2]){
-                    //System.out.println("New pixel");
+                if(!pointsEqual(newPixel, oldPixel)){
+
+                    // Check for lines
+                    int lineLength = 0;
+                    for(int i=x; i<getWidth(); i++){
+                        byte[] newLinePixel = getColorPixel(i,y);
+                        byte[] oldLinePixel = last_frame.getColorPixel(i,y);
+
+                        if(pointsEqual(newPixel, newLinePixel) && !pointsEqual(newLinePixel, oldLinePixel)){
+                            lineLength = i-x;
+                        }else{
+                            //System.out.println("Line length " + i);
+                            lineLength = i-x;
+                            break;
+                        }
+                    }
+
+                    if(lineLength>1){
+                        x+= lineLength;
+                        //continue;
+                    }
+
+                    // Check point
                     DisplayCommand displayCommand = new DisplayCommand();
 
                     byte x_bytes[] = char_to_bytes((char) x);
                     byte y_bytes[] = char_to_bytes((char) y);
 
-                    displayCommand.type = _1_DRAWING_PIXEL;
-                    displayCommand.params = new byte[]{
-                            uByte(x_bytes[0]),   // X0
-                            uByte(x_bytes[1]),   // X0
-                            uByte(y_bytes[0]),   // Y0
-                            uByte(y_bytes[1]),   // Y0
-                            newPixel[0],   // R
-                            newPixel[1],   // G
-                            newPixel[2],   // B
-                    };
-
-                    /*
+                    displayCommand.type = _1_DRAW_PIXEL;
                     if(colorScheme == _1_6_3_7_SCREEN_COLORS_24BIT__8_8_8){
                         displayCommand.params = new byte[]{
                             uByte(x_bytes[0]),   // X0
@@ -82,7 +96,7 @@ public class Display extends BinaryImage_24bit {
                             uByte(y_bytes[1]),   // Y0
                             Colors.rgb_to_color_256(newPixel)
                         };
-                    }*/
+                    }
 
                     displayCommands.add(displayCommand);
 

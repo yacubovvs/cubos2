@@ -71,7 +71,7 @@ public abstract class Emulator extends JFrame implements Connector {
         while(current_position<data.length) {
 
             switch (data[current_position]) {
-                case _1_DRAWING_PIXEL:
+                case _1_DRAW_PIXEL:
                     //System.out.println("Emulator client: drawing pixel command");
                     x0 = ByteConverter.bytesToChar(data[current_position + 1], data[current_position + 2]);
                     y0 = ByteConverter.bytesToChar(data[current_position + 3], data[current_position + 4]);
@@ -85,7 +85,7 @@ public abstract class Emulator extends JFrame implements Connector {
                     current_position += 8;
 
                     break;
-                case _2_DRAWING_RECT:
+                case _2_DRAW_RECT:
                     //System.out.println("Emulator client: drawing rectangle command");
                     x0 = ByteConverter.bytesToChar(data[current_position + 1], data[current_position + 2]);
                     y0 = ByteConverter.bytesToChar(data[current_position + 3], data[current_position + 4]);
@@ -99,10 +99,10 @@ public abstract class Emulator extends JFrame implements Connector {
                     current_position += 12;
                     drawRect(x0, y0, x1, y1, new Color(r, g, b));
                     break;
-                case _4_DRAWING_RECTS_ARRAY:
+                case _4_DRAW_RECTS_ARRAY:
                     System.out.println("Emulator client: drawing rectangle array");
                     break;
-                case _3_DRAWING_PIXELS_ARRAY:
+                case _3_DRAW_PIXELS_ARRAY:
                     System.out.println("Emulator client: drawing pixels array");
                     break;
                     /*
