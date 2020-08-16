@@ -24,7 +24,7 @@ public class Main_SocketServer_Bench {
             Profiler.point("test");
         }
 
-        Profiler.showSumTimers();
+        //Profiler.showSumTimers();
     }
 
     static public void benchFoo(Server server){

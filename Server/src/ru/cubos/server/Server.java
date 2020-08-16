@@ -63,6 +63,21 @@ public class Server {
         } catch (IOException e) {
             backGroundImage = null;
         }
+
+        Thread displayThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true){
+                    updateAndSendFrameBuffer();
+                    try {
+                        Thread.sleep(15);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        displayThread.start();
     }
 
 
@@ -131,7 +146,8 @@ public class Server {
             //System.out.println("Server: sending " + message.length + " bytes");
             connector.OnDataGotFromServer(message);
             Profiler.addCount("Received data", message.length);
-            Profiler.showCountAccumulators();
+            Profiler.addCount("Total frames", 1);
+            //Profiler.showCountAccumulators();
 
         } else {
             //System.out.println("Server: no frame change");
@@ -202,16 +218,23 @@ public class Server {
 
     public void setRepaintPending() {
         this.repaintPending = true;
-        // TODO: Remove this in future, should checking in loop
-        //long start = System.currentTimeMillis();
-        drawApps();
-        //long timeConsumedMillis = System.currentTimeMillis() - start;
-        //System.out.println("Repaint time: " + timeConsumedMillis + " ms");
+        //updateAndSendFrameBuffer();
+    }
 
-        Profiler.start("sendFrameBufferCommands");
-        sendFrameBufferCommands();
-        Profiler.point("sendFrameBufferCommands");
-        //Profiler.showSumTimers();
+    public void updateAndSendFrameBuffer(){
+        // TODO: Remove this in future, should checking in loop
+        if(this.repaintPending) {
+            //long start = System.currentTimeMillis();
+            drawApps();
+            //long timeConsumedMillis = System.currentTimeMillis() - start;
+            //System.out.println("Repaint time: " + timeConsumedMillis + " ms");
+
+            //Profiler.start("sendFrameBufferCommands");
+            sendFrameBufferCommands();
+            //Profiler.point("sendFrameBufferCommands");
+            //Profiler.showSumTimers();
+            this.repaintPending = false;
+        }
     }
 
     public void cancelRepaintPending() {

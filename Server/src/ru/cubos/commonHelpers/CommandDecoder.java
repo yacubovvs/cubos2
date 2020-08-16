@@ -4,6 +4,7 @@ import ru.cubos.server.helpers.ByteConverter;
 import ru.cubos.server.system.events.*;
 
 import static ru.cubos.connectors.Protocol.*;
+import static ru.cubos.connectors.Protocol._8_DRAW_LINE_VERTICAL_COORDINATES_LESS_255_LENGTH_LESS_255;
 import static ru.cubos.server.helpers.ByteConverter.uByte;
 
 public abstract class CommandDecoder {
@@ -126,94 +127,29 @@ public abstract class CommandDecoder {
                 case _0_2_DRAW_MODE:
                     switch (current_byte) {
                         case _1_DRAW_PIXEL:
-                            x0 = ByteConverter.bytesToChar(data[current_position + 1], data[current_position + 2]);
-                            y0 = ByteConverter.bytesToChar(data[current_position + 3], data[current_position + 4]);
-
-                            if(currentColorScheme==_1_6_3_7_SCREEN_COLORS_24BIT__8_8_8){
-                                rgb = readRgb_1_6_3_2_SCREEN_COLORS_24BIT__8_8_8(data, current_position + 5);
-                                current_position += 8;
-                            }else if(currentColorScheme==_1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS){
-                                rgb = readRgb_1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS(data, current_position + 5);
-                                current_position += 6;
-                            }
-
-                            setPixel(x0, y0, rgb);
+                            current_position++;
+                            current_position +=_1_DRAW_PIXEL(data, current_position);
                             break;
                         case _2_DRAW_PIXEL_COORDINATES_LESS_255:
-                            x0 = (char)(data[current_position + 1] + 128);
-                            y0 = (char)(data[current_position + 2] + 128);
-
-                            if(currentColorScheme==_1_6_3_7_SCREEN_COLORS_24BIT__8_8_8){
-                                rgb = readRgb_1_6_3_2_SCREEN_COLORS_24BIT__8_8_8(data, current_position + 3);
-                                current_position += 6;
-                            }else if(currentColorScheme==_1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS){
-                                rgb = readRgb_1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS(data, current_position + 3);
-                                current_position += 4;
-                            }
-
-                            setPixel(x0, y0, rgb);
+                            current_position++;
+                            current_position +=_2_DRAW_PIXEL_COORDINATES_LESS_255(data, current_position);
                             break;
                         case _5_DRAW_LINE_VERTICAL_COORDINATES_MORE_255:
-                            x0 = ByteConverter.bytesToChar(data[current_position + 1], data[current_position + 2]);
-                            y0 = ByteConverter.bytesToChar(data[current_position + 3], data[current_position + 4]);
-                            length = ByteConverter.bytesToChar(data[current_position + 5], data[current_position + 6]);
-                            if(currentColorScheme== _1_6_3_7_SCREEN_COLORS_24BIT__8_8_8){
-                                //setPixel(x0, y0, readRgb_1_6_3_2_SCREEN_COLORS_24BIT__8_8_8(data, current_position + 7));
-                                setLine(x0, y0, length, readRgb_1_6_3_2_SCREEN_COLORS_24BIT__8_8_8(data, current_position + 7));
-                                current_position += 10;
-
-                            }else if(currentColorScheme==_1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS){
-                                rgb = readRgb_1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS(data, current_position + 7);
-                                setLine(x0, y0, length, rgb);
-                                current_position += 8;
-                            }
+                            current_position++;
+                            current_position +=_5_DRAW_LINE_VERTICAL_COORDINATES_MORE_255(data, current_position);
                             break;
-
                         case _6_DRAW_LINE_VERTICAL_COORDINATES_LESS_255:
-                            x0 = (char)(data[current_position + 1] + 128);
-                            y0 = (char)(data[current_position + 2] + 128);
-                            length = ByteConverter.bytesToChar(data[current_position + 3], data[current_position + 4]);
-                            if(currentColorScheme== _1_6_3_7_SCREEN_COLORS_24BIT__8_8_8){
-                                setLine(x0, y0, length, readRgb_1_6_3_2_SCREEN_COLORS_24BIT__8_8_8(data, current_position + 5));
-                                current_position += 8;
-
-                            }else if(currentColorScheme==_1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS){
-                                rgb = readRgb_1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS(data, current_position + 5);
-                                setLine(x0, y0, length, rgb);
-                                current_position += 6;
-                            }
+                            current_position++;
+                            current_position +=_6_DRAW_LINE_VERTICAL_COORDINATES_LESS_255(data, current_position);
                             break;
-
                         case _7_DRAW_LINE_VERTICAL_COORDINATES_MORE_255_LENGTH_LESS_255:
-                            x0 = ByteConverter.bytesToChar(data[current_position + 1], data[current_position + 2]);
-                            y0 = ByteConverter.bytesToChar(data[current_position + 3], data[current_position + 4]);
-                            length = (char)(data[current_position + 5] + 128);
-                            if(currentColorScheme== _1_6_3_7_SCREEN_COLORS_24BIT__8_8_8){
-                                setLine(x0, y0, length, readRgb_1_6_3_2_SCREEN_COLORS_24BIT__8_8_8(data, current_position + 6));
-                                current_position += 9;
-
-                            }else if(currentColorScheme==_1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS){
-                                rgb = readRgb_1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS(data, current_position + 6);
-                                setLine(x0, y0, length, rgb);
-                                current_position += 7;
-                            }
+                            current_position++;
+                            current_position +=_7_DRAW_LINE_VERTICAL_COORDINATES_MORE_255_LENGTH_LESS_255(data, current_position);
                             break;
-
                         case _8_DRAW_LINE_VERTICAL_COORDINATES_LESS_255_LENGTH_LESS_255:
-                            x0 = (char)(data[current_position + 1] + 128);
-                            y0 = (char)(data[current_position + 2] + 128);
-                            length = (char)(data[current_position + 3] + 128);
-                            if(currentColorScheme== _1_6_3_7_SCREEN_COLORS_24BIT__8_8_8){
-                                setLine(x0, y0, length, readRgb_1_6_3_2_SCREEN_COLORS_24BIT__8_8_8(data, current_position + 4));
-                                current_position += 7;
-
-                            }else if(currentColorScheme==_1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS){
-                                rgb = readRgb_1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS(data, current_position + 4);
-                                setLine(x0, y0, length, rgb);
-                                current_position += 5;
-                            }
+                            current_position++;
+                            current_position +=_8_DRAW_LINE_VERTICAL_COORDINATES_LESS_255_LENGTH_LESS_255(data, current_position);
                             break;
-
                         case _3_DRAW_PIXELS_ARRAY:
                             //System.out.println("Emulator client: drawing pixels array");
                             break;
@@ -278,6 +214,127 @@ public abstract class CommandDecoder {
         }
         return null;
     }
+
+    public char _1_DRAW_PIXEL(byte[] data, int current_position){
+        char x0, y0;
+        byte rgb[] = null;
+        char current_position_iter = 0;
+        x0 = ByteConverter.bytesToChar(data[current_position], data[current_position + 1]);
+        y0 = ByteConverter.bytesToChar(data[current_position + 2], data[current_position + 3]);
+
+        if (currentColorScheme == _1_6_3_7_SCREEN_COLORS_24BIT__8_8_8) {
+            rgb = readRgb_1_6_3_2_SCREEN_COLORS_24BIT__8_8_8(data, current_position + 4);
+            current_position_iter = 7;
+        } else if (currentColorScheme == _1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS) {
+            rgb = readRgb_1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS(data, current_position + 4);
+            current_position_iter = 5;
+        }
+
+        setPixel(x0, y0, rgb);
+        return current_position_iter;
+    }
+
+    public char _2_DRAW_PIXEL_COORDINATES_LESS_255(byte[] data, int current_position){
+        char x0, y0;
+        byte rgb[] = null;
+        char current_position_iter = 0;
+
+        x0 = (char)(data[current_position] + 128);
+        y0 = (char)(data[current_position + 1] + 128);
+
+        if(currentColorScheme==_1_6_3_7_SCREEN_COLORS_24BIT__8_8_8){
+            rgb = readRgb_1_6_3_2_SCREEN_COLORS_24BIT__8_8_8(data, current_position + 2);
+            current_position_iter += 5;
+        }else if(currentColorScheme==_1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS){
+            rgb = readRgb_1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS(data, current_position + 2);
+            current_position_iter += 4;
+        }
+
+        setPixel(x0, y0, rgb);
+        return current_position_iter;
+    }
+
+    public char _5_DRAW_LINE_VERTICAL_COORDINATES_MORE_255(byte[] data, int current_position){
+        char x0, y0, length;
+        byte rgb[] = null;
+        char current_position_iter = 0;
+
+        x0 = ByteConverter.bytesToChar(data[current_position], data[current_position + 1]);
+        y0 = ByteConverter.bytesToChar(data[current_position + 2], data[current_position + 3]);
+        length = ByteConverter.bytesToChar(data[current_position + 4], data[current_position + 5]);
+        if(currentColorScheme== _1_6_3_7_SCREEN_COLORS_24BIT__8_8_8){
+            setLine(x0, y0, length, readRgb_1_6_3_2_SCREEN_COLORS_24BIT__8_8_8(data, current_position + 6));
+            current_position_iter += 9;
+
+        }else if(currentColorScheme==_1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS){
+            rgb = readRgb_1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS(data, current_position + 6);
+            setLine(x0, y0, length, rgb);
+            current_position_iter += 7;
+        }
+
+        return current_position_iter;
+    }
+
+    public char _6_DRAW_LINE_VERTICAL_COORDINATES_LESS_255(byte[] data, int current_position){
+        char x0, y0, length;
+        byte rgb[] = null;
+        char current_position_iter = 0;
+
+        x0 = (char)(data[current_position] + 128);
+        y0 = (char)(data[current_position + 1] + 128);
+        length = ByteConverter.bytesToChar(data[current_position + 2], data[current_position + 3]);
+        if(currentColorScheme== _1_6_3_7_SCREEN_COLORS_24BIT__8_8_8){
+            setLine(x0, y0, length, readRgb_1_6_3_2_SCREEN_COLORS_24BIT__8_8_8(data, current_position + 4));
+            current_position_iter += 7;
+
+        }else if(currentColorScheme==_1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS){
+            rgb = readRgb_1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS(data, current_position + 4);
+            setLine(x0, y0, length, rgb);
+            current_position_iter += 5;
+        }
+        return current_position_iter;
+    }
+
+    public char _7_DRAW_LINE_VERTICAL_COORDINATES_MORE_255_LENGTH_LESS_255(byte[] data, int current_position){
+        char x0, y0, length;
+        byte rgb[] = null;
+        char current_position_iter = 0;
+
+        x0 = ByteConverter.bytesToChar(data[current_position], data[current_position + 1]);
+        y0 = ByteConverter.bytesToChar(data[current_position + 2], data[current_position + 3]);
+        length = (char)(data[current_position + 4] + 128);
+        if(currentColorScheme== _1_6_3_7_SCREEN_COLORS_24BIT__8_8_8){
+            setLine(x0, y0, length, readRgb_1_6_3_2_SCREEN_COLORS_24BIT__8_8_8(data, current_position + 5));
+            current_position_iter += 8;
+
+        }else if(currentColorScheme==_1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS){
+            rgb = readRgb_1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS(data, current_position + 5);
+            setLine(x0, y0, length, rgb);
+            current_position_iter += 6;
+        }
+        return current_position_iter;
+    }
+
+    public char _8_DRAW_LINE_VERTICAL_COORDINATES_LESS_255_LENGTH_LESS_255(byte[] data, int current_position){
+        char x0, y0, length;
+        byte rgb[] = null;
+        char current_position_iter = 0;
+
+        x0 = (char)(data[current_position] + 128);
+        y0 = (char)(data[current_position + 1] + 128);
+        length = (char)(data[current_position + 2] + 128);
+        if(currentColorScheme== _1_6_3_7_SCREEN_COLORS_24BIT__8_8_8){
+            setLine(x0, y0, length, readRgb_1_6_3_2_SCREEN_COLORS_24BIT__8_8_8(data, current_position + 3));
+            current_position_iter += 6;
+
+        }else if(currentColorScheme==_1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS){
+            rgb = readRgb_1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS(data, current_position + 3);
+            setLine(x0, y0, length, rgb);
+            current_position_iter += 4;
+        }
+        return current_position_iter;
+    }
+
 
     private void setLine(char x, char y, char length, byte[] rgb) {
         for(char i=0; i<length; i++){
