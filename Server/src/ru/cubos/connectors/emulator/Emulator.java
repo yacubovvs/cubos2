@@ -85,7 +85,7 @@ public abstract class Emulator extends JFrame implements Connector {
                     current_position += 8;
 
                     break;
-                case _2_DRAW_RECT:
+                case _2_DRAW_PIXEL_COORDINATES_LESS_255:
                     //System.out.println("Emulator client: drawing rectangle command");
                     x0 = ByteConverter.bytesToChar(data[current_position + 1], data[current_position + 2]);
                     y0 = ByteConverter.bytesToChar(data[current_position + 3], data[current_position + 4]);

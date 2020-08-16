@@ -46,7 +46,7 @@ public class Profiler {
         long pointTimer = pointTimers.get(tag);
 
 
-        System.out.println(tag + " point " + (System.currentTimeMillis() - startTimer) + "           "  + (System.currentTimeMillis() - pointTimer));
+        System.out.println(tag + " point " + (System.currentTimeMillis() - startTimer) + " - "  + (System.currentTimeMillis() - pointTimer) + " ms");
 
         pointTimers.put(tag, System.currentTimeMillis());
     }

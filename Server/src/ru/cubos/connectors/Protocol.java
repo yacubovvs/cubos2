@@ -40,14 +40,15 @@ public class Protocol {
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // Drawing
     //DRAWING MODE
-    public static final byte _1_DRAW_PIXEL                              = 0x01;
-    public static final byte _2_DRAW_RECT                               = 0x02;
-    public static final byte _3_DRAW_PIXELS_ARRAY                       = 0x03;
-    public static final byte _4_DRAW_RECTS_ARRAY                        = 0x04;
-    public static final byte _5_DRAW_LINE_VERTICAL_255L                 = 0x05;
-    public static final byte _6_DRAW_LINE_VERTICAL_MORE_255_LENGTH      = 0x06;
-    public static final byte _7_DRAW_LINE_HORIZONTAL_255L               = 0x07;
-    public static final byte _8_DRAW_LINE_HORIZONTAL_MORE_255_LENGTH    = 0x08;
+    public static final byte _1_DRAW_PIXEL                                              = 0x01;
+    public static final byte _2_DRAW_PIXEL_COORDINATES_LESS_255                         = 0x02;
+    public static final byte _3_DRAW_PIXELS_ARRAY                                       = 0x03;
+    public static final byte _4_DRAW_RECTS_ARRAY                                        = 0x04;
+    public static final byte _5_DRAW_LINE_VERTICAL_COORDINATES_MORE_255                 = 0x05;
+    public static final byte _6_DRAW_LINE_VERTICAL_COORDINATES_LESS_255                 = 0x06;
+    public static final byte _7_DRAW_LINE_VERTICAL_COORDINATES_MORE_255_LENGTH_LESS_255 = 0x07;
+    public static final byte _8_DRAW_LINE_VERTICAL_COORDINATES_LESS_255_LENGTH_LESS_255 = 0x08;
+
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // EVENTS

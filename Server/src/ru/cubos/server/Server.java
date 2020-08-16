@@ -48,11 +48,11 @@ public class Server {
         // TODO: delete this string later:
         display = new Display(settings.getSystemScreenWidth(), settings.getSystemScreenHeight());
 
-        statusBar = new StatusBarDesktopWidget(this);
+        if(settings.isStatusBarEnable()) statusBar = new StatusBarDesktopWidget(this);
         buttonBar = new ButtonBar(this);
         openedApps = new ArrayList<>();
 
-        openedApps.add(statusBar);
+        if(settings.isStatusBarEnable()) openedApps.add(statusBar);
         openedApps.add(new ApplicationsList(this));
         //openedApps.add(new TestingApp(this));
 
@@ -99,12 +99,14 @@ public class Server {
     }
 
     void drawBars() {
-        if (statusBar.isRepaintPending()) statusBar.draw();
+        if (settings.isStatusBarEnable() && statusBar.isRepaintPending()) statusBar.draw();
         if (buttonBar.isRepaintPending()) buttonBar.paint();
     }
 
     public void sendFrameBufferCommands() {
+        //Profiler.start("get frame");
         List<Display.DisplayCommand> commands = display.getFrame();
+        //Profiler.stop("get frame");
         //System.out.println("Server: Server loop");
 
         if (commands.size() != 0) {
@@ -174,7 +176,7 @@ public class Server {
                         return;
                     }
                 }
-                activateApp(statusBar);
+                if(settings.isStatusBarEnable()) activateApp(statusBar);
             }
         }
     }
@@ -206,8 +208,10 @@ public class Server {
         //long timeConsumedMillis = System.currentTimeMillis() - start;
         //System.out.println("Repaint time: " + timeConsumedMillis + " ms");
 
+        Profiler.start("sendFrameBufferCommands");
         sendFrameBufferCommands();
-
+        Profiler.point("sendFrameBufferCommands");
+        //Profiler.showSumTimers();
     }
 
     public void cancelRepaintPending() {

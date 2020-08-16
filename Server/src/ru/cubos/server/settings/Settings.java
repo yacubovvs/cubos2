@@ -98,7 +98,7 @@ public class Settings {
     }
 
     public char getStatusBarHeight() {
-        return statusBarHeight;
+        if(!isStatusBarEnable()) return 0; else return statusBarHeight;
     }
 
     public void setStatusBarHeight(char statusBarHeight) {
