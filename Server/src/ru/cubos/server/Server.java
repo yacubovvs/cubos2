@@ -37,7 +37,7 @@ public class Server {
     }
 
     private BinaryImage_24bit backGroundImage;
-    private ServerCommandsDecoder serverCommandsDecoder;
+    public ServerCommandsDecoder serverCommandsDecoder;
 
 
     public Server(Connector connector) {
@@ -70,7 +70,7 @@ public class Server {
                 while (true){
                     updateAndSendFrameBuffer();
                     try {
-                        Thread.sleep(15);
+                        Thread.sleep(5);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -169,7 +169,7 @@ public class Server {
 
         //System.out.println("Server: received " + data.length + " bytes");
 
-        serverCommandsDecoder.decodeCommands(data);
+        serverCommandsDecoder.decodeCommands(data, true, 0);
 
         return true;
     }

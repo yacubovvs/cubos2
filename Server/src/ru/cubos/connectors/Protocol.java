@@ -7,6 +7,9 @@ public class Protocol {
     public static final byte _0_1_OPTIONS_MODE      = 0x01;
     public static final byte _0_2_DRAW_MODE         = 0x02;
     public static final byte _0_3_EVENT_MODE        = 0x03;
+
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    public static final byte _FINISH_BYTES = -127;
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // OPTIONS MODE
     public static final byte _1_SET_OPTION      = 0x01;
@@ -42,7 +45,7 @@ public class Protocol {
     //DRAWING MODE
     public static final byte _1_DRAW_PIXEL                                              = 0x01;
     public static final byte _2_DRAW_PIXEL_COORDINATES_LESS_255                         = 0x02;
-    public static final byte _3_DRAW_PIXELS_ARRAY                                       = 0x03;
+    public static final byte _3_UPDATE_SCREEN = 0x03;
     public static final byte _4_DRAW_RECTS_ARRAY                                        = 0x04;
     public static final byte _5_DRAW_LINE_VERTICAL_COORDINATES_MORE_255                 = 0x05;
     public static final byte _6_DRAW_LINE_VERTICAL_COORDINATES_LESS_255                 = 0x06;

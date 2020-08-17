@@ -19,4 +19,9 @@ public class SocketEmulatorClientCommandDecoder extends CommandDecoder {
         bitmap.setRGB(x, y, color.getRGB());
     }
 
+    @Override
+    protected void updateScreen(){
+        socketClient.clientSocket.clientSocket_updater.updateImage();
+    }
+
 }

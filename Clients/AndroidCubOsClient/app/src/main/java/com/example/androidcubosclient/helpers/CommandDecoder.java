@@ -1,15 +1,25 @@
-package ru.cubos.commonHelpers;
+package com.example.androidcubosclient.helpers;
 
-import ru.cubos.server.helpers.ByteConverter;
-import ru.cubos.server.system.events.*;
 
-import static ru.cubos.connectors.Protocol.*;
-import static ru.cubos.connectors.Protocol._8_DRAW_LINE_VERTICAL_COORDINATES_LESS_255_LENGTH_LESS_255;
-import static ru.cubos.server.helpers.ByteConverter.uByte;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 
-public abstract class CommandDecoder {
+import com.example.androidcubosclient.CanvasScreen;
+
+import static com.example.androidcubosclient.helpers.ByteConverter.uByte;
+import static com.example.androidcubosclient.helpers.Protocol.*;
+
+public class CommandDecoder {
     byte current_mode = 0;
     public byte currentColorScheme = _1_6_3_7_SCREEN_COLORS_24BIT__8_8_8;
+    Bitmap bitmap;
+    CanvasScreen canvasScreen;
+
+    public CommandDecoder(Bitmap bitmap, CanvasScreen canvasScreen) {
+        this.bitmap = bitmap;
+        this.canvasScreen = canvasScreen;
+
+    }
 
     public byte[] decodeCommands(byte data[], boolean lastMessage, final int rest_count_max){
         char x0, y0, x1, y1, x_start, y_start, length;
@@ -165,42 +175,15 @@ public abstract class CommandDecoder {
                 case _0_3_EVENT_MODE:
                     switch (current_byte){
                         case _1_1_EVENT_TOUCH_TAP:
-                            x0 = ByteConverter.bytesToChar(uByte(data[current_position + 1]), uByte(data[current_position + 2]));
-                            y0 = ByteConverter.bytesToChar(uByte(data[current_position + 3]), uByte(data[current_position + 4]));
-                            execTouchEvent(new TouchTapEvent(x0, y0));
-                            current_position += 5;
-                            break;
                         case _1_2_EVENT_TOUCH_UP:
-                            x0      = ByteConverter.bytesToChar(uByte(data[current_position + 1]),  uByte(data[current_position + 2]));
-                            y0      = ByteConverter.bytesToChar(uByte(data[current_position + 3]),  uByte(data[current_position + 4]));
-                            current_position += 5;
-                            execTouchEvent(new TouchUpEvent(x0, y0));
-                            break;
                         case _1_3_EVENT_TOUCH_DOWN:
-                            x0      = ByteConverter.bytesToChar(uByte(data[current_position + 1]),  uByte(data[current_position + 2]));
-                            y0      = ByteConverter.bytesToChar(uByte(data[current_position + 3]),  uByte(data[current_position + 4]));
                             current_position += 5;
-                            execTouchEvent(new TouchDownEvent(x0, y0));
                             break;
                         case _1_4_EVENT_TOUCH_MOVE:
-
-                            x0      = ByteConverter.bytesToChar(uByte(data[current_position + 1]),  uByte(data[current_position + 2]));
-                            y0      = ByteConverter.bytesToChar(uByte(data[current_position + 3]),  uByte(data[current_position + 4]));
-                            x1      = ByteConverter.bytesToChar(uByte(data[current_position + 5]),  uByte(data[current_position + 6]));
-                            y1      = ByteConverter.bytesToChar(uByte(data[current_position + 7]),  uByte(data[current_position + 8]));
-                            x_start = ByteConverter.bytesToChar(uByte(data[current_position + 9]),  uByte(data[current_position + 10]));
-                            y_start = ByteConverter.bytesToChar(uByte(data[current_position + 11]), uByte(data[current_position + 12]));
                             current_position += 13;
-                            execTouchEvent(new TouchMoveEvent(x0, y0, x1, y1, x_start, y_start));
                             break;
                         case _1_5_EVENT_TOUCH_MOVE_FINISHED:
-
-                            x0      = ByteConverter.bytesToChar(uByte(data[current_position + 1]),  uByte(data[current_position + 2]));
-                            y0      = ByteConverter.bytesToChar(uByte(data[current_position + 3]),  uByte(data[current_position + 4]));
-                            x_start = ByteConverter.bytesToChar(uByte(data[current_position + 5]),  uByte(data[current_position + 6]));
-                            y_start = ByteConverter.bytesToChar(uByte(data[current_position + 7]),  uByte(data[current_position + 8]));
                             current_position += 9;
-                            execTouchEvent(new TouchMoveFinishedEvent(x0, y0, x_start, y_start));
                             break;
                         case _1_6_EVENT_TOUCH_ZOOM_IN:
                             break;
@@ -359,14 +342,18 @@ public abstract class CommandDecoder {
         return rgb;
     }
 
-    protected void setPixel(int x, int y, byte rgb[]){}
-    protected void execTouchEvent(EventTouch event){}
+    protected void setPixel(int x, int y, byte rgb[]){
+        int color = Color.rgb(rgb[0] + 128, rgb[1] + 128, rgb[2] + 128);
+        bitmap.setPixel(x, y, color);
+    }
     protected void startServer(){}
     protected void stopServer(){}
     protected void setScreenHeight(char value){}
     protected void setScreenWidth(char value){}
     protected void setColorScheme(byte value){}
-    protected void updateScreen(){}
+    protected void updateScreen(){
+        canvasScreen.invalidate();
+    }
 
 
 }

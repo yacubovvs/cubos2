@@ -10,6 +10,8 @@ import android.view.View;
 
 import com.example.androidcubosclient.connectors.ClientSocket;
 import com.example.androidcubosclient.helpers.ByteConverter;
+import com.example.androidcubosclient.helpers.CommandDecoder;
+import com.example.androidcubosclient.helpers.Profiler;
 import com.example.androidcubosclient.helpers.Protocol;
 
 import static com.example.androidcubosclient.helpers.ClientSessionSettings.image_scale;
@@ -31,6 +33,8 @@ public class ScreenActivity extends AppCompatActivity {
         mContentView = new CanvasScreen(this);
         setContentView(mContentView);
 
+        //Profiler.context = this;
+
         /*
         mContentView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,7 +45,7 @@ public class ScreenActivity extends AppCompatActivity {
             }
         });*/
 
-        clientSocket = new ClientSocket("10.0.0.153" , 8000, mContentView);
+        clientSocket = new ClientSocket("10.0.0.153" , 8000, mContentView.getBitmap(), new CommandDecoder(mContentView.getBitmap(), mContentView));
         mContentView.setOnTouchListener(onScreenTouchListener);
 
     }

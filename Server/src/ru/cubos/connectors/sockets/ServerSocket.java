@@ -12,8 +12,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.cubos.commonHelpers.StaticSocketSettings.serverBufferSize;
-import static ru.cubos.commonHelpers.StaticSocketSettings.serverBufferSize_max;
+import static ru.cubos.commonHelpers.StaticSocketSettings.*;
+import static ru.cubos.connectors.Protocol._FINISH_BYTES;
 
 public class ServerSocket {
 
@@ -102,8 +102,45 @@ public class ServerSocket {
             //byte bytes[] = new byte[16 * 1024 * 1024];
             byte bytes[] = new byte[serverBufferSize];
 
+            try {
                 byte rest_bytes[] = null;
+                while ((count = in.read(bytes)) > 0) {
+                    byte sum_bytes[];
+                    if (rest_bytes != null) {
+                        sum_bytes = new byte[count + rest_bytes.length];
+                        // TODO: change to arraycopy
+                        for (int i = 0; i < rest_bytes.length; i++) sum_bytes[i] = rest_bytes[i];
+                        for (int i = rest_bytes.length; i < count + rest_bytes.length; i++)
+                            sum_bytes[i] = bytes[i - rest_bytes.length];
+                    } else {
+                        // TODO: change to arraycopy
+                        sum_bytes = new byte[count];
+                        for (int i = 0; i < count; i++) sum_bytes[i] = bytes[i];
+                    }
+
+                    rest_bytes = server.serverCommandsDecoder.decodeCommands(sum_bytes, false, restBytesSize);
+                    //System.out.println("Read " + count + " bytes");
+                    //System.out.println("Rest bytes " + rest_bytes.length + " bytes");
+                    if(
+                            bytes[count-1] == _FINISH_BYTES
+                                    && bytes[count-2] == _FINISH_BYTES
+                                    && bytes[count-3] == _FINISH_BYTES
+                                    && bytes[count-4] == _FINISH_BYTES
+                                    && bytes[count-5] == _FINISH_BYTES
+                                    && bytes[count-6] == _FINISH_BYTES
+                                    && bytes[count-7] == _FINISH_BYTES
+                                    && bytes[count-8] == _FINISH_BYTES
+                    ){
+                        server.serverCommandsDecoder.decodeCommands(rest_bytes, true, 0);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+                /*
                 try{
+                    byte rest_bytes[] = null;
                     while ((count = in.read(bytes)) > 0) {
                         //System.out.println("Recieved " + bytes.length + " bytes, with count " + count );
 
@@ -115,7 +152,7 @@ public class ServerSocket {
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
-                }
+                }*/
         }
     }
 
@@ -128,6 +165,7 @@ public class ServerSocket {
                 try {
                     byte data[] = messagesToSend.get(0);
                     out.write(data);
+                    out.write(new byte[]{_FINISH_BYTES, _FINISH_BYTES, _FINISH_BYTES, _FINISH_BYTES, _FINISH_BYTES, _FINISH_BYTES, _FINISH_BYTES, _FINISH_BYTES});
                     out.flush();
                     messagesToSend.remove(data);
                 } catch (IOException e) {}

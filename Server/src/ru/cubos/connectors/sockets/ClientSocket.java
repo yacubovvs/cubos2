@@ -19,13 +19,13 @@ import static ru.cubos.connectors.Protocol.*;
 
 public class ClientSocket{
 
-    private static Socket clientSocket; //сокет для общения
-    private static InputStream in; // поток чтения из сокета
-    private static OutputStream out; // поток записи в сокет
+    private static Socket clientSocket;
+    private static InputStream in;
+    private static OutputStream out;
     private int port;
     private String addr;
     private List<byte[]> messagesToSend = new ArrayList<>();
-    private ClientSocket_Updater clientSocket_updater;
+    public ClientSocket_Updater clientSocket_updater;
     private Reader reader;
     private Writer writer;
     private SocketEmulatorClientCommandDecoder socketEmulatorClientCommandDecoder;
@@ -119,7 +119,6 @@ public class ClientSocket{
 
             while (true) {
                 int count;
-                //byte bytes[] = new byte[16 * 1024 * 1024];
                 byte bytes[] = new byte[clientBufferSize];
 
                 try {
@@ -134,7 +133,7 @@ public class ClientSocket{
                                 sum_bytes[i] = bytes[i - rest_bytes.length];
 
                             rest_bytes = decodeCommands(sum_bytes);
-                            clientSocket_updater.updateImage();
+
                         } else {
                             // TODO: change to arraycopy
                             byte sum_bytes[] = new byte[count];
@@ -143,15 +142,24 @@ public class ClientSocket{
                         }
                         //System.out.println("Read " + count + " bytes");
                         //System.out.println("Rest bytes " + rest_bytes.length + " bytes");
+                        if(
+                                bytes[count-1] == _FINISH_BYTES
+                                && bytes[count-2] == _FINISH_BYTES
+                                && bytes[count-3] == _FINISH_BYTES
+                                && bytes[count-4] == _FINISH_BYTES
+                                && bytes[count-5] == _FINISH_BYTES
+                                && bytes[count-6] == _FINISH_BYTES
+                                && bytes[count-7] == _FINISH_BYTES
+                                && bytes[count-8] == _FINISH_BYTES
+                        ){
+                            socketEmulatorClientCommandDecoder.decodeCommands(rest_bytes, true, 0);
+                            //clientSocket_updater.updateImage();
+                        }
                     }
-
-                    socketEmulatorClientCommandDecoder.decodeCommands(rest_bytes);
-
                 } catch (IOException e) {
                     e.printStackTrace();
                     return;
                 }
-
             }
         }
 
@@ -249,6 +257,7 @@ public class ClientSocket{
                 try {
                         byte data[] = messagesToSend.get(0);
                         out.write(data);
+                        out.write(new byte[]{_FINISH_BYTES, _FINISH_BYTES, _FINISH_BYTES, _FINISH_BYTES, _FINISH_BYTES, _FINISH_BYTES, _FINISH_BYTES, _FINISH_BYTES});
                         out.flush();
                         messagesToSend.remove(data);
 

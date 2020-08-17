@@ -102,7 +102,7 @@ public abstract class Emulator extends JFrame implements Connector {
                 case _4_DRAW_RECTS_ARRAY:
                     System.out.println("Emulator client: drawing rectangle array");
                     break;
-                case _3_DRAW_PIXELS_ARRAY:
+                case _3_UPDATE_SCREEN:
                     System.out.println("Emulator client: drawing pixels array");
                     break;
                     /*

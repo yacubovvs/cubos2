@@ -1,4 +1,4 @@
-package ru.cubos.commonHelpers;
+package com.example.androidcubosclient.helpers;
 
 import java.net.Inet4Address;
 import java.net.UnknownHostException;

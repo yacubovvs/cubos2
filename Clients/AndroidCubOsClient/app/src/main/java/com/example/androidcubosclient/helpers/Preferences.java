@@ -33,6 +33,18 @@ public class Preferences {
         editor.apply();
     }
 
+    static public void putInt(String variable, String value, int defInt){
+        int value_int = defInt;
+
+        try{
+            value_int = Integer.parseInt(value);
+        }catch(Exception e){}
+
+        SharedPreferences.Editor editor = mSettings.edit();
+        editor.putInt(variable, value_int);
+        editor.apply();
+    }
+
     static public int getInt(String variable, int defaulValue){
         return mSettings.getInt(variable, defaulValue);
     }

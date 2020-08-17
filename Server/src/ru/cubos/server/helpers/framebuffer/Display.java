@@ -232,6 +232,12 @@ public class Display extends BinaryImage_24bit {
             }
         }
 
+        if(displayCommands.size()!=0) {
+            DisplayCommand updateScreenCommand = new DisplayCommand();
+            updateScreenCommand.type = _3_UPDATE_SCREEN;
+            displayCommands.add(updateScreenCommand);
+        }
+
         System.arraycopy(this.data, 0, last_frame.data, 0, this.data.length);
 
         return displayCommands;
@@ -247,7 +253,7 @@ public class Display extends BinaryImage_24bit {
 
     public class DisplayCommand{
         public byte type;
-        public byte params[];
+        public byte params[] = new byte[]{};
     }
 
 }

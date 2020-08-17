@@ -18,6 +18,7 @@ public class EmulatorImagePanel extends ImagePanel {
             byte[] startPosition = null;
             byte[] lastPosition = null;
             int[] startPositionCoords = null;
+            int[] lastPositionCoords = null;
 
             final char minClickPositionDiff = 5; // If position between touch down and touch up less then N, it is tab, else drag
 
@@ -44,6 +45,7 @@ public class EmulatorImagePanel extends ImagePanel {
                 eventData[4] = y_bytes[1];
 
                 startPositionCoords = mousePosition;
+                lastPositionCoords = mousePosition;
 
                 startPosition = new byte[4];
                 startPosition[0] = x_bytes[0];
@@ -106,6 +108,8 @@ public class EmulatorImagePanel extends ImagePanel {
 
                 startPosition = null;
                 lastPosition = null;
+                //startPositionCoords = null;
+                lastPositionCoords = null;
             }
 
             @Override
@@ -116,36 +120,47 @@ public class EmulatorImagePanel extends ImagePanel {
                 xPosition = (char)e.getX();
                 yPosition = (char)e.getY();
 
+
+
                 int mousePosition[] = getPositionOnScreen(xPosition, yPosition);
 
-                byte x_bytes[] = ByteConverter.char_to_bytes((char)(mousePosition[0]));
-                byte y_bytes[] = ByteConverter.char_to_bytes((char)(mousePosition[1]));
+                if(
+                        (Math.abs(mousePosition[0] - startPositionCoords[0])>minClickPositionDiff || Math.abs(mousePosition[1] - startPositionCoords[1])>minClickPositionDiff)
+                        && (lastPositionCoords[0]!=mousePosition[0] || lastPositionCoords[1]!=mousePosition[1])
+                ) {
 
-                byte eventData[] = new byte[13];
+                    byte x_bytes[] = ByteConverter.char_to_bytes((char) (mousePosition[0]));
+                    byte y_bytes[] = ByteConverter.char_to_bytes((char) (mousePosition[1]));
 
-                if(lastPosition==null) lastPosition = startPosition;
+                    byte eventData[] = new byte[13];
 
-                eventData[0]  = Protocol._1_4_EVENT_TOUCH_MOVE;
-                eventData[1]  = x_bytes[0];
-                eventData[2]  = x_bytes[1];
-                eventData[3]  = y_bytes[0];
-                eventData[4]  = y_bytes[1];
-                eventData[5]  = lastPosition[0];
-                eventData[6]  = lastPosition[1];
-                eventData[7]  = lastPosition[2];
-                eventData[8]  = lastPosition[3];
-                eventData[9]  = startPosition[0];
-                eventData[10] = startPosition[1];
-                eventData[11] = startPosition[2];
-                eventData[12] = startPosition[3];
+                    if (lastPosition == null) lastPosition = startPosition;
 
-                lastPosition = new byte[4];
-                lastPosition[0] = x_bytes[0];
-                lastPosition[1] = x_bytes[1];
-                lastPosition[2] = y_bytes[0];
-                lastPosition[3] = y_bytes[1];
 
-                emulator.sendToServer(eventData);
+                    eventData[0] = Protocol._1_4_EVENT_TOUCH_MOVE;
+                    eventData[1] = x_bytes[0];
+                    eventData[2] = x_bytes[1];
+                    eventData[3] = y_bytes[0];
+                    eventData[4] = y_bytes[1];
+                    eventData[5] = lastPosition[0];
+                    eventData[6] = lastPosition[1];
+                    eventData[7] = lastPosition[2];
+                    eventData[8] = lastPosition[3];
+                    eventData[9] = startPosition[0];
+                    eventData[10] = startPosition[1];
+                    eventData[11] = startPosition[2];
+                    eventData[12] = startPosition[3];
+
+                    lastPosition = new byte[4];
+                    lastPosition[0] = x_bytes[0];
+                    lastPosition[1] = x_bytes[1];
+                    lastPosition[2] = y_bytes[0];
+                    lastPosition[3] = y_bytes[1];
+
+                    lastPositionCoords = mousePosition;
+
+                    emulator.sendToServer(eventData);
+                }
             }
         };
 
