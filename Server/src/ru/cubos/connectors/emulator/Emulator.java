@@ -119,7 +119,7 @@ public abstract class Emulator extends JFrame implements Connector {
         }
 
         // TODO: make repaint on special command
-        repaint();
+        //repaint();
         return true;
     }
 

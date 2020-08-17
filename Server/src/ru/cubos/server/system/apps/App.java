@@ -121,7 +121,7 @@ public abstract class App {
         baseContainer.setScrollY(0);
         //baseContainer.setScrollX(0);
 
-        // TODO: on Zero in offsets, window is not showing
+        // TODO: on Zero (window mode) in offsets, window is not showing
         setLeftOffset(0);
         setRightOffset(0);
         setTopOffset(0);

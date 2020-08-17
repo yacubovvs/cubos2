@@ -222,7 +222,7 @@ public class Server {
     }
 
     public void updateAndSendFrameBuffer(){
-        // TODO: Remove this in future, should checking in loop
+
         if(this.repaintPending) {
             //long start = System.currentTimeMillis();
             drawApps();

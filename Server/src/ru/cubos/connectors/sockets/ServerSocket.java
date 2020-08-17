@@ -108,14 +108,11 @@ public class ServerSocket {
                     byte sum_bytes[];
                     if (rest_bytes != null) {
                         sum_bytes = new byte[count + rest_bytes.length];
-                        // TODO: change to arraycopy
-                        for (int i = 0; i < rest_bytes.length; i++) sum_bytes[i] = rest_bytes[i];
-                        for (int i = rest_bytes.length; i < count + rest_bytes.length; i++)
-                            sum_bytes[i] = bytes[i - rest_bytes.length];
+                        System.arraycopy(rest_bytes, 0, sum_bytes, 0, rest_bytes.length);
+                        System.arraycopy(bytes, 0, sum_bytes, rest_bytes.length, count);
                     } else {
-                        // TODO: change to arraycopy
                         sum_bytes = new byte[count];
-                        for (int i = 0; i < count; i++) sum_bytes[i] = bytes[i];
+                        System.arraycopy(bytes, 0, sum_bytes, 0, count);
                     }
 
                     rest_bytes = server.serverCommandsDecoder.decodeCommands(sum_bytes, false, restBytesSize);
