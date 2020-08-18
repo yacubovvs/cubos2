@@ -132,7 +132,6 @@ public class ClientSocket{
         public void run() {
 
             while (true) {
-                Profiler.start("Socket read");
                 int count;
                 byte bytes[] = new byte[clientBufferSize];
 
@@ -144,13 +143,15 @@ public class ClientSocket{
 
                             System.arraycopy(rest_bytes, 0, sum_bytes, 0, rest_bytes.length);
                             System.arraycopy(bytes, 0, sum_bytes, rest_bytes.length, count);
-
                             rest_bytes = decodeCommands(sum_bytes);
+
 
                         } else {
                             byte sum_bytes[] = new byte[count];
                             System.arraycopy(bytes, 0, sum_bytes, 0, count);
+
                             rest_bytes = decodeCommands(sum_bytes);
+
                         }
                         //System.out.println("Read " + count + " bytes");
                         //System.out.println("Rest bytes " + rest_bytes.length + " bytes");
@@ -166,7 +167,9 @@ public class ClientSocket{
                         ){
                             commandDecoder.decodeCommands(rest_bytes, true, 0);
                             //clientSocket_updater.updateImage();
-                            Profiler.point("Socket read");
+                            //Profiler.start("Message");
+                            //Profiler.point("Message");
+
                         }
                     }
                 } catch (IOException e) {

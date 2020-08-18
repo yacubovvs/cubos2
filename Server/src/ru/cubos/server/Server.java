@@ -145,8 +145,8 @@ public class Server {
 
             //System.out.println("Server: sending " + message.length + " bytes");
             connector.OnDataGotFromServer(message);
-            Profiler.addCount("Received data", message.length);
-            Profiler.addCount("Total frames", 1);
+            //Profiler.addCount("Received data", message.length);
+            //Profiler.addCount("Total frames", 1);
             //Profiler.showCountAccumulators();
 
         } else {
@@ -164,7 +164,7 @@ public class Server {
             return true; // No data
         }
 
-        Profiler.addCount("Transmit data", data.length);
+        /Profiler.addCount("Transmit data", data.length);
         //Profiler.showCountAccumulators();
 
         //System.out.println("Server: received " + data.length + " bytes");

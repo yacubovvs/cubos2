@@ -1,5 +1,6 @@
 package ru.cubos.connectors.sockets;
 
+import ru.cubos.commonHelpers.profiler.Profiler;
 import ru.cubos.server.Server;
 
 
@@ -29,6 +30,8 @@ public class ServerSocket {
     private Writer writer;
 
     public void addMessage(byte[] message){
+        //Profiler.point("Message");
+
         messagesToSend.add(message);
 
         if(writer==null){
@@ -129,6 +132,7 @@ public class ServerSocket {
                                     && bytes[count-8] == _FINISH_BYTES
                     ){
                         server.serverCommandsDecoder.decodeCommands(rest_bytes, true, 0);
+                        //Profiler.start("Message");
                     }
                 }
             } catch (IOException e) {
