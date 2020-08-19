@@ -1,8 +1,8 @@
 package ru.cubos.server.system.views;
 
-import ru.cubos.server.helpers.binaryImages.BinaryImage_24bit;
+import ru.cubos.commonHelpers.binaryImages.BinaryImage_24bit;
 import ru.cubos.commonHelpers.Colors;
-import ru.cubos.server.helpers.Strings;
+import ru.cubos.commonHelpers.Strings;
 
 import java.util.List;
 

@@ -1,6 +1,5 @@
 package ru.cubos.connectors.sockets;
 
-import ru.cubos.commonHelpers.profiler.Profiler;
 import ru.cubos.server.Server;
 
 
@@ -14,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static ru.cubos.commonHelpers.StaticSocketSettings.*;
-import static ru.cubos.connectors.Protocol._FINISH_BYTES;
+import static ru.cubos.commonHelpers.Protocol._FINISH_BYTES;
 
 public class ServerSocket {
 

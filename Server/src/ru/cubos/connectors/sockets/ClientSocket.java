@@ -2,7 +2,7 @@ package ru.cubos.connectors.sockets;
 
 import ru.cubos.connectors.ClientSessionSettings;
 import ru.cubos.connectors.socketEmulatorClient.SocketEmulatorClientCommandDecoder;
-import ru.cubos.server.helpers.ByteConverter;
+import ru.cubos.commonHelpers.ByteConverter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,9 +13,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.cubos.commonHelpers.StaticSocketSettings.clientBufferSize;
 import static ru.cubos.commonHelpers.StaticSocketSettings.clientBufferSize_max;
-import static ru.cubos.connectors.Protocol.*;
+import static ru.cubos.commonHelpers.Protocol.*;
 
 public class ClientSocket{
 

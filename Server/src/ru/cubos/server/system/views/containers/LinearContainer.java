@@ -1,6 +1,6 @@
 package ru.cubos.server.system.views.containers;
 
-import ru.cubos.server.helpers.binaryImages.BinaryImage_24bit;
+import ru.cubos.commonHelpers.binaryImages.BinaryImage_24bit;
 import ru.cubos.server.system.views.View;
 
 public class LinearContainer extends ContainerView {

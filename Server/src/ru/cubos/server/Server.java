@@ -1,10 +1,9 @@
 package ru.cubos.server;
 
-import ru.cubos.commonHelpers.profiler.Profiler;
-import ru.cubos.connectors.Connector;
-import ru.cubos.server.helpers.binaryImages.BinaryImage_24bit;
+import ru.cubos.connectors.Connectorable;
+import ru.cubos.commonHelpers.binaryImages.BinaryImage_24bit;
 import ru.cubos.commonHelpers.Colors;
-import ru.cubos.server.helpers.framebuffer.Display;
+import ru.cubos.server.framebuffer.Display;
 import ru.cubos.server.settings.Settings;
 import ru.cubos.server.system.ButtonBar;
 import ru.cubos.server.system.TimeWidgetView;
@@ -16,12 +15,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.cubos.server.helpers.ByteConverter.uByte;
-import static ru.cubos.connectors.Protocol.*;
+import static ru.cubos.commonHelpers.ByteConverter.uByte;
+import static ru.cubos.commonHelpers.Protocol.*;
 
 public class Server {
 
-    public Connector connector;
+    public Connectorable connector;
     public Display display;
     public Settings settings;
     public StatusBarDesktopWidget statusBar;
@@ -40,7 +39,7 @@ public class Server {
     public ServerCommandsDecoder serverCommandsDecoder;
 
 
-    public Server(Connector connector) {
+    public Server(Connectorable connector) {
         this.connector = connector;
         serverCommandsDecoder = new ServerCommandsDecoder(this);
         settings = new Settings();
@@ -70,7 +69,7 @@ public class Server {
                 while (true){
                     updateAndSendFrameBuffer();
                     try {
-                        Thread.sleep(5);
+                        Thread.sleep(15);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -95,7 +94,7 @@ public class Server {
 
         connector.OnDataGotFromServer(message);
 
-        sendFrameBufferCommands();
+        sendFrameBuffer();
     }
 
 
@@ -118,43 +117,8 @@ public class Server {
         if (buttonBar.isRepaintPending()) buttonBar.paint();
     }
 
-    public void sendFrameBufferCommands() {
-        //Profiler.start("get frame");
-        List<Display.DisplayCommand> commands = display.getFrame();
-        //Profiler.stop("get frame");
-        //System.out.println("Server: Server loop");
-
-        if (commands.size() != 0) {
-            int messageLength = 0;
-            for (Display.DisplayCommand command : commands) {
-                messageLength += command.params.length;
-                messageLength += 1; // Command type
-            }
-
-            byte message[] = new byte[messageLength];
-            int messagePosition = 0;
-
-            for (Display.DisplayCommand command : commands) {
-                message[messagePosition] = command.type;
-                messagePosition++;
-                for (char p = 0; p < command.params.length; p++) {
-                    message[messagePosition] = command.params[p];
-                    messagePosition++;
-                }
-            }
-
-            //System.out.println("Server: sending " + message.length + " bytes");
-            connector.OnDataGotFromServer(message);
-            //Profiler.addCount("Received data", message.length);
-            //Profiler.addCount("Total frames", 1);
-            //Profiler.showCountAccumulators();
-
-        } else {
-            //System.out.println("Server: no frame change");
-        }
-
-        //long usedBytes = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
-        //System.out.println("Using RAM: " + usedBytes/1048576 + " mb");
+    public void sendFrameBuffer() {
+        connector.updateScreen(display);
     }
 
 
@@ -164,7 +128,7 @@ public class Server {
             return true; // No data
         }
 
-        /Profiler.addCount("Transmit data", data.length);
+        //Profiler.addCount("Transmit data", data.length);
         //Profiler.showCountAccumulators();
 
         //System.out.println("Server: received " + data.length + " bytes");
@@ -230,7 +194,7 @@ public class Server {
             //System.out.println("Repaint time: " + timeConsumedMillis + " ms");
 
             //Profiler.start("sendFrameBufferCommands");
-            sendFrameBufferCommands();
+            sendFrameBuffer();
             //Profiler.point("sendFrameBufferCommands");
             //Profiler.showSumTimers();
             this.repaintPending = false;

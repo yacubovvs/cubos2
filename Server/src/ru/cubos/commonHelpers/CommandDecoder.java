@@ -1,11 +1,10 @@
 package ru.cubos.commonHelpers;
 
-import ru.cubos.server.helpers.ByteConverter;
 import ru.cubos.server.system.events.*;
 
-import static ru.cubos.connectors.Protocol.*;
-import static ru.cubos.connectors.Protocol._8_DRAW_LINE_VERTICAL_COORDINATES_LESS_255_LENGTH_LESS_255;
-import static ru.cubos.server.helpers.ByteConverter.uByte;
+import static ru.cubos.commonHelpers.Protocol.*;
+import static ru.cubos.commonHelpers.Protocol._8_DRAW_LINE_VERTICAL_COORDINATES_LESS_255_LENGTH_LESS_255;
+import static ru.cubos.commonHelpers.ByteConverter.uByte;
 
 public abstract class CommandDecoder {
     byte current_mode = 0;

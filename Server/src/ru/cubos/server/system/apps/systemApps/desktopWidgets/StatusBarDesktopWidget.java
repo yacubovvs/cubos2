@@ -1,7 +1,7 @@
 package ru.cubos.server.system.apps.systemApps.desktopWidgets;
 
 import ru.cubos.server.Server;
-import ru.cubos.server.helpers.binaryImages.BinaryImage_24bit;
+import ru.cubos.commonHelpers.binaryImages.BinaryImage_24bit;
 import ru.cubos.commonHelpers.Colors;
 import ru.cubos.server.system.events.TouchDownEvent;
 import ru.cubos.server.system.views.IconView;

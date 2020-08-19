@@ -1,6 +1,6 @@
 package ru.cubos;
 
-import ru.cubos.connectors.websocket.SocketConnector;
+import ru.cubos.connectors.sockets.SocketConnector;
 import ru.cubos.server.Server;
 
 public class Main_SocketServer {

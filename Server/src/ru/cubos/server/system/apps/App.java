@@ -1,8 +1,8 @@
 package ru.cubos.server.system.apps;
 
 import ru.cubos.server.Server;
-import ru.cubos.server.helpers.binaryImages.BinaryImage;
-import ru.cubos.server.helpers.binaryImages.BinaryImage_24bit;
+import ru.cubos.commonHelpers.binaryImages.BinaryImage;
+import ru.cubos.commonHelpers.binaryImages.BinaryImage_24bit;
 import ru.cubos.server.settings.Settings;
 import ru.cubos.server.system.events.Event;
 import ru.cubos.server.system.views.containers.LinearContainer;

@@ -1,7 +1,7 @@
 package ru.cubos.server.system.views.viewElements;
 
 import ru.cubos.server.Server;
-import ru.cubos.server.helpers.binaryImages.BinaryImage;
+import ru.cubos.commonHelpers.binaryImages.BinaryImage;
 import ru.cubos.server.system.apps.App;
 
 public class ScrollBar {

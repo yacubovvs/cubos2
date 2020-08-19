@@ -2,7 +2,7 @@ package ru.cubos.server.settings;
 
 import ru.cubos.commonHelpers.Colors;
 
-import static ru.cubos.connectors.Protocol.*;
+import static ru.cubos.commonHelpers.Protocol.*;
 
 public class Settings {
 

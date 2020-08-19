@@ -1,14 +1,15 @@
 package ru.cubos.connectors.socketEmulatorClient;
 
 import ru.cubos.connectors.ClientSessionSettings;
-import ru.cubos.connectors.Connector;
+import ru.cubos.connectors.Connectorable;
 import ru.cubos.connectors.emulator.Emulator;
 import ru.cubos.connectors.sockets.ClientSocket;
 import ru.cubos.connectors.sockets.ClientSocket_Updater;
+import ru.cubos.server.framebuffer.Display;
 
 import java.awt.image.BufferedImage;
 
-public class SocketClient extends Emulator implements Connector, ClientSocket_Updater {
+public class SocketClient extends Emulator implements ClientSocket_Updater {
     ClientSocket clientSocket;
     SocketEmulatorClientCommandDecoder socketEmulatorClientCommandDecoder;
 
@@ -17,14 +18,11 @@ public class SocketClient extends Emulator implements Connector, ClientSocket_Up
         socketEmulatorClientCommandDecoder = new SocketEmulatorClientCommandDecoder(this);
     }
 
-    @Override
     public boolean sendToServer(byte[] data) {
-        //clientSocket.messagesToSend.add(data);
         clientSocket.addMessage(data);
         return true;
     }
 
-    @Override
     public BufferedImage getBitmap() {
         return getImage();
     }
@@ -32,4 +30,5 @@ public class SocketClient extends Emulator implements Connector, ClientSocket_Up
     public void start(String host, int port){
         clientSocket = new ClientSocket(host, port, this, socketEmulatorClientCommandDecoder);
     }
+
 }
