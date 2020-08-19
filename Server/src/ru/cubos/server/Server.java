@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.cubos.commonHelpers.ByteConverter.uByte;
 import static ru.cubos.commonHelpers.Protocol.*;
 
 public class Server {
@@ -87,12 +86,7 @@ public class Server {
         drawApps();
         drawBars();
 
-        byte message[] = new byte[]{
-                _0_MODE_OPTION,                         // Switch mode
-                _0_2_DRAW_MODE,                      // Switch to COMMON MODE 1
-        };
-
-        connector.OnDataGotFromServer(message);
+        connector.switchToMode(_0_2_DRAW_MODE);
 
         sendFrameBuffer();
     }
@@ -121,8 +115,7 @@ public class Server {
         connector.updateScreen(display);
     }
 
-
-
+    /*
     public boolean transmitData(byte[] data) {
         if(data.length==0){
             return true; // No data
@@ -137,6 +130,7 @@ public class Server {
 
         return true;
     }
+    */
 
     public boolean isRepaintPending() {
         return repaintPending;

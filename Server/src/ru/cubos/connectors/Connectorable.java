@@ -9,4 +9,6 @@ public interface Connectorable {
     public int getScreenHeight();
 
     public boolean updateScreen(Display display);
+
+    void switchToMode(byte mode);
 }

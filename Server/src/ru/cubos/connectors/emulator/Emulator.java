@@ -36,6 +36,12 @@ public abstract class Emulator extends JFrame {
         return image;
     }
 
+    public void updateImage(BufferedImage image){
+        this.image = image;
+        ((ImagePanel)imageWrapper).setImage(image);
+        repaint();
+    }
+
     public void updateImage(){
         ((ImagePanel)imageWrapper).setImage(image);
         repaint();
@@ -57,68 +63,6 @@ public abstract class Emulator extends JFrame {
     public abstract boolean sendToServer(byte[] data);
 
     public boolean OnDataGotFromServer(byte[] data) {
-
-        if(data.length==0){
-            return true; // No data
-        }
-
-        //System.out.println("Emulator client: data received " + data.length + " bytes");
-
-        char x0, y0, x1, y1, r, g, b;
-        int current_position = 0;
-
-        while(current_position<data.length) {
-
-            switch (data[current_position]) {
-                case _1_DRAW_PIXEL:
-                    //System.out.println("Emulator client: drawing pixel command");
-                    x0 = ByteConverter.bytesToChar(data[current_position + 1], data[current_position + 2]);
-                    y0 = ByteConverter.bytesToChar(data[current_position + 3], data[current_position + 4]);
-
-                    r = ByteConverter.byte_to_char(data[current_position + 5]);
-                    g = ByteConverter.byte_to_char(data[current_position + 6]);
-                    b = ByteConverter.byte_to_char(data[current_position + 7]);
-
-                    drawPixel(x0, y0, new Color(r, g, b));
-
-                    current_position += 8;
-
-                    break;
-                case _2_DRAW_PIXEL_COORDINATES_LESS_255:
-                    //System.out.println("Emulator client: drawing rectangle command");
-                    x0 = ByteConverter.bytesToChar(data[current_position + 1], data[current_position + 2]);
-                    y0 = ByteConverter.bytesToChar(data[current_position + 3], data[current_position + 4]);
-                    x1 = ByteConverter.bytesToChar(data[current_position + 5], data[current_position + 6]);
-                    y1 = ByteConverter.bytesToChar(data[current_position + 7], data[current_position + 8]);
-
-                    r = ByteConverter.byte_to_char(data[current_position + 9]);
-                    g = ByteConverter.byte_to_char(data[current_position + 10]);
-                    b = ByteConverter.byte_to_char(data[current_position + 11]);
-
-                    current_position += 12;
-                    drawRect(x0, y0, x1, y1, new Color(r, g, b));
-                    break;
-                case _4_DRAW_RECTS_ARRAY:
-                    System.out.println("Emulator client: drawing rectangle array");
-                    break;
-                case _3_UPDATE_SCREEN:
-                    System.out.println("Emulator client: drawing pixels array");
-                    break;
-                    /*
-                case UPDATE_SCREEN:
-                    System.out.println("Emulator client: update screen");
-                    updateImage();
-                    break;*/
-                default:
-                    System.out.println("Emulator client: unknown protocol command");
-                    return false;
-            }
-
-
-        }
-
-        // TODO: make repaint on special command
-        //repaint();
         return true;
     }
 

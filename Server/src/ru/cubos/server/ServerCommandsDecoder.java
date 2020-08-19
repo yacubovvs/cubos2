@@ -22,22 +22,22 @@ public class ServerCommandsDecoder extends CommandDecoder {
     }
 
     @Override
-    protected void setScreenHeight(char value){
+    public void setScreenHeight(char value){
         server.settings.setSystemScreenHeight(value);
     }
 
     @Override
-    protected void setScreenWidth(char value){
+    public void setScreenWidth(char value){
         server.settings.setSystemScreenWidth(value);
     }
 
     @Override
-    protected void startServer(){
+    public void startServer(){
         server.start();
     }
 
     @Override
-    protected void setColorScheme(byte value){
+    public void setColorScheme(byte value){
         server.settings.setSystemScreenColorScheme(value);
         server.display.setColorScheme(value);
     }

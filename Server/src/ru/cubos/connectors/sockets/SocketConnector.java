@@ -81,6 +81,16 @@ public class SocketConnector implements Connectorable {
         //System.out.println("Using RAM: " + usedBytes/1048576 + " mb");
     }
 
+    @Override
+    public void switchToMode(byte mode) {
+        byte message[] = new byte[]{
+                _0_MODE_OPTION,                         // Switch mode
+                mode,                      // Switch to COMMON MODE 1
+        };
+
+        OnDataGotFromServer(message);
+    }
+
     public void start(Server server) {
         //socketServer = new ServerSocket(8000, server);
         socketServer = new ServerSocket(8000, server);

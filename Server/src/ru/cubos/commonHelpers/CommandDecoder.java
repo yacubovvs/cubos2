@@ -7,7 +7,7 @@ import static ru.cubos.commonHelpers.Protocol._8_DRAW_LINE_VERTICAL_COORDINATES_
 import static ru.cubos.commonHelpers.ByteConverter.uByte;
 
 public abstract class CommandDecoder {
-    byte current_mode = 0;
+    public byte current_mode = 0;
     public byte currentColorScheme = _1_6_3_7_SCREEN_COLORS_24BIT__8_8_8;
 
     public byte[] decodeCommands(byte data[], boolean lastMessage, final int rest_count_max){
