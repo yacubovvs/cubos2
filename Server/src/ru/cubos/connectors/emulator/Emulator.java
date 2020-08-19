@@ -12,7 +12,6 @@ public abstract class Emulator extends JFrame {
     protected int height;
 
     public Emulator(int width, int height){
-        //mainpanel = new JPanel();
         imageWrapper = new EmulatorImagePanel(this);
         setContentPane(imageWrapper);
         setTitle("CubOS2 Emulator");
