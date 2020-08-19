@@ -1,17 +1,10 @@
 package ru.cubos.connectors.emulator;
 
-import ru.cubos.connectors.Connectorable;
-import ru.cubos.commonHelpers.ByteConverter;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-import static ru.cubos.commonHelpers.ByteConverter.uByte;
-import static ru.cubos.commonHelpers.Protocol.*;
-
 public abstract class Emulator extends JFrame {
-    private JPanel mainpanel;
     private JPanel imageWrapper;
     private BufferedImage image;
 
@@ -19,7 +12,9 @@ public abstract class Emulator extends JFrame {
     protected int height;
 
     public Emulator(int width, int height){
-        setContentPane(mainpanel);
+        //mainpanel = new JPanel();
+        imageWrapper = new EmulatorImagePanel(this);
+        setContentPane(imageWrapper);
         setTitle("CubOS2 Emulator");
 
         setScreenWidth(width);
@@ -48,7 +43,7 @@ public abstract class Emulator extends JFrame {
     }
 
     private void createUIComponents() {
-        imageWrapper = new EmulatorImagePanel(this);
+        //imageWrapper = new EmulatorImagePanel(this);
     }
 
     /*
@@ -65,6 +60,7 @@ public abstract class Emulator extends JFrame {
     public boolean OnDataGotFromServer(byte[] data) {
         return true;
     }
+
 
     /*
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
