@@ -46,7 +46,7 @@
       blue_set != blue
       ) setDrawColor(red, green, blue);*/
 
-    setDrawColor(0, 255, 0);
+    setDrawColor(red_set, green_set, blue_set);
     //setDrawColor(red, green, blue);
     myGLCD.drawPixel(x,y);
   }
