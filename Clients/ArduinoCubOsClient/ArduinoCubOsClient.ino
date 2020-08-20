@@ -77,7 +77,6 @@ char * password = "tsdurobo6200";
 #define _6_DRAW_LINE_VERTICAL_COORDINATES_LESS_255                    0x06 + 128
 #define _7_DRAW_LINE_VERTICAL_COORDINATES_MORE_255_LENGTH_LESS_255    0x07 + 128
 #define _8_DRAW_LINE_VERTICAL_COORDINATES_LESS_255_LENGTH_LESS_255    0x08 + 128
-#define _1_TOUCH_EVENT                                                0x01 + 128
 #define _1_1_EVENT_TOUCH_TAP                                          0x01 + 128
 #define _1_2_EVENT_TOUCH_UP                                           0x02 + 128
 #define _1_3_EVENT_TOUCH_DOWN                                         0x03 + 128
@@ -118,17 +117,26 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  //drawRect(10, 10, 40,  40,  255,     0,     0,  true);
-  //drawRect(40, 10, 70,  40,    0,   255,     0,  true);
-  //drawRect(70, 10, 100, 40,    0,     0,   255,  true);
+  //drawLine(20,20,50,50,255,255,255);
 
-  drawLine(20,20,50,50,255,255,255);
+  byte message[] = {
+    _0_MODE_OPTION,
+    _0_2_DRAW_MODE,
+    _2_DRAW_PIXEL_COORDINATES_LESS_255,
+    5,
+    5,
+    255,
+    0,
+    0
+  };
+
+  
+  decodeCommands(message, 8);
 
   #ifdef connector_serial
-    drawString("Test!!!", 10,10,255,255,255,1);
-    Serial.println("Test!!!");
-    delay(1000);
+    //drawString("Test!!!", 10,10,255,255,255,1);
+    //Serial.println("Test!!!");
+    delay(3000);
   #endif
 
   #ifdef connector_wifi_socket_server

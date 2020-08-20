@@ -55,8 +55,6 @@ public class Protocol {
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // EVENTS
-    public static final byte _1_TOUCH_EVENT                     = 0x01;
-
     public static final byte _1_1_EVENT_TOUCH_TAP               = 0x01;
     public static final byte _1_2_EVENT_TOUCH_UP                = 0x02;
     public static final byte _1_3_EVENT_TOUCH_DOWN              = 0x03;

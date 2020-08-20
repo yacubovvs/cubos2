@@ -1,27 +1,14 @@
 byte current_mode = 0;
 byte currentColorScheme = _1_6_3_7_SCREEN_COLORS_24BIT__8_8_8;
 
-byte* decodeCommands(byte* data, unsigned int data_length, boolean lastMessage, int rest_count_max){
+int decodeCommands(byte* data, unsigned int data_length){
     unsigned int x0, y0, x1, y1, x_start, y_start, length;
     unsigned int current_position = 0;
     byte rgb[3];
 
     while (current_position < data_length) {
 
-        if(data_length-current_position<=rest_count_max && !lastMessage){
-            byte rest_data[data_length-current_position];
-            for(int i=0; i<data_length-current_position; i++){
-                rest_data[i] = data[current_position + i];
-            }
-            return  rest_data;
-        }
-
         byte current_byte = data[current_position];
-
-        if(current_byte==_FINISH_BYTES){
-            current_position += 1;
-            continue;
-        }
 
         if(current_byte==_0_MODE_OPTION){
             switch (data[current_position+1]){
@@ -34,6 +21,7 @@ byte* decodeCommands(byte* data, unsigned int data_length, boolean lastMessage, 
                 default:
                     current_mode = _0_0_MODE_SELECT; break;
             }
+            Serial.println("Setting mode");
             current_position += 2;
             continue;
         }
@@ -178,7 +166,7 @@ byte* decodeCommands(byte* data, unsigned int data_length, boolean lastMessage, 
                 break;
         }
     }
-    return data;
+    return current_position;
 }
 
 
@@ -198,7 +186,15 @@ unsigned int f_1_DRAW_PIXEL(byte* data, int current_position){
 }
 
 unsigned int f_2_DRAW_PIXEL_COORDINATES_LESS_255(byte* data, int current_position){
+    Serial.println("f_2_DRAW_PIXEL_COORDINATES_LESS_255");
     if(currentColorScheme==_1_6_3_7_SCREEN_COLORS_24BIT__8_8_8){
+        drawPixel(
+          data[current_position], 
+          data[current_position+1], 
+          data[current_position+2], 
+          data[current_position+3],
+          data[current_position+4]
+        );
         return 5;
     }else if(currentColorScheme==_1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS){
         return 4;
@@ -240,7 +236,7 @@ unsigned int f_8_DRAW_LINE_VERTICAL_COORDINATES_LESS_255_LENGTH_LESS_255(byte* d
 
 void setLine(unsigned int x, unsigned int y, unsigned int length, byte* rgb) {
     for(unsigned int i=0; i<length; i++){
-        setPixel(x+i, y, rgb);
+        //setPixel(x+i, y, rgb);
     }
 }
 
