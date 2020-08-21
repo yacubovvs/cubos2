@@ -1,6 +1,31 @@
 byte current_mode = 0;
 byte currentColorScheme = _1_6_3_7_SCREEN_COLORS_24BIT__8_8_8;
 
+int getDrawOperationLength(byte operation){
+  switch(operation){
+    case _1_DRAW_PIXEL:
+      return 8;
+      break;
+    case _2_DRAW_PIXEL_COORDINATES_LESS_255:
+      return 6;
+      break;
+    case _5_DRAW_LINE_VERTICAL_COORDINATES_MORE_255:
+      return 10;
+      break;
+    case _6_DRAW_LINE_VERTICAL_COORDINATES_LESS_255:
+      return 8;
+      break;
+    case _7_DRAW_LINE_VERTICAL_COORDINATES_MORE_255_LENGTH_LESS_255:
+      return 9;
+      break;
+    case _8_DRAW_LINE_VERTICAL_COORDINATES_LESS_255_LENGTH_LESS_255:
+      return 7;
+      break;
+    default:
+      return 1;
+  }
+}
+
 int decodeCommands(byte* data, unsigned int data_length){
     unsigned int x0, y0, x1, y1, x_start, y_start, length;
     unsigned int current_position = 0;
@@ -73,7 +98,7 @@ int decodeCommands(byte* data, unsigned int data_length){
                                                 setColorScheme(data[current_position+3]);
                                                 break;
                                             default:
-                                                //System.out.println("Unknown screen color parameter");
+                                                Serial.println("Unknown screen color parameter");
                                                 break;
                                         }
                                         current_position+=4;
@@ -83,19 +108,19 @@ int decodeCommands(byte* data, unsigned int data_length){
                                         updateScreen();
                                         break;
                                     default:
-                                        //System.out.println("Unknown screen parameter");
+                                        Serial.println("Unknown screen parameter");
                                         current_position+=3;
                                         break;
                                 }
                                 break;
                             default:
-                                //System.out.println("Unknown parameter");
+                                Serial.println("Unknown parameter");
                                 current_position+=2;
                                 break;
                         }
                         break;
                     default:
-                        //System.out.println("Unknown parameter operation");
+                        Serial.println("Unknown parameter operation");
                         current_position++;
                         break;
                 }
@@ -131,7 +156,7 @@ int decodeCommands(byte* data, unsigned int data_length){
                         updateScreen();
                         break;
                     default:
-                        //System.out.println("Unknown draw mode command");
+                        Serial.println("Unknown draw mode command");
                         current_position += 1;
                         break;
                 }
@@ -160,7 +185,7 @@ int decodeCommands(byte* data, unsigned int data_length){
                     case _1_8_EVENT_TOUCH_ZOOM_FINISHED:
                         break;
                     default:
-                        //System.out.println("CommandDecoder: unknown protocol command recieved");
+                        Serial.println("CommandDecoder: unknown protocol command recieved");
                         current_position += 1;
                 }
                 break;
