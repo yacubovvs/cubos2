@@ -26,8 +26,9 @@ public class ApplicationsList extends App {
         setTopOffset(getServer().settings.getStatusBarHeight());
         setBottomOffset(0);
 
-        tabelContainer = new TabelContainer(TabelContainer.TableType.FIXED_ROWS,4);
+        tabelContainer = new TabelContainer(TabelContainer.TableType.FIXED_ROWS,3);
         tabelContainer.setMargin(15);
+        tabelContainer.setMarginLeft(6);
 
         addIcon("Settings" , "images//icons//apps//settings.png");
         addIcon("Network" , "images//icons//apps//network.png");

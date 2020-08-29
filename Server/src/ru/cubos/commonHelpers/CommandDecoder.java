@@ -30,9 +30,7 @@ public abstract class CommandDecoder {
             if(current_byte==_FINISH_BYTES){
                 current_position += 1;
                 continue;
-            }
-
-            if(current_byte==_0_MODE_OPTION){
+            }else if(current_byte==_0_MODE_OPTION){
                 switch (data[current_position+1]){
                     case _0_1_OPTIONS_MODE:
                         current_mode = _0_1_OPTIONS_MODE; break;

@@ -148,6 +148,8 @@ public class ScrollBar {
             final int y1 = y0 + app.getWindowHeight()-scrollSize*2;
 
             scollBarLength = y1 - y0;
+            if(scollBarLength<0) return;
+            
             image.drawLine( x0, y0, x1, y1, scrollColor);
 
             final int pointWidth  = server.settings.getScrollbarPointWidth();

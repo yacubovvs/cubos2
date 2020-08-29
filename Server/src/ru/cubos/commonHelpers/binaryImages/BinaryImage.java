@@ -21,6 +21,9 @@ public abstract class BinaryImage {
     private String imagePath;
 
     public BinaryImage(int width, int height){
+        if(width<0) width = 0;
+        if(height<0) height = 0;
+
         setWidth(width);
         setHeight(height);
     }

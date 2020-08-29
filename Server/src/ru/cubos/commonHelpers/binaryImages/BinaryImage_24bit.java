@@ -7,9 +7,9 @@ import java.io.IOException;
 public class BinaryImage_24bit extends BinaryImage {
     public BinaryImage_24bit(int width, int height) {
         super(width, height);
-        type = Type.COLOR_24BIT;
 
-        data = new byte[width*height*3];
+        type = Type.COLOR_24BIT;
+        data = new byte[this.width*this.height*3];
 
         for(int i=0; i<data.length; i++){
             data[i] = -128;
