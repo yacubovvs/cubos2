@@ -2,6 +2,8 @@ package ru.cubos.connectors.emulator;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 
 public class ImagePanel extends JPanel {
@@ -13,8 +15,7 @@ public class ImagePanel extends JPanel {
     int offsetSize = 0;
     float scale_k = 1;
 
-    public ImagePanel() {
-    }
+    public ImagePanel() { }
 
     public void loadImage(BufferedImage image){
         setLayout(new BorderLayout());

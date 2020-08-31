@@ -461,7 +461,7 @@ public abstract class View {
 
     public void setBackgroundColor(byte[] backgroundColor) {
         this.backgroundColor = backgroundColor;
-        setRepaintPending(true);
+        setRepaintPending(true, true);
     }
 
     public int getPaddingLeft() {

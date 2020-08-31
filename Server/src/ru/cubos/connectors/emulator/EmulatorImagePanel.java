@@ -3,6 +3,8 @@ package ru.cubos.connectors.emulator;
 import ru.cubos.commonHelpers.ByteConverter;
 import ru.cubos.commonHelpers.Protocol;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
