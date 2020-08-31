@@ -1,4 +1,4 @@
 package ru.cubos.server.system.views.viewListeners;
 
-public class viewListener {
+public abstract class viewListener {
 }

@@ -4,18 +4,41 @@ import ru.cubos.server.Server;
 import ru.cubos.commonHelpers.Colors;
 import ru.cubos.server.system.apps.App;
 import ru.cubos.server.system.events.TouchTapEvent;
+import ru.cubos.server.system.views.DesktopIconView;
 import ru.cubos.server.system.views.IconView;
 import ru.cubos.server.system.views.TextView;
 import ru.cubos.server.system.views.View;
 import ru.cubos.server.system.views.containers.TabelContainer;
 import ru.cubos.server.system.views.containers.VerticalContainer;
+import ru.cubos.server.system.views.viewListeners.ActivationListener;
 import ru.cubos.server.system.views.viewListeners.TouchTapListener;
 
 public class ApplicationsList extends App {
     TabelContainer tabelContainer;
+    ActivationListener activationListener;
+    TouchTapListener touchTapListener;
 
     public ApplicationsList(Server server) {
         super(server);
+
+        activationListener = new ActivationListener() {
+            @Override
+            public void activate(View view) {
+                view.setBackgroundColor(new byte[]{87-128, 0-128, 112-128});
+            }
+
+            @Override
+            public void deactivate(View view) {
+                view.setBackgroundColor(null);
+            }
+        };
+
+        touchTapListener = new TouchTapListener() {
+            @Override
+            public void onTouchTap(View view, TouchTapEvent touchTapEvent) {
+                ApplicationsList.this.focus(view);
+            }
+        };
 
         setWindowTitle("Main menu");
 
@@ -27,7 +50,8 @@ public class ApplicationsList extends App {
         setBottomOffset(0);
 
         tabelContainer = new TabelContainer(TabelContainer.TableType.FIXED_ROWS,3);
-        tabelContainer.setMargin(15);
+        tabelContainer.setMargin(4);
+        tabelContainer.setMarginRight(12);
         tabelContainer.setMarginLeft(6);
 
         addIcon("Settings" , "images//icons//apps//settings.png");
@@ -48,31 +72,12 @@ public class ApplicationsList extends App {
 
     }
 
-    public void addIcon(String name, String iconPath){
-        IconView appIcon = new IconView(iconPath, Colors.COLOR_ALFA);
-        appIcon.setHorizontalAlign(View.HorizontalAlign.ALIGN_HORIZONTAL_CENTER);
+    private void addIcon(String name, String iconPath){
+        DesktopIconView desktopIconView = new DesktopIconView(name , iconPath);
+        desktopIconView.setActivationListener(activationListener);
+        desktopIconView.setOnTouchTapListener(this, touchTapListener);
 
-        TextView appName = new TextView(name);
-        appName.setHorizontalAlign(View.HorizontalAlign.ALIGN_HORIZONTAL_CENTER);
-        appName.setPadding(10);
-        appName.setPaddingBottom(20);
-        appName.setPaddingTop(10);
-
-
-        VerticalContainer appContainer = new VerticalContainer();
-
-        appContainer.setId(name);
-        appContainer.setOnTouchTapListener(this, new TouchTapListener(){
-            @Override
-            public void onTouchTap(TouchTapEvent touchTapEvent) {
-                System.out.println("OnClick listener ID: " + name);
-            }
-        });
-
-
-
-        appContainer.add(appIcon);
-        appContainer.add(appName);
-        tabelContainer.add(appContainer);
+        tabelContainer.add(desktopIconView);
     }
+
 }

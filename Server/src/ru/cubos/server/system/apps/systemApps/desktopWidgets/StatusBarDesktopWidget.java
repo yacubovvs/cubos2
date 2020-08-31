@@ -3,10 +3,15 @@ package ru.cubos.server.system.apps.systemApps.desktopWidgets;
 import ru.cubos.server.Server;
 import ru.cubos.commonHelpers.binaryImages.BinaryImage_24bit;
 import ru.cubos.commonHelpers.Colors;
+import ru.cubos.server.system.apps.App;
 import ru.cubos.server.system.events.TouchDownEvent;
+import ru.cubos.server.system.events.TouchTapEvent;
 import ru.cubos.server.system.views.IconView;
+import ru.cubos.server.system.views.View;
 import ru.cubos.server.system.views.containers.LinearContainer;
+import ru.cubos.server.system.views.viewListeners.ActivationListener;
 import ru.cubos.server.system.views.viewListeners.TouchDownListener;
+import ru.cubos.server.system.views.viewListeners.TouchTapListener;
 
 public class StatusBarDesktopWidget extends DesktopWidget {
     public StatusBarDesktopWidget(Server server) {
@@ -19,9 +24,10 @@ public class StatusBarDesktopWidget extends DesktopWidget {
         IconView iconView = new IconView("images//icons//startButton.png", Colors.COLOR_ALFA);
         iconView.setMargin((getSettings().getStatusBarHeight() - iconView.getIcon().getHeight())/2);
 
+
         iconView.setOnTouchDownListener(this, new TouchDownListener(){
             @Override
-            public void onTouchDown(TouchDownEvent touchDownEvent) {
+            public void onTouchDown(View view, TouchDownEvent touchDownEvent) {
                 getServer().openApp(new MainMenuDesktopWidget(getServer()));
             }
         });

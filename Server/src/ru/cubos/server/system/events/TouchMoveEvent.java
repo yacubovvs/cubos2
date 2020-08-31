@@ -14,7 +14,7 @@ public class TouchMoveEvent extends EventTouch {
 
     @Override
     public void runViewEvent(View view) {
-        view.getTouchMoveListener().onTouchMove(this);
+        view.getTouchMoveListener().onTouchMove(view, this);
     }
 
     public boolean isOnTitleBarEvent(App app){

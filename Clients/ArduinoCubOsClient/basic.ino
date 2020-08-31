@@ -25,3 +25,7 @@ uint32_t bytes_to_value(byte byte0, byte byte1, byte byte2){
 uint16_t bytes_to_value(byte byte0, byte byte1){
   return (byte1<<8)|byte0;
 }
+
+uint16_t bytes_to_value_inverse(byte byte1, byte byte0){
+  return (byte1<<8)|byte0;
+}

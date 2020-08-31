@@ -34,6 +34,17 @@ public abstract class App {
     private boolean movingEnable = true;
     private boolean resizingEnable = true;
 
+    private View activeView;
+
+    protected void focus(View view){
+        if(activeView!=null && activeView.getActivationListener()!=null){
+            activeView.getActivationListener().deactivate(activeView);
+        }
+
+        activeView = view;
+        activeView.getActivationListener().activate(activeView);
+    }
+
     private HashMap<Event.Type, List<View>> eventViewLists = new HashMap<>();
     public List<View> getEventList(Event.Type type){
         return eventViewLists.get(type);

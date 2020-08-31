@@ -12,7 +12,7 @@ public class Settings {
      *
      * */
 
-    private char systemScreenWidth = 240;
+    private char systemScreenWidth = 320;
     private char systemScreenHeight = 240;
     private byte systemScreenColorScheme = _1_6_3_7_SCREEN_COLORS_24BIT__8_8_8;
     /*

@@ -31,6 +31,8 @@ public abstract class View {
         app.addEventView(this, Event.Type.EVENT_TOUCH_TAP);
     }
 
+
+
     public TouchUpListener getTouchUpListener() {
         return touchUpListener;
     }
@@ -133,6 +135,14 @@ public abstract class View {
 
     public void setBorderBottom(int borderBottom) {
         this.borderBottom = borderBottom;
+    }
+
+    public ActivationListener getActivationListener() {
+        return activationListener;
+    }
+
+    public void setActivationListener(ActivationListener activationListener) {
+        this.activationListener = activationListener;
     }
 
     public enum SizeSource {
@@ -243,6 +253,7 @@ public abstract class View {
     private EventTouch                  touchZoomOutListener;
     private EventTouch                  touchZoomFinishedListener;
     private EventTouch                  touchLongListener;
+    private ActivationListener          activationListener;
 
     public View() {
 
@@ -283,6 +294,10 @@ public abstract class View {
 
     public void setRepaintPending(boolean repaintPending) {
         this.repaintPending = repaintPending;
+        if(repaintPending) {
+            if(getParent()!=null)getParent().setRepaintPending(true);
+            else if(getAppParent()!=null) getAppParent().setRepaintPending(true, false);
+        }
     }
 
     public void setRepaintPending(boolean repaintPending, boolean anything) {
@@ -446,6 +461,7 @@ public abstract class View {
 
     public void setBackgroundColor(byte[] backgroundColor) {
         this.backgroundColor = backgroundColor;
+        setRepaintPending(true);
     }
 
     public int getPaddingLeft() {
@@ -560,4 +576,7 @@ public abstract class View {
     protected int getMarginLeftRight() {
         return getMarginLeft() + getMarginRight();
     }
+
+
 }
+

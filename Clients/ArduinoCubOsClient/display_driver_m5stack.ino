@@ -11,8 +11,8 @@ void driver_clearScreen(){
 }
 
 uint32_t get_m5ColorFromPallette(byte r, byte g, byte b){
-  //return (((( r*31/255) <<11)|( g*31/255) <<6)|( b*31/255) <<0);
-  return (((( r ) <<11)|( g ) <<6)|( b ) <<0);
+  return (((( r*31/255) <<11)|( g*31/255) <<6)|( b*31/255) <<0);
+  //return (((( r ) <<11)|( g ) <<6)|( b ) <<0);
 }
 
 void setup_displayDriver(){

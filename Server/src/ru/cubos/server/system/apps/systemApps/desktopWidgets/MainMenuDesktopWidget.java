@@ -40,7 +40,7 @@ public class MainMenuDesktopWidget extends DesktopWidget {
 
         iconView.setOnTouchDownListener(this, new TouchDownListener() {
             @Override
-            public void onTouchDown(TouchDownEvent touchDownEvent) {
+            public void onTouchDown(View view, TouchDownEvent touchDownEvent) {
                 System.out.println("On widget menu element click");
             }
         });

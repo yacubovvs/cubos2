@@ -28,7 +28,7 @@ public class WindowTitleBar extends HorizontalContainer {
 
         close_button.setOnTouchTapListener(app, new TouchTapListener() {
             @Override
-            public void onTouchTap(TouchTapEvent touchTapEvent) {
+            public void onTouchTap(View view, TouchTapEvent touchTapEvent) {
                 // TODO: Now not working, but should
                 System.out.println("On title close press");
             }
@@ -40,7 +40,7 @@ public class WindowTitleBar extends HorizontalContainer {
 
         fullscreen_button.setOnTouchTapListener(app, new TouchTapListener() {
             @Override
-            public void onTouchTap(TouchTapEvent touchTapEvent) {
+            public void onTouchTap(View view, TouchTapEvent touchTapEvent) {
                 System.out.println("On title fullscreen press");
             }
         });
@@ -51,7 +51,7 @@ public class WindowTitleBar extends HorizontalContainer {
 
         rollup_button.setOnTouchTapListener(app, new TouchTapListener() {
             @Override
-            public void onTouchTap(TouchTapEvent touchTapEvent) {
+            public void onTouchTap(View view, TouchTapEvent touchTapEvent) {
                 System.out.println("On title rollup press");
             }
         });

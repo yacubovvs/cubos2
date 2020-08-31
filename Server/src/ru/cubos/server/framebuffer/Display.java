@@ -65,6 +65,8 @@ public class Display extends BinaryImage_24bit {
                     }
 
                     if(lineLength>1){
+                        if(lineLength>255) lineLength=255; // TODO: is fixing anknown error on _6_DRAW_LINE_VERTICAL_COORDINATES_LESS_255 for serial connect
+
                         DisplayCommand displayCommand = new DisplayCommand();
 
                         if(x>255 || y>255) {
@@ -130,10 +132,12 @@ public class Display extends BinaryImage_24bit {
                             byte y_bytes[] = char_to_bytes((char) y);
 
                             if(lineLength>255) {
+
                                 byte lineLength_bytes[] = char_to_bytes((char) lineLength);
 
                                 displayCommand.type = _6_DRAW_LINE_VERTICAL_COORDINATES_LESS_255;
                                 if (colorScheme == _1_6_3_7_SCREEN_COLORS_24BIT__8_8_8) {
+
                                     displayCommand.params = new byte[]{
                                             uByte(x),   // X0
                                             uByte(y),   // Y0
@@ -143,6 +147,9 @@ public class Display extends BinaryImage_24bit {
                                             newPixel[1],   // G
                                             newPixel[2],   // B
                                     };
+
+                                    //if(true) continue; //n103*/
+
                                 } else if (colorScheme == _1_6_3_5_SCREEN_COLORS_8BIT_256_COLORS) {
                                     displayCommand.params = new byte[]{
                                             uByte(x),   // X0
@@ -184,6 +191,7 @@ public class Display extends BinaryImage_24bit {
                     DisplayCommand displayCommand = new DisplayCommand();
 
                     if(x>255 || y>255) {
+
                         byte x_bytes[] = char_to_bytes((char) x);
                         byte y_bytes[] = char_to_bytes((char) y);
 

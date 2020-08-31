@@ -9,7 +9,7 @@ public class TouchUpEvent extends EventTouch {
 
     @Override
     public void runViewEvent(View view) {
-        view.getTouchUpListener().onTouchUp(this);
+        view.getTouchUpListener().onTouchUp(view, this);
     }
 
     public TouchUpEvent(int x, int y){

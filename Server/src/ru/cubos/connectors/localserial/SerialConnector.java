@@ -20,10 +20,20 @@ public class SerialConnector implements Connectorable {
     static SerialPort serialPort;
     String serialPortName = "";
     private Server server;
+    boolean startOnConnect = false;
+    int serialPortSpeed = 115200;
 
     public SerialConnector(String serialPortName){
         this.serialPortName = serialPortName;
         serialPort = new SerialPort(serialPortName);
+    }
+
+    public SerialConnector(String serialPortName, boolean startOnConnect,  int serialPortSpeed){
+        this.serialPortName = serialPortName;
+        serialPort = new SerialPort(serialPortName);
+        this.serialPortSpeed = serialPortSpeed;
+
+        this.startOnConnect = startOnConnect;
     }
 
     private class PortReader implements SerialPortEventListener {
@@ -91,14 +101,17 @@ public class SerialConnector implements Connectorable {
 
     public void connect() throws SerialPortException {
         serialPort.openPort();
+        serialPort.setParams(serialPortSpeed, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
         //serialPort.setParams(SerialPort.BAUDRATE_115200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+
         //serialPort.setParams(SerialPort.BAUDRATE_256000, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
-        serialPort.setParams(2048000, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+        //serialPort.setParams(512000, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
         //serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN | SerialPort.FLOWCONTROL_RTSCTS_OUT);
         //SerialPort.MASK_RXCHAR
 
         //n103
         serialPort.addEventListener(new PortReader(), SerialPort.MASK_RXCHAR);
+        if(startOnConnect) server.start();
 
     }
 
@@ -116,15 +129,23 @@ public class SerialConnector implements Connectorable {
     public boolean OnDataGotFromServer(byte[] data) {
         try {
 
+            byte data_out[] = new byte[data.length];
+            for(int i=0; i<data.length; i++){
+                data_out[i] = (byte)(data[i] + 128);
+            }
+            serialPort.writeBytes(data_out);
+
+            /*
             for(int i=0; i<data.length; i++){
                 serialPort.writeByte((byte)(data[i]+128));
-                if(i%64==0 || i==data.length)
+
+                if( (sendSerialDelay>0) && (i%64==0 || i==data.length) )
                 try {
-                    Thread.sleep(130);
+                    Thread.sleep(sendSerialDelay);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }
+            }*/
         } catch (SerialPortException e) {
             e.printStackTrace();
         }
