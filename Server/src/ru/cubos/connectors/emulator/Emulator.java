@@ -2,10 +2,12 @@ package ru.cubos.connectors.emulator;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 
 public abstract class Emulator extends JFrame {
-    private JPanel imageWrapper;
+    private ImagePanel imageWrapper;
     private BufferedImage image;
 
     protected int width;
@@ -24,6 +26,23 @@ public abstract class Emulator extends JFrame {
         image = new BufferedImage(getScreenWidth(), getScreenHeight(), BufferedImage.TYPE_INT_RGB);
         updateImage();
         setVisible(true);
+
+        addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent keyEvent) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent keyEvent) {
+                imageWrapper.onKeyPressed(keyEvent);
+            }
+
+            @Override
+            public void keyReleased(KeyEvent keyEvent) {
+
+            }
+        });
     }
 
     public BufferedImage getImage(){
@@ -32,12 +51,12 @@ public abstract class Emulator extends JFrame {
 
     public void updateImage(BufferedImage image){
         this.image = image;
-        ((ImagePanel)imageWrapper).setImage(image);
+        imageWrapper.setImage(image);
         repaint();
     }
 
     public void updateImage(){
-        ((ImagePanel)imageWrapper).setImage(image);
+        imageWrapper.setImage(image);
         repaint();
     }
 

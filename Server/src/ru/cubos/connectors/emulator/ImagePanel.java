@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage;
 
 public class ImagePanel extends JPanel {
     BufferedImage image;
-    private JPanel imageWrapper;
 
     float image_k = 1;
     boolean verticalOffset = false;
@@ -20,6 +19,10 @@ public class ImagePanel extends JPanel {
     public void loadImage(BufferedImage image){
         setLayout(new BorderLayout());
         setImage(image);
+    }
+
+    public void onKeyPressed(KeyEvent keyEvent){
+        return;
     }
 
     public void setImage(BufferedImage image) {

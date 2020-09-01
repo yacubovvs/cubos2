@@ -64,4 +64,6 @@ public class Protocol {
     public static final byte _1_7_EVENT_TOUCH_ZOOM_OUT          = 0x07;
     public static final byte _1_8_EVENT_TOUCH_ZOOM_FINISHED     = 0x08;
 
+    public static final byte _1_9_EVENT_BUTTON_PRESSED          = 0x09;
+
 }
