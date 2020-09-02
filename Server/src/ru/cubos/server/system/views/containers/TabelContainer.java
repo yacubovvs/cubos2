@@ -2,9 +2,13 @@ package ru.cubos.server.system.views.containers;
 
 import ru.cubos.server.system.views.View;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TabelContainer extends LinearContainer {
+
+    public List<View> ElementsList = new ArrayList<>();
+
     public enum TableType {
         FIXED_ROWS,
         FIXED_COLS
@@ -32,6 +36,7 @@ public class TabelContainer extends LinearContainer {
 
     @Override
     public void add(View view) {
+        ElementsList.add(view);
         view.setWidth_k(((float)1)/fixed_num);
         if (((LinearContainer)getChildren().get(getChildren().size() - 1)).getChildren().size() < fixed_num){
             ((LinearContainer)getChildren().get(getChildren().size() - 1)).add(view);

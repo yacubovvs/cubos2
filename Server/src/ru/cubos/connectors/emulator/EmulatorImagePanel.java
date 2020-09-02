@@ -13,11 +13,14 @@ public class EmulatorImagePanel extends ImagePanel {
 
     @Override
     public void onKeyPressed(KeyEvent keyEvent){
-        byte eventData[] = new byte[3];
+        byte eventData[] = new byte[5];
+        byte keyCode[] = ByteConverter.char_to_bytes((char)(keyEvent.getKeyCode()));
         byte keyChar[] = ByteConverter.char_to_bytes((char)(keyEvent.getKeyChar()));
         eventData[0] = Protocol._1_9_EVENT_BUTTON_PRESSED;
-        eventData[1] = keyChar[0];
-        eventData[2] = keyChar[1];
+        eventData[1] = keyCode[0];
+        eventData[2] = keyCode[1];
+        eventData[3] = keyChar[0];
+        eventData[4] = keyChar[1];
         emulator.sendToServer(eventData);
     }
 

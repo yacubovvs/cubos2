@@ -1,22 +1,54 @@
 package ru.cubos.server.system.apps.systemApps;
 
+import ru.cubos.commonHelpers.Buttons;
 import ru.cubos.server.Server;
 import ru.cubos.commonHelpers.Colors;
 import ru.cubos.server.system.apps.App;
+import ru.cubos.server.system.events.TouchDownEvent;
+import ru.cubos.server.system.events.TouchMoveEvent;
 import ru.cubos.server.system.events.TouchTapEvent;
+import ru.cubos.server.system.events.TouchUpEvent;
 import ru.cubos.server.system.views.DesktopIconView;
 import ru.cubos.server.system.views.IconView;
 import ru.cubos.server.system.views.TextView;
 import ru.cubos.server.system.views.View;
 import ru.cubos.server.system.views.containers.TabelContainer;
 import ru.cubos.server.system.views.containers.VerticalContainer;
-import ru.cubos.server.system.views.viewListeners.ActivationListener;
-import ru.cubos.server.system.views.viewListeners.TouchTapListener;
+import ru.cubos.server.system.views.viewListeners.*;
+
+import java.sql.SQLOutput;
 
 public class ApplicationsList extends App {
     TabelContainer tabelContainer;
     ActivationListener activationListener;
     TouchTapListener touchTapListener;
+    TouchDownListener touchDownListener;
+    int selectedElement = -1;
+
+    @Override
+    public void onButtonPressed(char code, char buttonChar){
+        super.onButtonPressed(code, buttonChar);
+
+        Buttons.ButtonType buttonType = Buttons.getButtonType(code, buttonChar);
+        if(buttonType==null) return;
+
+        switch (buttonType){
+            case ARROW_RIGHT:
+                selectedElement++;
+                if(selectedElement>tabelContainer.ElementsList.size()-1){selectedElement=0;}
+                focus(tabelContainer.ElementsList.get(selectedElement));
+                break;
+            case ARROW_LEFT:
+                selectedElement--;
+                if(selectedElement<0)selectedElement=tabelContainer.ElementsList.size()-1;
+                focus(tabelContainer.ElementsList.get(selectedElement));
+                break;
+            case ENTER:
+                break;
+        }
+
+        return;
+    }
 
     public ApplicationsList(Server server) {
         super(server);
@@ -25,6 +57,21 @@ public class ApplicationsList extends App {
             @Override
             public void activate(View view) {
                 view.setBackgroundColor(new byte[]{87-128, 0-128, 112-128});
+
+                int coords[] = ApplicationsList.this.getBaseContainer().getRenderCoordinatesInContainer(view);
+                final int x = coords[0];
+                final int y = coords[1];
+
+                //System.out.println("X: " + coords[0] + ", Y: " + coords[1] + ", scrollY: " + ApplicationsList.this.getScrollY());
+
+                if(y<0){
+                    ApplicationsList.this.setScrollY(ApplicationsList.this.getScrollY() + y - 4);
+                }else if(y + view.getRenderHeight()>ApplicationsList.this.getBaseContainer().getRenderHeight() + ApplicationsList.this.getBaseContainer().getRenderY() + ApplicationsList.this.getScrollY()){
+                    //ApplicationsList.this.setScrollY(ApplicationsList.this.getScrollY() + y + ApplicationsList.this.getBaseContainer().getRenderHeight() - view.getRenderHeight() - 4);
+                    ApplicationsList.this.setScrollY(ApplicationsList.this.getScrollY() + y - ApplicationsList.this.getBaseContainer().getRenderHeight()  + view.getRenderHeight()/2 + 20);
+                }
+
+                //System.out.println("getRenderHeight " + view.getRenderHeight());
             }
 
             @Override
@@ -36,7 +83,14 @@ public class ApplicationsList extends App {
         touchTapListener = new TouchTapListener() {
             @Override
             public void onTouchTap(View view, TouchTapEvent touchTapEvent) {
-                ApplicationsList.this.focus(view);
+
+            }
+        };
+
+        touchDownListener = new TouchDownListener() {
+            @Override
+            public void onTouchDown(View view, TouchDownEvent touchDownEvent) {
+                ApplicationsList.this.focus(null);
             }
         };
 
@@ -76,6 +130,7 @@ public class ApplicationsList extends App {
         DesktopIconView desktopIconView = new DesktopIconView(name , iconPath);
         desktopIconView.setActivationListener(activationListener);
         desktopIconView.setOnTouchTapListener(this, touchTapListener);
+        desktopIconView.setOnTouchDownListener(this, touchDownListener);
 
         tabelContainer.add(desktopIconView);
     }

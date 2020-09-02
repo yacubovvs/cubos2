@@ -11,7 +11,7 @@ public abstract class CommandDecoder {
     public byte currentColorScheme = _1_6_3_7_SCREEN_COLORS_24BIT__8_8_8;
 
     public byte[] decodeCommands(byte data[], boolean lastMessage, final int rest_count_max){
-        char x0, y0, x1, y1, x_start, y_start, length, button;
+        char x0, y0, x1, y1, x_start, y_start, length;
         int current_position = 0;
         byte rgb[] = null;
 
@@ -206,9 +206,10 @@ public abstract class CommandDecoder {
                         case _1_8_EVENT_TOUCH_ZOOM_FINISHED:
                             break;
                         case _1_9_EVENT_BUTTON_PRESSED:
-                            button      = ByteConverter.bytesToChar(uByte(data[current_position + 1]),  uByte(data[current_position + 2]));
-                            onButtonPressed(button);
-                            current_position += 3;
+                            x0      = ByteConverter.bytesToChar(uByte(data[current_position + 1]),  uByte(data[current_position + 2]));
+                            x1      = ByteConverter.bytesToChar(uByte(data[current_position + 3]),  uByte(data[current_position + 4]));
+                            onButtonPressed(x1, x0);
+                            current_position += 5;
                             break;
                         default:
                             System.out.println("CommandDecoder: unknown protocol command recieved");
@@ -369,9 +370,7 @@ public abstract class CommandDecoder {
     protected void setScreenWidth(char value){}
     protected void setColorScheme(byte value){}
     protected void updateScreen(){}
-    protected void onButtonPressed(char button){
-        return;
-    }
+    protected void onButtonPressed(char code, char buttonChar){}
 
 
 }

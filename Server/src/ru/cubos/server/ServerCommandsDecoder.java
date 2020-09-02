@@ -41,4 +41,10 @@ public class ServerCommandsDecoder extends CommandDecoder {
         server.settings.setSystemScreenColorScheme(value);
         server.display.setColorScheme(value);
     }
+
+    @Override
+    protected void onButtonPressed(char code, char buttonChar){
+        App app = server.getActiveApp();
+        if(app!=null) app.onButtonPressed(code, buttonChar);
+    }
 }

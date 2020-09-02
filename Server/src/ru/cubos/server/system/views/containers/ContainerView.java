@@ -15,6 +15,10 @@ public abstract class ContainerView extends View {
 
     protected List<View> children = new ArrayList<>();
 
+    public int[] getRenderCoordinatesInContainer(View view){
+        return new int[]{ view.getRenderX() - this.getRenderX() - getScrollX(), view.getRenderY() - this.getRenderY() - getScrollY()};
+    }
+
     @Override
     public void recountPositionOnRenderImage(int x, int y){
         super.recountPositionOnRenderImage(x,y);

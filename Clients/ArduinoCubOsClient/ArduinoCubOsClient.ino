@@ -23,6 +23,9 @@
 //#define ssid "DIR-615"
 //#define password "tsdurovo6200"
 
+// CONTROLS
+#define controls_m5stack
+
 char * ssid = "DIR-615";
 char * password = "tsdurobo6200";
 /*
@@ -295,7 +298,7 @@ void setup() {
 void loop() {
 
   #ifdef connector_serial
-    if(isSerialAvailable()){
+    while(isSerialAvailable()){
       decodeCommands();
     }
   #endif
@@ -304,4 +307,5 @@ void loop() {
     socket_server_loop();
   #endif
 
+  checkAndSendControls();
 }
