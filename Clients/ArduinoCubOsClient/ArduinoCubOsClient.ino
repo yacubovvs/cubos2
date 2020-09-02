@@ -88,6 +88,7 @@ char * password = "tsdurobo6200";
 #define L_1_6_EVENT_TOUCH_ZOOM_IN                                      (byte)(0x06 + 128)
 #define L_1_7_EVENT_TOUCH_ZOOM_OUT                                     (byte)(0x07 + 128)
 #define L_1_8_EVENT_TOUCH_ZOOM_FINISHED                                (byte)(0x08 + 128)
+#define L_1_9_EVENT_BUTTON_PRESSED                                     (byte)(0x09 + 128)
 
 /*
 #define L_0_MODE_OPTION                                                -128 + 128
@@ -264,7 +265,7 @@ void setup() {
     };
 
     sendMessage(message, 29);
-    //sendMessage("Ososo");
+
   #endif
 
   #ifdef connector_wifi_socket_server
