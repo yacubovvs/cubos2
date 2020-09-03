@@ -15,8 +15,18 @@ void checkAndSendControls(){
         
         byte message[] = {
           L_1_9_EVENT_BUTTON_PRESSED - 128,
-          0, 37,
-          0, 28
+          0, 
+          37,
+          255, 
+          255,
+          L_FINISH_BYTES - 128,
+          L_FINISH_BYTES - 128,
+          L_FINISH_BYTES - 128,
+          L_FINISH_BYTES - 128,
+          L_FINISH_BYTES - 128,
+          L_FINISH_BYTES - 128,
+          L_FINISH_BYTES - 128,
+          L_FINISH_BYTES - 128,
         };
         sendMessage(message, 5);
         beep();
@@ -29,8 +39,18 @@ void checkAndSendControls(){
         
         byte message[] = {
           L_1_9_EVENT_BUTTON_PRESSED - 128,
-          0, 10,
-          0, 10
+          0, 
+          10,
+          0, 
+          10,
+          L_FINISH_BYTES - 128,
+          L_FINISH_BYTES - 128,
+          L_FINISH_BYTES - 128,
+          L_FINISH_BYTES - 128,
+          L_FINISH_BYTES - 128,
+          L_FINISH_BYTES - 128,
+          L_FINISH_BYTES - 128,
+          L_FINISH_BYTES - 128,
         };
         sendMessage(message, 5);
         beep();
@@ -41,14 +61,23 @@ void checkAndSendControls(){
     if(M5.BtnC.read()){
       if( buttons[2]==false){
 
-        /*
         byte message[] = {
           L_1_9_EVENT_BUTTON_PRESSED - 128,
-          0, 39,
-          0, 29
+          0, 
+          39,
+          255, 
+          255,
+          L_FINISH_BYTES - 128,
+          L_FINISH_BYTES - 128,
+          L_FINISH_BYTES - 128,
+          L_FINISH_BYTES - 128,
+          L_FINISH_BYTES - 128,
+          L_FINISH_BYTES - 128,
+          L_FINISH_BYTES - 128,
+          L_FINISH_BYTES - 128,
         };
         sendMessage(message, 5);
-        */
+        
         beep();
         buttons[2]=true;
       }
@@ -59,6 +88,7 @@ void checkAndSendControls(){
 
 #ifdef controls_m5stack
   void beep(){
+    return;
     M5.Speaker.beep();
     delay(15);
     M5.Speaker.mute();
