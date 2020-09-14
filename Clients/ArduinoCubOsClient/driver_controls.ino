@@ -28,7 +28,7 @@ void checkAndSendControls(){
           L_FINISH_BYTES - 128,
           L_FINISH_BYTES - 128,
         };
-        sendMessage(message, 5);
+        sendMessage(message, 13);
         beep();
         buttons[0]=true;
       }
@@ -52,7 +52,7 @@ void checkAndSendControls(){
           L_FINISH_BYTES - 128,
           L_FINISH_BYTES - 128,
         };
-        sendMessage(message, 5);
+        sendMessage(message, 13);
         beep();
         buttons[1]=true;
       }
@@ -76,7 +76,7 @@ void checkAndSendControls(){
           L_FINISH_BYTES - 128,
           L_FINISH_BYTES - 128,
         };
-        sendMessage(message, 5);
+        sendMessage(message, 13);
         
         beep();
         buttons[2]=true;

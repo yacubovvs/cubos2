@@ -90,6 +90,7 @@ public class SerialConnector implements Connectorable {
                                 && bytes[count-8] == _FINISH_BYTES
                 ){
                     server.serverCommandsDecoder.decodeCommands(rest_bytes, true, 0);
+                    rest_bytes = null;
                     //Profiler.start("Message");
                 }
             //}
