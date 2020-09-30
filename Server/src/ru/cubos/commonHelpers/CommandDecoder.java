@@ -7,7 +7,7 @@ import static ru.cubos.commonHelpers.Protocol._8_DRAW_LINE_VERTICAL_COORDINATES_
 import static ru.cubos.commonHelpers.ByteConverter.uByte;
 
 public abstract class CommandDecoder {
-    public byte current_mode = _0_3_EVENT_MODE;
+    public byte current_mode = _0_2_DRAW_MODE;
     public byte currentColorScheme = _1_6_3_7_SCREEN_COLORS_24BIT__8_8_8;
 
     public byte[] decodeCommands(byte data[], boolean lastMessage, final int rest_count_max){
@@ -200,10 +200,13 @@ public abstract class CommandDecoder {
                             execTouchEvent(new TouchMoveFinishedEvent(x0, y0, x_start, y_start));
                             break;
                         case _1_6_EVENT_TOUCH_ZOOM_IN:
+                            current_position += 1;
                             break;
                         case _1_7_EVENT_TOUCH_ZOOM_OUT:
+                            current_position += 1;
                             break;
                         case _1_8_EVENT_TOUCH_ZOOM_FINISHED:
+                            current_position += 1;
                             break;
                         case _1_9_EVENT_BUTTON_PRESSED:
                             x0      = ByteConverter.bytesToChar(uByte(data[current_position + 1]),  uByte(data[current_position + 2]));

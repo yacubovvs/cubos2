@@ -162,6 +162,15 @@ public class ServerSocket {
         public void run() {
             while (messagesToSend.size()>0) {
 
+                if(out==null){
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    continue;
+                }
+
                 try {
                     byte data[] = messagesToSend.get(0);
                     out.write(data);

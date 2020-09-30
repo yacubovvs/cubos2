@@ -10,7 +10,7 @@ import static com.example.androidcubosclient.helpers.ByteConverter.uByte;
 import static com.example.androidcubosclient.helpers.Protocol.*;
 
 public class CommandDecoder {
-    byte current_mode = 0;
+    byte current_mode = _0_2_DRAW_MODE;
     public byte currentColorScheme = _1_6_3_7_SCREEN_COLORS_24BIT__8_8_8;
     Bitmap bitmap;
     CanvasScreen canvasScreen;
@@ -18,7 +18,6 @@ public class CommandDecoder {
     public CommandDecoder(Bitmap bitmap, CanvasScreen canvasScreen) {
         this.bitmap = bitmap;
         this.canvasScreen = canvasScreen;
-
     }
 
     public byte[] decodeCommands(byte data[], boolean lastMessage, final int rest_count_max){
