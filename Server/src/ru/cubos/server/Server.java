@@ -37,11 +37,14 @@ public class Server {
     private BinaryImage_24bit backGroundImage;
     public ServerCommandsDecoder serverCommandsDecoder;
 
-
-    public Server(Connectorable connector) {
+    public Server(Connectorable connector, Settings setted_settings) {
         this.connector = connector;
         serverCommandsDecoder = new ServerCommandsDecoder(this);
-        settings = new Settings();
+        if(settings==null){
+            settings = new Settings();
+        } else {
+            settings = setted_settings;
+        }
 
         // TODO: delete this string later:
         display = new Display(settings.getSystemScreenWidth(), settings.getSystemScreenHeight());
@@ -76,6 +79,10 @@ public class Server {
             }
         });
         displayThread.start();
+    }
+
+    public Server(Connectorable connector) {
+        this(connector, null);
     }
 
 
