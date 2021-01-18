@@ -83,7 +83,7 @@ public class ApplicationsList extends App {
         touchTapListener = new TouchTapListener() {
             @Override
             public void onTouchTap(View view, TouchTapEvent touchTapEvent) {
-
+                System.out.println("Clicked");
             }
         };
 
@@ -98,10 +98,17 @@ public class ApplicationsList extends App {
 
         getBaseContainer().setBackgroundColor(new byte[]{-96, -96, -96});
 
-        setLeftOffset(0);
-        setRightOffset(0);
-        setTopOffset(getServer().settings.getStatusBarHeight());
-        setBottomOffset(0);
+        if(server.settings.isWindowMode()) {
+            setLeftOffset(30);
+            setRightOffset(30);
+            setTopOffset(80);
+            setBottomOffset(40);
+        }else{
+            setLeftOffset(0);
+            setRightOffset(0);
+            setTopOffset(getServer().settings.getStatusBarHeight());
+            setBottomOffset(0);
+        }
 
         tabelContainer = new TabelContainer(TabelContainer.TableType.FIXED_ROWS,3);
         tabelContainer.setMargin(4);
@@ -129,7 +136,13 @@ public class ApplicationsList extends App {
     private void addIcon(String name, String iconPath){
         DesktopIconView desktopIconView = new DesktopIconView(name , iconPath);
         desktopIconView.setActivationListener(activationListener);
-        desktopIconView.setOnTouchTapListener(this, touchTapListener);
+        //desktopIconView.setOnTouchTapListener(this, touchTapListener);
+        desktopIconView.setOnTouchTapListener(this, new TouchTapListener() {
+            @Override
+            public void onTouchTap(View view, TouchTapEvent touchTapEvent) {
+                System.out.println("Tap on " + name);
+            }
+        });
         desktopIconView.setOnTouchDownListener(this, touchDownListener);
 
         tabelContainer.add(desktopIconView);

@@ -28,7 +28,8 @@ public class StatusBarDesktopWidget extends DesktopWidget {
         iconView.setOnTouchDownListener(this, new TouchDownListener(){
             @Override
             public void onTouchDown(View view, TouchDownEvent touchDownEvent) {
-                getServer().openApp(new MainMenuDesktopWidget(getServer()));
+                MainMenuDesktopWidget mainMenuDesktopWidget = new MainMenuDesktopWidget(getServer());
+                getServer().openApp(mainMenuDesktopWidget);
             }
         });
 

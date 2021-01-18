@@ -37,6 +37,7 @@ public abstract class EventTouch extends Event {
         if(viewList==null) return;
         for(View view: viewList){
             if(
+                view.getRenderImage()!=null &&
                 view.isVisible() &&
                 view.getRenderX() <= x &&
                 view.getRenderY() <= y &&

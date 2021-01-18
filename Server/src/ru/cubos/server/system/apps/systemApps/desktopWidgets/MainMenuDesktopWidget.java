@@ -38,6 +38,13 @@ public class MainMenuDesktopWidget extends DesktopWidget {
         IconView iconView7 = new IconView("images//icons//texteditor.png", Colors.COLOR_ALFA);
         */
 
+        this.getBaseContainer().setOnTouchDownListener(this, new TouchDownListener() {
+            @Override
+            public void onTouchDown(View view, TouchDownEvent touchDownEvent) {
+                System.out.println("On menu form click");
+            }
+        });
+
         iconView.setOnTouchDownListener(this, new TouchDownListener() {
             @Override
             public void onTouchDown(View view, TouchDownEvent touchDownEvent) {

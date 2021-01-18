@@ -8,6 +8,7 @@ import ru.cubos.server.settings.Settings;
 import ru.cubos.server.system.ButtonBar;
 import ru.cubos.server.system.TimeWidgetView;
 import ru.cubos.server.system.apps.App;
+import ru.cubos.server.system.apps.customApps.TestingApp;
 import ru.cubos.server.system.apps.systemApps.ApplicationsList;
 import ru.cubos.server.system.apps.systemApps.desktopWidgets.StatusBarDesktopWidget;
 
@@ -37,13 +38,13 @@ public class Server {
     private BinaryImage_24bit backGroundImage;
     public ServerCommandsDecoder serverCommandsDecoder;
 
-    public Server(Connectorable connector, Settings setted_settings) {
+    public Server(Connectorable connector, Settings initing_settings) {
         this.connector = connector;
         serverCommandsDecoder = new ServerCommandsDecoder(this);
-        if(settings==null){
+        if(initing_settings==null){
             settings = new Settings();
         } else {
-            settings = setted_settings;
+            settings = initing_settings;
         }
 
         // TODO: delete this string later:
@@ -54,7 +55,7 @@ public class Server {
         openedApps = new ArrayList<>();
 
         if(settings.isStatusBarEnable()) openedApps.add(statusBar);
-        openedApps.add(new ApplicationsList(this));
+        //openedApps.add(new ApplicationsList(this));
         //openedApps.add(new TestingApp(this));
 
         timeWidgetView = new TimeWidgetView();
@@ -176,6 +177,7 @@ public class Server {
     }
 
     public void openApp(App app){
+        app.draw();
         openedApps.add(app);
         app.onFocusGot();
         setRepaintPending();

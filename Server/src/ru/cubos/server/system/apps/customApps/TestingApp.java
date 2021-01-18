@@ -14,10 +14,17 @@ public class TestingApp extends App {
 
         setWindowTitle("Testing app");
 
-        setLeftOffset(30);
-        setRightOffset(30);
-        setTopOffset(40);
-        setBottomOffset(40);
+        if(server.settings.isWindowMode()) {
+            setLeftOffset(30);
+            setRightOffset(30);
+            setTopOffset(80);
+            setBottomOffset(40);
+        }else{
+            setLeftOffset(0);
+            setRightOffset(0);
+            setTopOffset(getServer().settings.getStatusBarHeight());
+            setBottomOffset(0);
+        }
 
         getBaseContainer().setBackgroundColor(Colors.COLOR_DARK_GRAY);
         //getBaseContainer().setBackgroundColor(Colors.COLOR_GREEN);
